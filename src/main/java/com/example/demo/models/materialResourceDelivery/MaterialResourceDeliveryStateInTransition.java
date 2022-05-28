@@ -2,7 +2,6 @@ package com.example.demo.models.materialResourceDelivery;
 
 public class MaterialResourceDeliveryStateInTransition implements MaterialResourceDeliveryState{
 
-    public static final String stateName = "InTransition";
     private final String name;
 
     public MaterialResourceDeliveryStateInTransition() {

@@ -2,7 +2,6 @@ package com.example.demo.models.materialResourceDelivery;
 
 public class MaterialResourceDeliveryStatePrepared implements MaterialResourceDeliveryState {
 
-    public static final String stateName = "Prepared";
     private final String name;
 
     public MaterialResourceDeliveryStatePrepared() {

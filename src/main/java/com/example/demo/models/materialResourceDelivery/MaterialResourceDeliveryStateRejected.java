@@ -2,7 +2,6 @@ package com.example.demo.models.materialResourceDelivery;
 
 public class MaterialResourceDeliveryStateRejected implements MaterialResourceDeliveryState {
 
-    public static final String stateName = "Rejected";
     private final String name;
 
     public MaterialResourceDeliveryStateRejected() {

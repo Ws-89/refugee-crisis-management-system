@@ -2,7 +2,6 @@ package com.example.demo.models.materialResourceDelivery;
 
 public class MaterialResourceDeliveryStateCanceled implements MaterialResourceDeliveryState {
 
-    public static final String stateName = "Canceled";
     private final String name;
 
     public MaterialResourceDeliveryStateCanceled() {

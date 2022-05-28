@@ -1,19 +1,21 @@
 package com.example.demo.controller;
 
-import com.example.demo.models.Refugee;
-import com.example.demo.repo.RefugeeRepo;
-import com.example.demo.service.RefugeeService;
+import com.example.demo.models.GenericEntity;
+import com.example.demo.repo.GenericRepository;
+import com.example.demo.service.GenericService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
-@RequestMapping("/refugees")
-public class RefugeeController extends GenericController<Refugee> {
+public abstract class GenericController<T extends GenericEntity<T>> {
 
-    protected RefugeeController(RefugeeService service) {
-        super(service);
+    private final GenericService<T> service;
+
+    protected GenericController(GenericService<T> service) {
+        this.service = service;
     }
 
-    /* METHODS
     @GetMapping("")
     public ResponseEntity<Page<T>> getPage(Pageable pageable){
         return ResponseEntity.ok(service.getPage(pageable));
@@ -39,5 +41,6 @@ public class RefugeeController extends GenericController<Refugee> {
         service.delete(id);
         return ResponseEntity.ok("OK");
     }
-     */
+
+
 }

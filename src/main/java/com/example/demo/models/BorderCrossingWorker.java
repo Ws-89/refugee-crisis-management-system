@@ -1,4 +1,4 @@
-package com.example.demo.models.borderCrossing;
+package com.example.demo.models;
 
 import com.example.demo.models.shared.Address;
 import com.example.demo.models.shared.Contact;

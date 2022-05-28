@@ -1,4 +1,8 @@
 package com.example.demo.repo;
 
-public interface LocalGovernmentRepo {
+import com.example.demo.models.LocalGovernment;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface LocalGovernmentRepo extends GenericRepository<LocalGovernment> {
 }

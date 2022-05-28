@@ -1,25 +1,15 @@
 package com.example.demo.controller;
 
-import com.example.demo.models.refugees.Refugee;
-import com.example.demo.models.RefugeeRegistrationRequest;
+import com.example.demo.models.BorderCrossing;
 import com.example.demo.service.BorderCrossingService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController("/border-crossing")
-public class BorderCrossingController {
+@RestController
+@RequestMapping("/border-crossing")
+public class BorderCrossingController extends GenericController<BorderCrossing> {
 
-    private final BorderCrossingService borderCrossingService;
-
-    public BorderCrossingController(BorderCrossingService borderCrossingService) {
-        this.borderCrossingService = borderCrossingService;
+    protected BorderCrossingController(BorderCrossingService service) {
+        super(service);
     }
-
-    @PostMapping("/registration")
-    public ResponseEntity<Refugee> registerRefugee(RefugeeRegistrationRequest request) {
-        return new ResponseEntity<Refugee>(this.borderCrossingService.registerRefugee(request), HttpStatus.OK);
-    }
-
 }

@@ -1,6 +1,9 @@
 package com.example.demo.models.materialResourceDelivery;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -8,6 +11,8 @@ import javax.persistence.*;
 @Data
 @Entity
 @Table(name = "tbl_material_resource_delivery")
+@AllArgsConstructor
+@ToString
 public class MaterialResourceDelivery {
 
 
@@ -22,13 +27,18 @@ public class MaterialResourceDelivery {
             generator = "material_resource_delivery_sequence"
     )
     private long deliveryId;
-
+    private String description;
     @Type(type = "com.example.demo.models.materialResourceDelivery.MaterialResourceDeliveryStateType")
     @Column(name = "delivery_state")
     private MaterialResourceDeliveryState state;
 
     public MaterialResourceDelivery() {
-        this.state = new MaterialResourceDeliveryStateStarted();
+        this.state
+                = new MaterialResourceDeliveryStateStarted();
+    }
+
+    public String getStateName(){
+        return this.state.getName();
     }
 
     public void nextState(){
@@ -38,5 +48,6 @@ public class MaterialResourceDelivery {
     public void prevState(){
         state.prevState(this);
     }
+
 
 }

@@ -1,15 +1,18 @@
-package com.example.demo.models.borderCrossing;
+package com.example.demo.models;
 
 import com.example.demo.models.shared.Address;
 import com.example.demo.models.shared.Contact;
 import lombok.Builder;
+import lombok.Data;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "tbl_border_crossing")
 @Builder
-public class BorderCrossing {
+@Data
+public class BorderCrossing implements Serializable, GenericEntity<BorderCrossing> {
 
     @Id
     @SequenceGenerator(
@@ -28,5 +31,19 @@ public class BorderCrossing {
     private Contact contact;
 
 
+    @Override
+    public void update(BorderCrossing source) {
+        this.address = source.getAddress();
+        this.contact = source.getContact();
+    }
 
+    @Override
+    public Long getId() {
+        return this.id;
+    }
+
+    @Override
+    public BorderCrossing createNewInstance() {
+        return null;
+    }
 }

@@ -1,15 +1,11 @@
 package com.example.demo.models.materialResourceDelivery;
 
-import javax.persistence.Embeddable;
-
-@Embeddable
 public class MaterialResourceDeliveryStateStarted implements MaterialResourceDeliveryState {
 
-    public static final String stateName = "Started";
     private final String name;
 
     public MaterialResourceDeliveryStateStarted() {
-        this.name = "Rejected";
+        this.name = "Started";
     }
 
     public String getName() {

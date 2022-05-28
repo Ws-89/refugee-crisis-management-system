@@ -1,18 +1,16 @@
 package com.example.demo.models.materialResourceDelivery;
 
-import javax.persistence.Embeddable;
-
 public class MaterialResourceDeliveryStateFinished implements MaterialResourceDeliveryState {
 
-    public static final String stateName = "Finished";
     private final String name;
 
     public MaterialResourceDeliveryStateFinished() {
         this.name = "Finished";
     }
 
+    @Override
     public String getName() {
-        return this.name;
+        return name;
     }
 
     @Override

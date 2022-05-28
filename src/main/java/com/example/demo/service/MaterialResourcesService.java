@@ -1,5 +1,8 @@
 package com.example.demo.service;
 
-public class MaterialResourcesService {
+import com.example.demo.models.materialResources.MaterialResource;
+
+public abstract class MaterialResourcesService<T extends MaterialResource> {
+
 
 }

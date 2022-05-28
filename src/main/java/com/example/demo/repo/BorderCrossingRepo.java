@@ -1,4 +1,8 @@
 package com.example.demo.repo;
 
-public interface BorderCrossingRepo {
+import com.example.demo.models.BorderCrossing;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface BorderCrossingRepo extends GenericRepository<BorderCrossing> {
 }
