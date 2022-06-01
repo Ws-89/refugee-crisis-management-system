@@ -1,4 +1,4 @@
-package com.example.demo.models.materialResourceDelivery;
+package com.example.demo.models.productsdelivery;
 
 import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.sql.*;
 import java.util.Objects;
 
-public class MaterialResourceDeliveryStateType implements UserType {
+public class ProductDeliveryStateType implements UserType {
 
     @Override
     public int[] sqlTypes() {
@@ -18,7 +18,7 @@ public class MaterialResourceDeliveryStateType implements UserType {
 
     @Override
     public Class returnedClass() {
-        return MaterialResourceDeliveryState.class;
+        return ProductDeliveryState.class;
     }
 
     @Override
@@ -40,17 +40,17 @@ public class MaterialResourceDeliveryStateType implements UserType {
 
         switch (name){
             case "Canceled":
-                return new MaterialResourceDeliveryStateCanceled();
+                return new ProductDeliveryStateCanceled();
             case "Finished":
-                return new MaterialResourceDeliveryStateFinished();
+                return new ProductDeliveryStateFinished();
             case "InTransition":
-                return new MaterialResourceDeliveryStateInTransition();
+                return new ProductDeliveryStateInTransition();
             case "Prepared":
-                return new MaterialResourceDeliveryStatePrepared();
+                return new ProductDeliveryStatePrepared();
             case "Rejected":
-                return new MaterialResourceDeliveryStateRejected();
+                return new ProductDeliveryStateRejected();
             case "Started":
-                return new MaterialResourceDeliveryStateStarted();
+                return new ProductDeliveryStateStarted();
             default:
                 throw new RuntimeException("State corrupted");
 
@@ -64,7 +64,7 @@ public class MaterialResourceDeliveryStateType implements UserType {
             preparedStatement.setNull(i, Types.VARCHAR);
         }
         else{
-            MaterialResourceDeliveryState state = (MaterialResourceDeliveryState) o;
+            ProductDeliveryState state = (ProductDeliveryState) o;
             preparedStatement.setString(i, state.getName());
         }
     }

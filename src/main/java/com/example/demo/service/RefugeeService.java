@@ -10,4 +10,5 @@ public class RefugeeService extends  GenericService<Refugee>{
     public RefugeeService(GenericRepository<Refugee> repository) {
         super(repository);
     }
+
 }

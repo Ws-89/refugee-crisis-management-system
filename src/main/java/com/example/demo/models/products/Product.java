@@ -1,7 +1,6 @@
-package com.example.demo.models.materialResources;
+package com.example.demo.models.products;
 
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
 
@@ -9,19 +8,19 @@ import java.time.LocalDateTime;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "RESOURCE_TYPE")
+@DiscriminatorColumn(name = "PRODUCT_TYPE")
 @NoArgsConstructor
-public abstract class MaterialResource {
+public abstract class Product {
 
     @Id
     @SequenceGenerator(
-            name = "material_resource_sequence",
-            sequenceName = "material_resource_sequence",
+            name = "product_sequence",
+            sequenceName = "product_sequence",
             allocationSize = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "material_resource_sequence"
+            generator = "product_sequence"
     )
     private long id;
     private String name;
@@ -33,7 +32,7 @@ public abstract class MaterialResource {
     @Enumerated(value = EnumType.STRING)
     private State state;
 
-    public MaterialResource(String name, long quantity, LocalDateTime expirationDate, String description, double weight, boolean fragile, State state) {
+    public Product(String name, long quantity, LocalDateTime expirationDate, String description, double weight, boolean fragile, State state) {
         this.name = name;
         this.quantity = quantity;
         this.expirationDate = expirationDate;

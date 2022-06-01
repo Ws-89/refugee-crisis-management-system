@@ -1,7 +1,8 @@
 package com.example.demo.repo;
 
-import com.example.demo.models.materialResourceDelivery.MaterialResourceDelivery;
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.example.demo.models.productsdelivery.ProductDelivery;
+import org.springframework.stereotype.Repository;
 
-public interface MaterialResourceDeliveryRepo extends JpaRepository<MaterialResourceDelivery, Long> {
+@Repository
+public interface MaterialResourceDeliveryRepo extends GenericRepository<ProductDelivery> {
 }

@@ -1,11 +1,11 @@
 package com.example.demo.service;
 
-import com.example.demo.models.materialResources.MaterialResource;
+import com.example.demo.models.products.Product;
 
 import java.util.List;
 
 public interface MaterialResourceService  {
 
-    List<MaterialResource> findAllByCategory(String category);
+    List<Product> findAllByCategory(String category);
 
 }

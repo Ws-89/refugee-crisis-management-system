@@ -1,4 +1,4 @@
-package com.example.demo.models.materialResources;
+package com.example.demo.models.products;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -7,12 +7,12 @@ import javax.persistence.Enumerated;
 
 @Entity
 @DiscriminatorValue(value = "Food")
-public class Food extends MaterialResource {
+public class FoodProduction extends Product {
 
     @Enumerated(value = EnumType.STRING)
     private FoodType foodType;
 
-    public Food(FoodType foodType) {
+    public FoodProduction(FoodType foodType) {
         this.foodType = foodType;
     }
 }

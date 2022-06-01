@@ -1,15 +1,15 @@
-package com.example.demo.models.materialResources;
+package com.example.demo.models.products;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
 @Entity
 @DiscriminatorValue(value = "Medicament")
-public class MedicalSupply extends MaterialResource {
+public class MedicalProduct extends Product {
 
     private String purpose;
 
-    public MedicalSupply(String purpose) {
+    public MedicalProduct(String purpose) {
         this.purpose = purpose;
     }
 }

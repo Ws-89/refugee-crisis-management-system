@@ -2,7 +2,7 @@ package com.example.demo.models;
 
 
 
-import com.example.demo.models.materialResources.MaterialResource;
+import com.example.demo.models.products.Product;
 import com.example.demo.models.shared.Address;
 import com.example.demo.models.shared.Contact;
 import lombok.AllArgsConstructor;
@@ -45,10 +45,10 @@ public class HelpCenter {
             name = "help_center_id",
             referencedColumnName = "id"
     )
-    Collection<MaterialResource> materials = new ArrayList<MaterialResource>();
+    Collection<Product> materials = new ArrayList<Product>();
 
 
-    public void addToMaterials(MaterialResource resource){
+    public void addToMaterials(Product resource){
         if(resource == null)
             throw new IllegalArgumentException("Resource cannot be null");
         this.materials.add(resource);

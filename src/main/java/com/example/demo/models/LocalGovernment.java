@@ -39,6 +39,11 @@ public class LocalGovernment implements Serializable, GenericEntity<LocalGovernm
     }
 
     @Override
+    public Long getId(){
+        return this.id;
+    }
+
+    @Override
     public LocalGovernment createNewInstance() {
         LocalGovernment newInstance = new LocalGovernment();
         newInstance.update(this);

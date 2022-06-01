@@ -1,11 +1,11 @@
 package com.example.demo;
 
-import com.example.demo.controller.MaterialResourceDeliveryController;
+import com.example.demo.controller.ProductDeliveryController;
 import com.example.demo.exception.NotFoundException;
-import com.example.demo.models.materialResourceDelivery.MaterialResourceDelivery;
-import com.example.demo.models.materialResourceDelivery.MaterialResourceDeliveryStateStarted;
+import com.example.demo.models.productsdelivery.ProductDelivery;
+import com.example.demo.models.productsdelivery.ProductDeliveryStateStarted;
 import com.example.demo.repo.MaterialResourceDeliveryRepo;
-import com.example.demo.service.MaterialResourceDeliveryService;
+import com.example.demo.service.ProductDeliveryService;
 import org.junit.jupiter.api.Test;
 
 import org.mockito.InjectMocks;
@@ -30,10 +30,10 @@ class DemoApplicationTests {
 	private MaterialResourceDeliveryRepo materialResourceDeliveryRepo;
 
 	@Autowired
-	private MaterialResourceDeliveryService materialResourceDeliveryService;
+	private ProductDeliveryService productDeliveryService;
 
 	@Autowired
-	private MaterialResourceDeliveryController materialResourceDeliveryController;
+	private ProductDeliveryController productDeliveryController;
 
 //	@Test
 //	void refugeeSave(){
@@ -48,8 +48,8 @@ class DemoApplicationTests {
 
 	@Test
 	void nextState(){
-		MaterialResourceDelivery delivery = new MaterialResourceDelivery();
-		delivery.setState(new MaterialResourceDeliveryStateStarted());
+		ProductDelivery delivery = new ProductDelivery();
+		delivery.setState(new ProductDeliveryStateStarted());
 		delivery.nextState();
 		delivery.nextState();
 		assertThat(delivery.getStateName()).isEqualTo("InTransition");
@@ -59,19 +59,19 @@ class DemoApplicationTests {
 
 	@Test
 	void saveStateToRepo(){
-		MaterialResourceDelivery delivery = new MaterialResourceDelivery();
-		delivery.setState(new MaterialResourceDeliveryStateStarted());
+		ProductDelivery delivery = new ProductDelivery();
+		delivery.setState(new ProductDeliveryStateStarted());
 		delivery.nextState();
 		delivery.nextState();
-		materialResourceDeliveryService.sendDelivery(delivery);
+		productDeliveryService.create(delivery);
 
 //		assertThat(delivery.getStateName()).isEqualTo("Started");
 	}
 
 	@Test
 	void loadStateFromRepo(){
-		List<MaterialResourceDelivery> lista = materialResourceDeliveryRepo.findAll();
-		MaterialResourceDelivery delivery  = lista.get(0);
+		List<ProductDelivery> lista = materialResourceDeliveryRepo.findAll();
+		ProductDelivery delivery  = lista.get(0);
 		delivery.nextState();
 		materialResourceDeliveryRepo.save(delivery);
 //		assertThat(delivery.getStateName()).isEqualTo("Prepared");
@@ -79,12 +79,12 @@ class DemoApplicationTests {
 
 	@Test
 	void changeState(){
-		materialResourceDeliveryService.nextState(19L);
+		productDeliveryService.nextState(19L);
 	}
 
 	@Test
 	void saveFromService(){
-		MaterialResourceDelivery delivery = materialResourceDeliveryRepo.findById(61L).orElseThrow(()-> new NotFoundException("Not found"));
+		ProductDelivery delivery = materialResourceDeliveryRepo.findById(61L).orElseThrow(()-> new NotFoundException("Not found"));
 		delivery.nextState();
 		materialResourceDeliveryRepo.save(delivery);
 	}

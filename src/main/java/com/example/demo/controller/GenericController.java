@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import com.example.demo.models.GenericEntity;
-import com.example.demo.repo.GenericRepository;
 import com.example.demo.service.GenericService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 public abstract class GenericController<T extends GenericEntity<T>> {
 
-    private final GenericService<T> service;
+    protected final GenericService<T> service;
 
     protected GenericController(GenericService<T> service) {
         this.service = service;
