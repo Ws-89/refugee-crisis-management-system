@@ -11,19 +11,19 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "tbl_delivery_address")
+@Table(name = "tbl_starting_point_address")
 @Entity
-public class DeliveryAddress {
+public class StartingPointAddress {
 
     @Id
     @SequenceGenerator(
-            name = "delivery_address_sequence",
-            sequenceName = "delivery_address_sequence",
+            name = "starting_point_address_sequence",
+            sequenceName = "starting_point_address_sequence",
             allocationSize = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "delivery_address_sequence"
+            generator = "starting_point_address_sequence"
     )
     private Long id;
     private String postCode;

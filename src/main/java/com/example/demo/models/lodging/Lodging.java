@@ -1,6 +1,7 @@
 package com.example.demo.models.lodging;
 
 import com.example.demo.models.GenericEntity;
+import com.example.demo.models.Refugee;
 import com.example.demo.models.shared.Address;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,12 +10,13 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Table(name = "tbl_lodging")
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class Lodging implements Serializable, GenericEntity<Lodging> {
 
@@ -28,7 +30,7 @@ public class Lodging implements Serializable, GenericEntity<Lodging> {
             strategy = GenerationType.SEQUENCE,
             generator = "tbl_lodging_sequence"
     )
-    private Long id;
+    private Long lodgingId;
     private Address address;
     @ManyToOne(
             cascade = CascadeType.ALL
@@ -38,15 +40,26 @@ public class Lodging implements Serializable, GenericEntity<Lodging> {
             referencedColumnName = "lodgingOwnerId"
     )
     private LodgingOwner lodgingOwner;
+    @Enumerated(value = EnumType.STRING)
+    private LodgingState state;
+    private Integer capacity;
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY
+    )
+    @JoinColumn(
+            name = "lodging_id",
+            referencedColumnName = "lodgingId"
+    )
+    private List<Refugee> tenants;
 
     @Override
     public void update(Lodging source) {
         this.address = source.getAddress();
     }
 
-    @Override
     public Long getId() {
-        return this.id;
+        return this.lodgingId;
     }
 
     @Override
@@ -54,5 +67,30 @@ public class Lodging implements Serializable, GenericEntity<Lodging> {
         Lodging newInstance = new Lodging();
         newInstance.update(this);
         return newInstance;
+    }
+
+    public void setStateToAvailable(){
+        this.state = LodgingState.Available;
+    }
+
+    public void setStateToCanceled(){
+        this.tenants.clear();
+        this.state = LodgingState.Canceled;
+    }
+
+    public void addTentant(Refugee refugee){
+        if(tenants.size() < capacity)
+            tenants.add(refugee);
+
+        if(tenants.size() == capacity)
+            this.state = LodgingState.Occupied;
+    }
+
+    public void removeTenant(Long id){
+        if(this.tenants.contains(id))
+            this.tenants.remove(id);
+
+        if(this.state != LodgingState.Available)
+            this.setStateToAvailable();
     }
 }

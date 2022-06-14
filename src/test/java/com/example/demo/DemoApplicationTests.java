@@ -2,18 +2,20 @@ package com.example.demo;
 
 import com.example.demo.controller.ProductDeliveryController;
 import com.example.demo.exception.NotFoundException;
-import com.example.demo.models.productsdelivery.ProductDelivery;
-import com.example.demo.models.productsdelivery.ProductDeliveryStateStarted;
-import com.example.demo.repo.MaterialResourceDeliveryRepo;
+import com.example.demo.models.products.FoodProduct;
+import com.example.demo.models.products.Product;
+import com.example.demo.models.productsdelivery.*;
+import com.example.demo.repo.ProductDeliveryRepository;
 import com.example.demo.service.ProductDeliveryService;
 import org.junit.jupiter.api.Test;
 
-import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.demo.models.products.FoodType.FRUITS;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 
@@ -24,10 +26,11 @@ class DemoApplicationTests {
 //	@Autowired
 //	private RefugeeService refugeeService;
 
-	@InjectMocks
+//	@InjectMocks
+
 
 	@Autowired
-	private MaterialResourceDeliveryRepo materialResourceDeliveryRepo;
+	private ProductDeliveryRepository productDeliveryRepository;
 
 	@Autowired
 	private ProductDeliveryService productDeliveryService;
@@ -47,47 +50,30 @@ class DemoApplicationTests {
 //	}
 
 	@Test
-	void nextState(){
-		ProductDelivery delivery = new ProductDelivery();
-		delivery.setState(new ProductDeliveryStateStarted());
-		delivery.nextState();
-		delivery.nextState();
-		assertThat(delivery.getStateName()).isEqualTo("InTransition");
+	void saveProductDelivery(){
+		ProductDelivery productDelivery = new ProductDelivery();
+		productDelivery.setDescription("First delivery");
+		productDelivery.setCapacity(10.0);
+
+		DeliveryHistory history = new DeliveryHistory();
+		HandlingEvent handlingEvent = new HandlingEvent();
+		history.addEvent(handlingEvent);
+		productDelivery.setDeliveryHistory(history);
+
+		DeliverySpecification deliverySpecification = new DeliverySpecification();
+		DeliveryAddress deliveryAddress = new DeliveryAddress();
+		deliveryAddress.setPostCode("123");
+		deliveryAddress.setCity("Bydgoszcz");
+		deliverySpecification.setDeliveryAddress(deliveryAddress);
+		productDelivery.setDeliverySpecification(deliverySpecification);
+
+		FoodProduct product = new FoodProduct();
+		product.setFoodType(FRUITS);
+		productDelivery.addProduct(product);
+		productDeliveryRepository.save(productDelivery);
 	}
 
 
-
-	@Test
-	void saveStateToRepo(){
-		ProductDelivery delivery = new ProductDelivery();
-		delivery.setState(new ProductDeliveryStateStarted());
-		delivery.nextState();
-		delivery.nextState();
-		productDeliveryService.create(delivery);
-
-//		assertThat(delivery.getStateName()).isEqualTo("Started");
-	}
-
-	@Test
-	void loadStateFromRepo(){
-		List<ProductDelivery> lista = materialResourceDeliveryRepo.findAll();
-		ProductDelivery delivery  = lista.get(0);
-		delivery.nextState();
-		materialResourceDeliveryRepo.save(delivery);
-//		assertThat(delivery.getStateName()).isEqualTo("Prepared");
-	}
-
-	@Test
-	void changeState(){
-		productDeliveryService.nextState(19L);
-	}
-
-	@Test
-	void saveFromService(){
-		ProductDelivery delivery = materialResourceDeliveryRepo.findById(61L).orElseThrow(()-> new NotFoundException("Not found"));
-		delivery.nextState();
-		materialResourceDeliveryRepo.save(delivery);
-	}
 
 
 }

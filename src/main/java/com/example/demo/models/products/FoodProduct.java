@@ -10,18 +10,17 @@ import javax.persistence.Enumerated;
 import java.time.LocalDateTime;
 
 @Entity
+@DiscriminatorValue(value = "FOOD")
 @Data
 @NoArgsConstructor
-@DiscriminatorValue(value = "HYGIENE")
-public class HygieneProduct extends Product {
+public class FoodProduct extends Product {
 
     @Enumerated(value = EnumType.STRING)
-    private HygienePurpose hygienePurpose;
+    private FoodType foodType;
 
-    public HygieneProduct(String name, LocalDateTime expirationDate,  String description, double weight, boolean fragile, State state, HygienePurpose purpose
-    ) {
+    public FoodProduct(String name, LocalDateTime expirationDate, String description, double weight, boolean fragile, State state, FoodType foodType){
         super(name, expirationDate, description, weight, fragile, state);
-        this.hygienePurpose = purpose;
+        this.foodType = foodType;
     }
 
 }

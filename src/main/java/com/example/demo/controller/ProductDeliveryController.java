@@ -45,14 +45,4 @@ public class ProductDeliveryController {
         return ResponseEntity.ok("OK");
     }
 
-    @PostMapping("/next-state/{id}")
-    public ResponseEntity<ProductDelivery> nextState(@PathVariable("id") Long id){
-        return ResponseEntity.ok(this.productDeliveryService.nextState(id));
-    }
-
-    @PostMapping("/prev-state/{id}")
-    public ResponseEntity<ProductDelivery> prevState(@PathVariable("id") Long id){
-        return ResponseEntity.ok(this.productDeliveryService.prevState(id));
-    }
-
 }

@@ -1,15 +1,12 @@
 package com.example.demo.models.productsdelivery;
 
+import com.example.demo.models.Customer;
 import com.example.demo.models.GenericEntity;
-import com.example.demo.models.shared.Address;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.ToString;
-import org.hibernate.annotations.Type;
+import com.example.demo.models.products.Product;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,8 +16,10 @@ import java.util.List;
 @Entity
 @Table(name = "tbl_product_delivery")
 @AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @ToString
-public class ProductDelivery implements Serializable, GenericEntity<ProductDelivery> {
+public class ProductDelivery implements Serializable, GenericEntity<ProductDelivery>, Prototype<ProductDelivery> {
 
     @Id
     @SequenceGenerator(
@@ -34,43 +33,43 @@ public class ProductDelivery implements Serializable, GenericEntity<ProductDeliv
     )
     private long deliveryId;
     private String description;
-    @Type(type = "com.example.demo.models.productsdelivery.ProductDeliveryStateType")
-    @Column(name = "delivery_state")
-    private ProductDeliveryState state;
     private Double capacity;
-    private Address startingPoint;
+    @OneToOne(
+            cascade=CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private DeliveryHistory deliveryHistory;
+    @OneToOne(
+            cascade=CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private DeliverySpecification deliverySpecification;
     @OneToMany(
-            cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY
+            mappedBy =  "productDelivery"
+    )
+    private List<Product> products = new ArrayList<Product>();
+    @ManyToOne(
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL
     )
     @JoinColumn(
-            name = "delivery_id",
-            referencedColumnName = "deliveryId"
+            name = "customer_id",
+            referencedColumnName = "customerId"
     )
-    private List<DeliveryStatusMessage> messageLog = new ArrayList<>();
+    private Customer customer;
 
-    public ProductDelivery() {
-        this.state = new ProductDeliveryStateStarted();
-        this.messageLog.add(new DeliveryStatusMessage("New delivery has been created", LocalDateTime.now()));
+
+    public ProductDelivery(ProductDelivery productDelivery) {
+        this.description = productDelivery.description;
+        this.capacity = productDelivery.capacity;
+        this.deliveryHistory = null;
+        this.deliverySpecification = null;
+        this.products = null;
+        this.customer = productDelivery.customer;
     }
-
-    public String getStateName(){
-        return this.state.getName();
-    }
-
-    public void nextState(){
-        state.nextState(this);
-        this.messageLog.add(new DeliveryStatusMessage());
-    }
-
-    public void prevState(){
-        state.prevState(this);
-    }
-
 
     @Override
     public void update(ProductDelivery source) {
-        this.state = source.getState();
         this.description = source.getDescription();
     }
 
@@ -84,5 +83,14 @@ public class ProductDelivery implements Serializable, GenericEntity<ProductDeliv
         ProductDelivery newInstance = new ProductDelivery();
         newInstance.update(this);
         return newInstance;
+    }
+
+    @Override
+    public ProductDelivery clone() {
+        return new ProductDelivery(this);
+    }
+
+    public void addProduct(Product product){
+        this.products.add(product);
     }
 }

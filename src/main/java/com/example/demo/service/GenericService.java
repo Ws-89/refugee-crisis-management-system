@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 public abstract class GenericService<T extends GenericEntity<T>>{
 
-    private final GenericRepository<T> repository;
+    protected final GenericRepository<T> repository;
 
     public GenericService(GenericRepository<T> repository) {
         this.repository = repository;
@@ -27,7 +27,6 @@ public abstract class GenericService<T extends GenericEntity<T>>{
     public T update(T updated){
         T dbDomain = get(updated.getId());
         dbDomain.update(updated);
-
         return repository.save(dbDomain);
     }
 

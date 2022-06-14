@@ -1,15 +1,27 @@
 package com.example.demo.models.products;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import java.time.LocalDateTime;
 
 @Entity
-@DiscriminatorValue(value = "Medicament")
+@Data
+@NoArgsConstructor
+@DiscriminatorValue(value = "MEDICAMENT")
 public class MedicalProduct extends Product {
 
-    private String purpose;
+    @Enumerated(value = EnumType.STRING)
+    private MedicalPurpose medicalPurpose;
 
-    public MedicalProduct(String purpose) {
-        this.purpose = purpose;
+    public MedicalProduct(String name,  LocalDateTime expirationDate, String description, double weight, boolean fragile, State state, MedicalPurpose medicalPurpose
+    ){
+        super(name, expirationDate, description, weight, fragile, state);
+        this.medicalPurpose = medicalPurpose;
     }
+
 }
