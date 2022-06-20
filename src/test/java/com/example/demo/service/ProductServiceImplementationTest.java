@@ -108,19 +108,6 @@ class ProductServiceImplementationTest {
 
     @Test
     void deleteProduct() {
-        ProductDTO foodProduct = ProductDTO.builder()
-                .productId(1L)
-                .name("Bread")
-                .expirationDate(LocalDateTime.of(2017, Month.FEBRUARY,3,6,30,40,50000))
-                .description("Full grain")
-                .amount(200L)
-                .weight(150)
-                .fragile(false)
-                .state(Solid)
-                .foodType(Grains)
-                .productType(ProductType.Food)
-                .build();
-
         FoodProduct foodProductUpdate = new FoodProduct("Bread", LocalDateTime.of(2017, Month.FEBRUARY,3,6,30,40,50000), "Full grain", 150 , 200L, false, Solid, Grains);
 
         when(productRepository.findById(1L)).thenReturn(Optional.of(foodProductUpdate));
@@ -131,14 +118,14 @@ class ProductServiceImplementationTest {
 
         FoodProduct product = foodProductCaptor.getValue();
 
-        assertThat(product.getName()).isEqualTo(foodProduct.getName());
-        assertThat(product.getDescription()).isEqualTo(foodProduct.getDescription());
-        assertThat(product.getExpirationDate()).isEqualTo(foodProduct.getExpirationDate());
-        assertThat(product.getAmount()).isEqualTo(foodProduct.getAmount());
-        assertThat(product.getWeight()).isEqualTo(foodProduct.getWeight());
-        assertThat(product.isFragile()).isEqualTo(foodProduct.isFragile());
-        assertThat(product.getState()).isEqualTo(foodProduct.getState());
-        assertThat(product.getFoodType()).isEqualTo(foodProduct.getFoodType());
+        assertThat(product.getName()).isEqualTo(foodProductUpdate.getName());
+        assertThat(product.getDescription()).isEqualTo(foodProductUpdate.getDescription());
+        assertThat(product.getExpirationDate()).isEqualTo(foodProductUpdate.getExpirationDate());
+        assertThat(product.getAmount()).isEqualTo(foodProductUpdate.getAmount());
+        assertThat(product.getWeight()).isEqualTo(foodProductUpdate.getWeight());
+        assertThat(product.isFragile()).isEqualTo(foodProductUpdate.isFragile());
+        assertThat(product.getState()).isEqualTo(foodProductUpdate.getState());
+        assertThat(product.getFoodType()).isEqualTo(foodProductUpdate.getFoodType());
     }
 
     @Test

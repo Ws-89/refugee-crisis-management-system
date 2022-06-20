@@ -7,6 +7,7 @@ public class ProductFactoryImplementation {
 
     public static Product getInstance(ProductDTO source) {
         Product product = null;
+
         switch (source.getProductType()) {
             case Food:
                 product = new FoodProduct(

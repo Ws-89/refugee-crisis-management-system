@@ -12,31 +12,34 @@ import java.util.List;
 @Service
 public class ProductServiceImplementation implements ProductService{
 
-    private final ProductFactoryImplementation productFactoryImplementation;
     private final ProductRepository productRepository;
 
-    public ProductServiceImplementation(ProductFactoryImplementation productFactoryImplementation, ProductRepository productRepository) {
-        this.productFactoryImplementation = productFactoryImplementation;
+    public ProductServiceImplementation(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 
     @Override
+    public Product getOne(Long id) {
+        return productRepository.findById(id)
+                .orElseThrow(()-> new NotFoundException(String.format("Product with id %s not found", id)));
+    }
+
+    @Override
     public Product saveProduct(ProductDTO product) {
-        Product productToSave = productFactoryImplementation.getInstance(product);
+        Product productToSave = ProductFactoryImplementation.getInstance(product);
         return productRepository.save(productToSave);
     }
 
     @Override
     public Product updateProduct(ProductDTO product) {
-        Product productToUpdate = productRepository.findById(product.getProductId())
-                .orElseThrow(()-> new NotFoundException(String.format("Product with id %s not found", product.getProductId())));
+        Product productToUpdate = getOne(product.getProductId());
         productToUpdate.update(product);
         return productRepository.save(productToUpdate);
     }
 
     @Override
     public Long deleteProduct(Long id) {
-        Product product = productRepository.findById(id).orElseThrow(()-> new NotFoundException(String.format("Product with id %s not found", id)));
+        Product product = getOne(id);
         productRepository.delete(product);
         return product.getProductId();
     }

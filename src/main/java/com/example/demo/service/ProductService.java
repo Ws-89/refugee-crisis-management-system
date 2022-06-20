@@ -9,6 +9,7 @@ import java.util.List;
 @Component
 public interface ProductService {
 
+    public Product getOne(Long id);
     public Product saveProduct(ProductDTO product);
     public Product updateProduct(ProductDTO product);
     public Long deleteProduct(Long id);
