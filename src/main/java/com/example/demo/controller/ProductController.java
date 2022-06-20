@@ -9,22 +9,35 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
-@RequestMapping("/products")
+@RequestMapping("/api/v1/products")
 public class ProductController {
 
     private final ProductService productService;
-    private final ProductFactoryImplementation productFactoryImplementation;
 
     public ProductController(ProductService productService, ProductFactoryImplementation productFactoryImplementation) {
         this.productService = productService;
-        this.productFactoryImplementation = productFactoryImplementation;
     }
 
     @PostMapping("/save")
     public ResponseEntity<Product> saveProduct(@RequestBody ProductDTO product) {
-        Product productToSave = productFactoryImplementation.getInstance(product);
-        return ResponseEntity.ok(this.productService.saveProduct(productToSave));
+        return ResponseEntity.ok(productService.saveProduct(product));
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<Product> updateProduct(@RequestBody ProductDTO product){
+        return ResponseEntity.ok(productService.updateProduct(product));
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Long> deleteProduct(@PathVariable("id") Long id){
+        return ResponseEntity.ok(productService.deleteProduct(id));
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<List<Product>> findAllHProducts(){
+        return ResponseEntity.ok(productService.findAllProducts());
     }
 
     @GetMapping("/list/hygiene")

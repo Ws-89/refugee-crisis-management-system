@@ -4,11 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.tomcat.jni.Local;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 import static com.example.demo.models.productsdelivery.HandlingEventState.LOADING_EVENT;
 import static com.example.demo.models.productsdelivery.HandlingEventState.UNLOADING_EVENT;
@@ -33,7 +31,7 @@ public class HandlingEvent {
     )
     private long handlingEventId;
     @OneToOne()
-    private DeliveryMovement deliveryMovement;
+    private TransportMovement transportMovement;
     @ManyToOne(
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY
@@ -47,15 +45,15 @@ public class HandlingEvent {
     private HandlingEventState state;
     private LocalDateTime timeStamp;
 
-    public HandlingEvent(DeliveryMovement deliveryMovement, HandlingEventState state, LocalDateTime timeStamp) {
-        this.deliveryMovement = deliveryMovement;
+    public HandlingEvent(TransportMovement transportMovement, HandlingEventState state, LocalDateTime timeStamp) {
+        this.transportMovement = transportMovement;
         this.state = state;
         this.timeStamp = timeStamp;
     }
 
-    public static HandlingEvent newLoading(DeliveryMovement loadedOnto, LocalDateTime timeStamp) {
+    public static HandlingEvent newLoading(TransportMovement loadedOnto, LocalDateTime timeStamp) {
         HandlingEvent result = new HandlingEvent(loadedOnto, LOADING_EVENT, timeStamp);
-        result.setDeliveryMovement(loadedOnto);
+        result.setTransportMovement(loadedOnto);
         return result;
     }
 
@@ -64,7 +62,7 @@ public class HandlingEvent {
         return result;
     }
 
-    private void setDeliveryMovement(DeliveryMovement loadedOnto) {
+    private void setTransportMovement(TransportMovement loadedOnto) {
     }
 
 

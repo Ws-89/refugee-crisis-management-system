@@ -18,10 +18,26 @@ public class MedicalProduct extends Product {
     @Enumerated(value = EnumType.STRING)
     private MedicalPurpose medicalPurpose;
 
-    public MedicalProduct(String name,  LocalDateTime expirationDate, String description, double weight, boolean fragile, State state, MedicalPurpose medicalPurpose
+    public MedicalProduct(String name,  LocalDateTime expirationDate, String description, double weight, Long ammount, boolean fragile, State state, MedicalPurpose medicalPurpose
     ){
-        super(name, expirationDate, description, weight, fragile, state);
+        super(name, expirationDate, description, weight, ammount, fragile, state);
         this.medicalPurpose = medicalPurpose;
     }
 
+    @Override
+    public void update(ProductDTO product) {
+        if(product.getMedicalPurpose() != null){
+            super.setName(product.getName());
+            super.setExpirationDate(product.getExpirationDate());
+            super.setDescription(product.getDescription());
+            super.setWeight(product.getWeight());
+            super.setAmount(product.getAmount());
+            super.setFragile(product.isFragile());
+            super.setState(product.getState());
+            this.medicalPurpose = product.getMedicalPurpose();
+        }
+        else {
+            throw new IllegalArgumentException("Not a medical product");
+        }
+    }
 }

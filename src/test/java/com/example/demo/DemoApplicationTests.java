@@ -15,7 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.demo.models.products.FoodType.FRUITS;
+import static com.example.demo.models.products.FoodType.Fruits;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 
@@ -68,7 +68,7 @@ class DemoApplicationTests {
 		productDelivery.setDeliverySpecification(deliverySpecification);
 
 		FoodProduct product = new FoodProduct();
-		product.setFoodType(FRUITS);
+		product.setFoodType(Fruits);
 		productDelivery.addProduct(product);
 		productDeliveryRepository.save(productDelivery);
 	}

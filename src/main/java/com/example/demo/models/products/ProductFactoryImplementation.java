@@ -7,41 +7,41 @@ public class ProductFactoryImplementation {
 
     public static Product getInstance(ProductDTO source) {
         Product product = null;
-        switch (source.getType()) {
-            case FOOD:
+        switch (source.getProductType()) {
+            case Food:
                 product = new FoodProduct(
-                        source.getName()
-                        ,
+                        source.getName(),
                         source.getExpirationDate(),
                         source.getDescription(),
                         source.getWeight(),
+                        source.getAmount(),
                         source.isFragile(),
                         source.getState(),
-
                         source.getFoodType());
                 break;
 
-            case HYGIENE:
+            case Hygiene:
                 product = new HygieneProduct(
                         source.getName(),
                         source.getExpirationDate(),
                         source.getDescription(),
                         source.getWeight(),
+                        source.getAmount(),
                         source.isFragile(),
                         source.getState(),
                         source.getHygienePurpose());
                 break;
 
-            case MEDICAL:
+            case Medical:
                 product = new MedicalProduct(
                         source.getName(),
                         source.getExpirationDate(),
                         source.getDescription(),
                         source.getWeight(),
+                        source.getAmount(),
                         source.isFragile(),
                         source.getState(),
                         source.getMedicalPurpose()
-
                         );
                 break;
         }

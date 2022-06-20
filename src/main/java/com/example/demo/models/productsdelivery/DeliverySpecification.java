@@ -27,7 +27,7 @@ public class DeliverySpecification {
             generator = "delivery_specification_sequence"
     )
     private Long deliverySpecificationId;
-    private LocalDateTime expectedDeliveryDateTime;
+    private LocalDateTime arrivalTime;
     @OneToOne(
             cascade=CascadeType.ALL
     )

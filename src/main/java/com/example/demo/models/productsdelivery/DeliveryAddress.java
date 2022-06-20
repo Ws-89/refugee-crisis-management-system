@@ -1,5 +1,6 @@
 package com.example.demo.models.productsdelivery;
 
+import com.example.demo.models.GenericEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,5 +29,11 @@ public class DeliveryAddress {
     private Long id;
     private String postCode;
     private String city;
+    private String street;
 
+    public void update(DeliveryAddress source) {
+        this.setPostCode(source.getPostCode());
+        this.setCity(source.getCity());
+        this.setStreet(source.getStreet());
+    }
 }

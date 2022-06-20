@@ -5,21 +5,21 @@ import lombok.Builder;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "tbl_delivery_movement")
+@Table(name = "tbl_transport_movement")
 @Builder
-public class DeliveryMovement {
+public class TransportMovement {
 
     @Id
     @SequenceGenerator(
-            name = "delivery_movement_sequence",
-            sequenceName = "delivery_movement_sequence",
+            name = "delivery_transport_sequence",
+            sequenceName = "delivery_transport_sequence",
             allocationSize = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "delivery_movement_sequence"
+            generator = "delivery_transport_sequence"
     )
-    private Long id;
+    private Long transportMovementId;
     @OneToOne()
     private DeliveryAddress deliveryAddress;
     @OneToOne()

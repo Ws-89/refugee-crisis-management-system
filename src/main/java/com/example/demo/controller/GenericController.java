@@ -15,27 +15,27 @@ public abstract class GenericController<T extends GenericEntity<T>> {
         this.service = service;
     }
 
-    @GetMapping("")
+    @GetMapping("/save")
     public ResponseEntity<Page<T>> getPage(Pageable pageable){
         return ResponseEntity.ok(service.getPage(pageable));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/get/{id}")
     public ResponseEntity<T> getOne(@PathVariable Long id){
         return ResponseEntity.ok(service.get(id));
     }
 
-    @PutMapping("")
+    @PutMapping("/update")
     public ResponseEntity<T> update(@RequestBody T updated){
         return ResponseEntity.ok(service.update(updated));
     }
 
-    @PostMapping("")
+    @PostMapping("/save")
     public ResponseEntity<T> create(@RequestBody T created){
         return ResponseEntity.ok(service.create(created));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> delete(@PathVariable Long id){
         service.delete(id);
         return ResponseEntity.ok("OK");

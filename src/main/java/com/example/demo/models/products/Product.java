@@ -1,10 +1,10 @@
 package com.example.demo.models.products;
 
 import com.example.demo.models.productsdelivery.ProductDelivery;
-import com.example.demo.models.productsdelivery.Prototype;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -16,8 +16,8 @@ import java.time.LocalDateTime;
         name = "PRODUCT_TYPE",
         discriminatorType = DiscriminatorType.STRING
 )
-@NoArgsConstructor
-@AllArgsConstructor
+
+@RequiredArgsConstructor
 @Table(name = "tbl_product")
 @Data
 public abstract class Product implements Serializable {
@@ -37,6 +37,7 @@ public abstract class Product implements Serializable {
     private LocalDateTime expirationDate;
     private String description;
     private double weight;
+    private Long amount;
     private boolean fragile;
     @Enumerated(value = EnumType.STRING)
     private State state;
@@ -51,12 +52,16 @@ public abstract class Product implements Serializable {
     private ProductDelivery productDelivery;
 
     public Product(String name, LocalDateTime expirationDate
-                   , String description, double weight, boolean fragile, State state) {
+                   , String description, double weight, Long amount, boolean fragile, State state) {
         this.name = name;
         this.expirationDate = expirationDate;
         this.description = description;
         this.weight = weight;
+        this.amount = amount;
         this.fragile = fragile;
         this.state = state;
     }
+
+    public abstract void update(ProductDTO product);
+
 }
