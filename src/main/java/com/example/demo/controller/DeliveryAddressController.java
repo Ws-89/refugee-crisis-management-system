@@ -23,7 +23,7 @@ public class DeliveryAddressController {
         return ResponseEntity.ok(deliveryAddressService.save(deliveryAddress));
     }
 
-    @PostMapping("/update")
+    @PutMapping("/update")
     public ResponseEntity<DeliveryAddress> update(@RequestBody DeliveryAddress deliveryAddress){
         return ResponseEntity.ok(deliveryAddressService.update(deliveryAddress));
     }

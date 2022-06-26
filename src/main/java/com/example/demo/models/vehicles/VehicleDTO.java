@@ -13,8 +13,5 @@ public class VehicleDTO {
     private Long vehicleId;
     private Double capacity;
     private VehicleType vehicleType;
-    private PassengerCarType passengerCarType;
-    private VanType vanType;
-    private TruckType truckType;
     private String licensePlate;
 }

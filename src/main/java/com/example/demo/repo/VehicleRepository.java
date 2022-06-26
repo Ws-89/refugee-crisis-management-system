@@ -11,12 +11,12 @@ import java.util.Optional;
 @Repository
 public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
 
-    @Query("from PassengerCar")
-    public List<Vehicle> getPassengerCars();
-    @Query("from Van")
-    public List<Vehicle> getVans();
-    @Query("from Truck")
-    public List<Vehicle> getTrucks();
+//    @Query("from PassengerCar")
+//    public List<Vehicle> getPassengerCars();
+//    @Query("from Van")
+//    public List<Vehicle> getVans();
+//    @Query("from Truck")
+//    public List<Vehicle> getTrucks();
 
     public Optional<Vehicle> findByLicensePlate(String licensePlate);
 }

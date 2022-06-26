@@ -25,7 +25,7 @@ public class StartingPointAddress {
             strategy = GenerationType.SEQUENCE,
             generator = "starting_point_address_sequence"
     )
-    private Long id;
+    private Long startingPointAddressId;
     private String postCode;
     private String city;
 

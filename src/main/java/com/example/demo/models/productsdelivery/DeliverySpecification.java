@@ -1,9 +1,7 @@
 package com.example.demo.models.productsdelivery;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -13,7 +11,6 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
 public class DeliverySpecification {
 
     @Id
@@ -28,8 +25,43 @@ public class DeliverySpecification {
     )
     private Long deliverySpecificationId;
     private LocalDateTime arrivalTime;
-    @OneToOne(
-            cascade=CascadeType.ALL
-    )
+
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "delivery_address_id", referencedColumnName = "deliveryAddressId")
     private DeliveryAddress deliveryAddress;
+    @JsonIgnore
+    @OneToOne(mappedBy = "deliverySpecification")
+    private ProductDelivery productDelivery;
+
+    public Long getDeliverySpecificationId() {
+        return deliverySpecificationId;
+    }
+
+    public void setDeliverySpecificationId(Long deliverySpecificationId) {
+        this.deliverySpecificationId = deliverySpecificationId;
+    }
+
+    public LocalDateTime getArrivalTime() {
+        return arrivalTime;
+    }
+
+    public void setArrivalTime(LocalDateTime arrivalTime) {
+        this.arrivalTime = arrivalTime;
+    }
+
+    public DeliveryAddress getDeliveryAddress() {
+        return deliveryAddress;
+    }
+
+    public void setDeliveryAddress(DeliveryAddress deliveryAddress) {
+        this.deliveryAddress = deliveryAddress;
+    }
+
+    public ProductDelivery getProductDelivery() {
+        return productDelivery;
+    }
+
+    public void setProductDelivery(ProductDelivery productDelivery) {
+        this.productDelivery = productDelivery;
+    }
 }

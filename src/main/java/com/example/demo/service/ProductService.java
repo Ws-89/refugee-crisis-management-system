@@ -14,7 +14,7 @@ public interface ProductService {
     public Product updateProduct(ProductDTO product);
     public Long deleteProduct(Long id);
     public List<Product> findAllProducts();
-    public List<Product> findAllHygieneProducts();
-    public List<Product> findAllFoodProducts();
-    public List<Product> findAllMedicalProducts();
+//    public List<Product> findAllHygieneProducts();
+//    public List<Product> findAllFoodProducts();
+//    public List<Product> findAllMedicalProducts();
 }

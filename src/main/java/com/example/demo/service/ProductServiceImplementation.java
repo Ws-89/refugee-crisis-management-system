@@ -3,7 +3,6 @@ package com.example.demo.service;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.models.products.Product;
 import com.example.demo.models.products.ProductDTO;
-import com.example.demo.models.products.ProductFactoryImplementation;
 import com.example.demo.repo.ProductRepository;
 import org.springframework.stereotype.Service;
 
@@ -26,8 +25,10 @@ public class ProductServiceImplementation implements ProductService{
 
     @Override
     public Product saveProduct(ProductDTO product) {
-        Product productToSave = ProductFactoryImplementation.getInstance(product);
+        Product productToSave = new Product();
+        productToSave.update(product);
         return productRepository.save(productToSave);
+//        return null;
     }
 
     @Override
@@ -49,18 +50,18 @@ public class ProductServiceImplementation implements ProductService{
         return productRepository.findAll();
     }
 
-    @Override
-    public List<Product> findAllHygieneProducts() {
-        return productRepository.findAllHygieneProducts();
-    }
-
-    @Override
-    public List<Product> findAllFoodProducts() {
-        return productRepository.findAllFoodProducts();
-    }
-
-    @Override
-    public List<Product> findAllMedicalProducts() {
-        return productRepository.findAllMedicalProducts();
-    }
+//    @Override
+//    public List<Product> findAllHygieneProducts() {
+//        return productRepository.findAllHygieneProducts();
+//    }
+//
+//    @Override
+//    public List<Product> findAllFoodProducts() {
+//        return productRepository.findAllFoodProducts();
+//    }
+//
+//    @Override
+//    public List<Product> findAllMedicalProducts() {
+//        return productRepository.findAllMedicalProducts();
+//    }
 }

@@ -1,15 +1,19 @@
 package com.example.demo.service;
 
+import com.example.demo.models.products.Product;
+import com.example.demo.models.products.ProductDTO;
 import com.example.demo.models.productsdelivery.ProductDelivery;
-import com.example.demo.repo.ProductDeliveryRepository;
-import org.springframework.stereotype.Service;
+import com.example.demo.models.productsdelivery.ProductDeliveryDTO;
+import org.springframework.stereotype.Component;
 
-@Service
-public class ProductDeliveryService extends GenericService<ProductDelivery> {
+import java.util.List;
 
-    public ProductDeliveryService(ProductDeliveryRepository productDeliveryRepository) {
-        super(productDeliveryRepository);
-    }
+@Component
+public interface ProductDeliveryService {
 
-
+    public ProductDelivery getOne(Long id);
+    public ProductDelivery saveProductDelivery(ProductDeliveryDTO productDelivery);
+    public ProductDelivery updateProductDelivery(ProductDelivery productDelivery);
+    public Long deleteProductDelivery(Long id);
+    public List<ProductDelivery> findAllProductDeliveries();
 }

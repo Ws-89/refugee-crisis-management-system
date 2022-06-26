@@ -1,25 +1,23 @@
 package com.example.demo.models.productsdelivery;
 
-import com.example.demo.models.Customer;
-import com.example.demo.models.GenericEntity;
 import com.example.demo.models.products.Product;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 
-
-@Data
-@Entity
 @Table(name = "tbl_product_delivery")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @ToString
-public class ProductDelivery implements Serializable, GenericEntity<ProductDelivery>, Prototype<ProductDelivery> {
+@Entity
+public class ProductDelivery implements Serializable {
 
     @Id
     @SequenceGenerator(
@@ -34,6 +32,8 @@ public class ProductDelivery implements Serializable, GenericEntity<ProductDeliv
     private long deliveryId;
     private String description;
     private Double capacity;
+    private Double totalWeight;
+
     @OneToOne(
             cascade=CascadeType.ALL,
             orphanRemoval = true
@@ -44,53 +44,77 @@ public class ProductDelivery implements Serializable, GenericEntity<ProductDeliv
             orphanRemoval = true
     )
     private DeliverySpecification deliverySpecification;
-    @OneToMany(
-            mappedBy =  "productDelivery"
-    )
-    private List<Product> products = new ArrayList<Product>();
-    @ManyToOne(
-            fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL
-    )
-    @JoinColumn(
-            name = "customer_id",
-            referencedColumnName = "customerId"
-    )
-    private Customer customer;
+    @JsonIgnore
+    @OneToMany(mappedBy = "productDelivery", orphanRemoval = true, cascade = CascadeType.ALL)
+    private Set<Product> products = new HashSet<>();
 
 
-    public ProductDelivery(ProductDelivery productDelivery) {
-        this.description = productDelivery.description;
-        this.capacity = productDelivery.capacity;
-        this.deliveryHistory = null;
-        this.deliverySpecification = null;
-        this.products = null;
-        this.customer = productDelivery.customer;
-    }
 
-    @Override
+
     public void update(ProductDelivery source) {
         this.description = source.getDescription();
     }
 
-    @Override
-    public Long getId() {
-        return this.getDeliveryId();
-    }
-
-    @Override
-    public ProductDelivery createNewInstance() {
-        ProductDelivery newInstance = new ProductDelivery();
-        newInstance.update(this);
-        return newInstance;
-    }
-
-    @Override
-    public ProductDelivery clone() {
-        return new ProductDelivery(this);
-    }
 
     public void addProduct(Product product){
+        product.setProductDelivery(this);
         this.products.add(product);
+    }
+
+    public void removeProduct(Product product){
+        product.setProductDelivery(null);
+        this.products.remove(product);
+    }
+
+    public long getDeliveryId() {
+        return deliveryId;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Double getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(Double capacity) {
+        this.capacity = capacity;
+    }
+
+    public Double getTotalWeight() {
+        return totalWeight;
+    }
+
+    public void setTotalWeight(Double totalWeight) {
+        this.totalWeight = totalWeight;
+    }
+
+    public DeliveryHistory getDeliveryHistory() {
+        return deliveryHistory;
+    }
+
+    public void setDeliveryHistory(DeliveryHistory deliveryHistory) {
+        this.deliveryHistory = deliveryHistory;
+    }
+
+    public DeliverySpecification getDeliverySpecification() {
+        return deliverySpecification;
+    }
+
+    public void setDeliverySpecification(DeliverySpecification deliverySpecification) {
+        this.deliverySpecification = deliverySpecification;
+    }
+
+    public Set<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(Set<Product> products) {
+        this.products = products;
     }
 }

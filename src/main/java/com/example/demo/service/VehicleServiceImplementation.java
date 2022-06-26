@@ -3,7 +3,6 @@ package com.example.demo.service;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.models.vehicles.Vehicle;
 import com.example.demo.models.vehicles.VehicleDTO;
-import com.example.demo.models.vehicles.VehicleFactoryImplementation;
 import com.example.demo.repo.VehicleRepository;
 import org.springframework.stereotype.Service;
 
@@ -29,12 +28,13 @@ public class VehicleServiceImplementation implements VehicleService {
 
     @Override
     public Vehicle saveVehicle(VehicleDTO source) {
-        Optional<Vehicle> ifExists = vehicleRepository.findByLicensePlate(source.getLicensePlate());
-        if(ifExists.isPresent()) {
-            throw new IllegalStateException(String.format("Vehicle with license plate %s", source.getLicensePlate()));
-        }
-        Vehicle vehicleToSave = VehicleFactoryImplementation.getInstance(source);
-        return vehicleRepository.save(vehicleToSave);
+//        Optional<Vehicle> ifExists = vehicleRepository.findByLicensePlate(source.getLicensePlate());
+//        if(ifExists.isPresent()) {
+//            throw new IllegalStateException(String.format("Vehicle with license plate %s", source.getLicensePlate()));
+//        }
+//        Vehicle vehicleToSave = VehicleFactoryImplementation.getInstance(source);
+//        return vehicleRepository.save(vehicleToSave);
+        return null;
     }
 
     @Override
@@ -56,18 +56,18 @@ public class VehicleServiceImplementation implements VehicleService {
         return vehicleRepository.findAll();
     }
 
-    @Override
-    public List<Vehicle> findAllTrucks() {
-        return vehicleRepository.getTrucks();
-    }
-
-    @Override
-    public List<Vehicle> findAllVans() {
-        return vehicleRepository.getVans();
-    }
-
-    @Override
-    public List<Vehicle> findAllPassengerCars() {
-        return vehicleRepository.getPassengerCars();
-    }
+//    @Override
+//    public List<Vehicle> findAllTrucks() {
+//        return vehicleRepository.getTrucks();
+//    }
+//
+//    @Override
+//    public List<Vehicle> findAllVans() {
+//        return vehicleRepository.getVans();
+//    }
+//
+//    @Override
+//    public List<Vehicle> findAllPassengerCars() {
+//        return vehicleRepository.getPassengerCars();
+//    }
 }

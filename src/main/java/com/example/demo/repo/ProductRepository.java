@@ -10,12 +10,12 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    @Query("from HygieneProduct")
-    public List<Product> findAllHygieneProducts();
-
-    @Query("from FoodProduct")
-    public List<Product> findAllFoodProducts();
-
-    @Query("from MedicalProduct")
-    public List<Product> findAllMedicalProducts();
+//    @Query("from HygieneProduct")
+//    public List<Product> findAllHygieneProducts();
+//
+//    @Query("from FoodProduct")
+//    public List<Product> findAllFoodProducts();
+//
+//    @Query("from MedicalProduct")
+//    public List<Product> findAllMedicalProducts();
 }

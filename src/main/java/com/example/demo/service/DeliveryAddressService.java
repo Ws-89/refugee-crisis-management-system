@@ -41,7 +41,7 @@ public class DeliveryAddressService {
     }
 
     public DeliveryAddress update(DeliveryAddress deliveryAddress){
-        DeliveryAddress address = deliveryAddressRepository.findById(deliveryAddress.getId()).orElseThrow(() -> new NotFoundException("Addres not found"));
+        DeliveryAddress address = deliveryAddressRepository.findById(deliveryAddress.getDeliveryAddressId()).orElseThrow(() -> new NotFoundException("Addres not found"));
         address.update(deliveryAddress);
         return deliveryAddressRepository.save(address);
     }

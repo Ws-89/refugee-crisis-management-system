@@ -30,7 +30,14 @@ public class HandlingEvent {
             generator = "handling_event_sequence"
     )
     private long handlingEventId;
-    @OneToOne()
+    @ManyToOne(
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY
+    )
+    @JoinColumn(
+            name = "transport_movement_id",
+            referencedColumnName = "transportMovementId"
+    )
     private TransportMovement transportMovement;
     @ManyToOne(
             cascade = CascadeType.ALL,
@@ -53,12 +60,11 @@ public class HandlingEvent {
 
     public static HandlingEvent newLoading(TransportMovement loadedOnto, LocalDateTime timeStamp) {
         HandlingEvent result = new HandlingEvent(loadedOnto, LOADING_EVENT, timeStamp);
-        result.setTransportMovement(loadedOnto);
         return result;
     }
 
-    public static HandlingEvent newUnload(LocalDateTime timeStamp) {
-        HandlingEvent result = new HandlingEvent(null, UNLOADING_EVENT, timeStamp);
+    public static HandlingEvent newUnload(TransportMovement unloadedFrom, LocalDateTime timeStamp) {
+        HandlingEvent result = new HandlingEvent(unloadedFrom, UNLOADING_EVENT, timeStamp);
         return result;
     }
 

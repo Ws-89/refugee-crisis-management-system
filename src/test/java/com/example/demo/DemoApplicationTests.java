@@ -1,21 +1,14 @@
 package com.example.demo;
 
 import com.example.demo.controller.ProductDeliveryController;
-import com.example.demo.exception.NotFoundException;
-import com.example.demo.models.products.FoodProduct;
-import com.example.demo.models.products.Product;
 import com.example.demo.models.productsdelivery.*;
 import com.example.demo.repo.ProductDeliveryRepository;
-import com.example.demo.service.ProductDeliveryService;
+import com.example.demo.service.ProductDeliveryServiceImplementation;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.example.demo.models.products.FoodType.Fruits;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 
@@ -33,7 +26,7 @@ class DemoApplicationTests {
 	private ProductDeliveryRepository productDeliveryRepository;
 
 	@Autowired
-	private ProductDeliveryService productDeliveryService;
+	private ProductDeliveryServiceImplementation productDeliveryServiceImplementation;
 
 	@Autowired
 	private ProductDeliveryController productDeliveryController;
@@ -67,10 +60,10 @@ class DemoApplicationTests {
 		deliverySpecification.setDeliveryAddress(deliveryAddress);
 		productDelivery.setDeliverySpecification(deliverySpecification);
 
-		FoodProduct product = new FoodProduct();
-		product.setFoodType(Fruits);
-		productDelivery.addProduct(product);
-		productDeliveryRepository.save(productDelivery);
+//		FoodProduct product = new FoodProduct();
+//		product.setFoodType(Fruits);
+//		productDelivery.addProduct(product);
+//		productDeliveryRepository.save(productDelivery);
 	}
 
 
