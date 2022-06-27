@@ -41,8 +41,9 @@ public class Product implements Serializable {
     @Enumerated(value = EnumType.STRING)
     private State state;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.LAZY)
     @JoinColumn(name = "delivery_id", referencedColumnName = "deliveryId")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private ProductDelivery productDelivery;
 
     public Product(String name, String category, LocalDateTime expirationDate
@@ -59,6 +60,7 @@ public class Product implements Serializable {
     }
 
     public void update(ProductDTO product){
+        this.productId = product.getProductId();
         this.name = product.getName();
         this.description = product.getDescription();
         this.category = product.getProductType();

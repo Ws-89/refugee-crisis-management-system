@@ -2,6 +2,7 @@ package com.example.demo.models.productsdelivery;
 
 import com.example.demo.models.GenericEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -36,13 +37,23 @@ public class DeliveryAddress {
     private String street;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "deliveryAddress")
+    @OneToMany(mappedBy = "deliveryAddress", orphanRemoval = true, cascade = CascadeType.ALL)
     private Set<DeliverySpecification> deliverySpecifications = new HashSet<>();
 
     public void update(DeliveryAddress source) {
         this.setPostCode(source.getPostCode());
         this.setCity(source.getCity());
         this.setStreet(source.getStreet());
+    }
+
+    public void addDeliverySpecification(DeliverySpecification deliverySpecification){
+        this.deliverySpecifications.add(deliverySpecification);
+        deliverySpecification.setDeliveryAddress(this);
+    }
+
+    public void removeDeliverySpecification(DeliverySpecification deliverySpecification){
+        this.deliverySpecifications.remove(deliverySpecification);
+        deliverySpecification.setDeliveryAddress(null);
     }
 
     public Long getDeliveryAddressId() {

@@ -45,7 +45,7 @@ public class ProductDelivery implements Serializable {
     )
     private DeliverySpecification deliverySpecification;
     @JsonIgnore
-    @OneToMany(mappedBy = "productDelivery", orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "productDelivery", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Product> products = new HashSet<>();
 
 

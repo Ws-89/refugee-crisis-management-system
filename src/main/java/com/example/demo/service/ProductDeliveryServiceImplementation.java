@@ -2,18 +2,18 @@ package com.example.demo.service;
 
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.models.products.*;
+import com.example.demo.models.productsdelivery.DeliveryAddress;
+import com.example.demo.models.productsdelivery.DeliverySpecification;
 import com.example.demo.models.productsdelivery.ProductDelivery;
 import com.example.demo.models.productsdelivery.ProductDeliveryDTO;
+import com.example.demo.repo.DeliveryAddressRepository;
 import com.example.demo.repo.ProductDeliveryRepository;
 import com.example.demo.repo.ProductRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.time.Month;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,10 +21,14 @@ public class ProductDeliveryServiceImplementation implements ProductDeliveryServ
 
     private final ProductDeliveryRepository productDeliveryRepository;
     private final ProductRepository productRepository;
+    private final DeliveryAddressRepository deliveryAddressRepository;
 
-    public ProductDeliveryServiceImplementation(ProductDeliveryRepository productDeliveryRepository, ProductRepository productRepository) {
+    public ProductDeliveryServiceImplementation(ProductDeliveryRepository productDeliveryRepository,
+                                                ProductRepository productRepository,
+                                                DeliveryAddressRepository deliveryAddressRepository) {
         this.productDeliveryRepository = productDeliveryRepository;
         this.productRepository = productRepository;
+        this.deliveryAddressRepository = deliveryAddressRepository;
     }
 
     @Override
@@ -33,11 +37,16 @@ public class ProductDeliveryServiceImplementation implements ProductDeliveryServ
     }
 
     @Override
+    @Transactional
     public ProductDelivery saveProductDelivery(ProductDeliveryDTO source){
+
+        DeliveryAddress deliveryAddress = deliveryAddressRepository.save(source.getDeliverySpecification().getDeliveryAddress());
+        DeliverySpecification deliverySpecification = source.getDeliverySpecification();
+        deliverySpecification.setDeliveryAddress(deliveryAddress);
 
         ProductDelivery productDelivery = ProductDelivery.builder()
                 .deliveryHistory(source.getDeliveryHistory())
-                .deliverySpecification(source.getDeliverySpecification())
+                .deliverySpecification(deliverySpecification)
                 .description(source.getDescription())
                 .capacity(source.getCapacity())
                 .totalWeight(source.getTotalWeight())
@@ -51,11 +60,9 @@ public class ProductDeliveryServiceImplementation implements ProductDeliveryServ
                     return product;
                 }).collect(Collectors.toSet());
 
-        productRepository.saveAll(productsSet);
+        productDelivery.setProducts(productRepository.saveAll(productsSet).stream().collect(Collectors.toSet()));
 
-        productDelivery.setProducts(productsSet);
-
-        return productDeliveryRepository.save(productDelivery);
+        return productDelivery.getProducts().stream().findFirst().get().getProductDelivery();
     }
 
     @Override
