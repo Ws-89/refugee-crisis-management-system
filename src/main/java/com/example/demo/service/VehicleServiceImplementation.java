@@ -6,8 +6,10 @@ import com.example.demo.models.vehicles.VehicleDTO;
 import com.example.demo.repo.VehicleRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class VehicleServiceImplementation implements VehicleService {
@@ -28,13 +30,14 @@ public class VehicleServiceImplementation implements VehicleService {
 
     @Override
     public Vehicle saveVehicle(VehicleDTO source) {
-//        Optional<Vehicle> ifExists = vehicleRepository.findByLicensePlate(source.getLicensePlate());
-//        if(ifExists.isPresent()) {
-//            throw new IllegalStateException(String.format("Vehicle with license plate %s", source.getLicensePlate()));
-//        }
-//        Vehicle vehicleToSave = VehicleFactoryImplementation.getInstance(source);
-//        return vehicleRepository.save(vehicleToSave);
-        return null;
+        Optional<Vehicle> ifExists = vehicleRepository.findByLicensePlate(source.getLicensePlate());
+        if(ifExists.isPresent()) {
+            throw new IllegalStateException(String.format("Vehicle with license plate %s", source.getLicensePlate()));
+        }
+        Vehicle vehicle = new Vehicle();
+        vehicle.update(source);
+
+        return vehicleRepository.save(vehicle);
     }
 
     @Override
@@ -56,18 +59,8 @@ public class VehicleServiceImplementation implements VehicleService {
         return vehicleRepository.findAll();
     }
 
-//    @Override
-//    public List<Vehicle> findAllTrucks() {
-//        return vehicleRepository.getTrucks();
-//    }
-//
-//    @Override
-//    public List<Vehicle> findAllVans() {
-//        return vehicleRepository.getVans();
-//    }
-//
-//    @Override
-//    public List<Vehicle> findAllPassengerCars() {
-//        return vehicleRepository.getPassengerCars();
-//    }
+    @Override
+    public List<Double> highestCapacity(){
+        return vehicleRepository.findAll().stream().map(v -> v.getCapacity()).sorted(Double::compareTo).distinct().collect(Collectors.toList());
+    }
 }

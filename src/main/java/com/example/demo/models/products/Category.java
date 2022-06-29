@@ -13,7 +13,7 @@ import javax.persistence.Embeddable;
 @AllArgsConstructor
 @Builder
 public class Category {
-    String name;
+    String categoryName;
     String attr1Caption;
     String attr2Caption;
     String attr3Caption;

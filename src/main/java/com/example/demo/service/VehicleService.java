@@ -12,7 +12,5 @@ public interface VehicleService {
     public Vehicle updateVehicle(VehicleDTO product);
     public Long deleteVehicle(Long id);
     public List<Vehicle> findAllVehicles();
-//    public List<Vehicle> findAllTrucks();
-//    public List<Vehicle> findAllVans();
-//    public List<Vehicle> findAllPassengerCars();
+    public List<Double> highestCapacity();
 }

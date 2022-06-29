@@ -24,18 +24,13 @@ public class ProductServiceImplementation implements ProductService{
     }
 
     @Override
-    public Product saveProduct(ProductDTO product) {
-        Product productToSave = new Product();
-        productToSave.update(product);
-        return productRepository.save(productToSave);
-//        return null;
+    public Product saveProduct(Product product) {
+        return productRepository.save(product);
     }
 
     @Override
-    public Product updateProduct(ProductDTO product) {
-        Product productToUpdate = getOne(product.getProductId());
-        productToUpdate.update(product);
-        return productRepository.save(productToUpdate);
+    public Product updateProduct(Product product) {
+        return productRepository.save(product);
     }
 
     @Override

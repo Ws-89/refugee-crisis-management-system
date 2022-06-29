@@ -1,5 +1,6 @@
 package com.example.demo.models.productsdelivery;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -31,7 +32,7 @@ public class HandlingEvent {
     )
     private long handlingEventId;
     @ManyToOne(
-            cascade = CascadeType.ALL,
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE},
             fetch = FetchType.LAZY
     )
     @JoinColumn(
@@ -40,13 +41,14 @@ public class HandlingEvent {
     )
     private TransportMovement transportMovement;
     @ManyToOne(
-            cascade = CascadeType.ALL,
+            cascade = {CascadeType.MERGE},
             fetch = FetchType.LAZY
     )
     @JoinColumn(
             name = "delivery_history_id",
             referencedColumnName = "deliveryHistoryId"
     )
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private DeliveryHistory deliveryHistory;
     @Enumerated(value = EnumType.STRING)
     private HandlingEventState state;
@@ -69,6 +71,14 @@ public class HandlingEvent {
     }
 
     private void setTransportMovement(TransportMovement loadedOnto) {
+    }
+
+    public void update(HandlingEventDTO source){
+//        this.setHandlingEventId(source.getHandlingEventId());
+        this.setTransportMovement(source.getTransportMovement());
+        this.setDeliveryHistory(source.getDeliveryHistory());
+        this.setState(source.getState());
+        this.setTimeStamp(source.getTimeStamp());
     }
 
 

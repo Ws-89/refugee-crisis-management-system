@@ -31,21 +31,22 @@ public class ProductDelivery implements Serializable {
     )
     private long deliveryId;
     private String description;
-    private Double capacity;
     private Double totalWeight;
 
-    @OneToOne(
-            cascade=CascadeType.ALL,
-            orphanRemoval = true
-    )
+    @OneToOne(cascade= {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
+    @JoinColumn(name = "delivery_history_id", referencedColumnName = "deliveryHistoryId")
     private DeliveryHistory deliveryHistory;
-    @OneToOne(
-            cascade=CascadeType.ALL,
-            orphanRemoval = true
-    )
+
+    @OneToOne(cascade= {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "starting_address_id", referencedColumnName = "deliveryAddressId")
+    private DeliveryAddress startingAddress;
+
+    @OneToOne(cascade= {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
+    @JoinColumn(name = "delivery_specification_id", referencedColumnName = "deliverySpecificationId")
     private DeliverySpecification deliverySpecification;
+
     @JsonIgnore
-    @OneToMany(mappedBy = "productDelivery", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "productDelivery", orphanRemoval = true, cascade = CascadeType.ALL)
     private Set<Product> products = new HashSet<>();
 
 
@@ -76,14 +77,6 @@ public class ProductDelivery implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Double getCapacity() {
-        return capacity;
-    }
-
-    public void setCapacity(Double capacity) {
-        this.capacity = capacity;
     }
 
     public Double getTotalWeight() {
@@ -117,4 +110,6 @@ public class ProductDelivery implements Serializable {
     public void setProducts(Set<Product> products) {
         this.products = products;
     }
+
+
 }

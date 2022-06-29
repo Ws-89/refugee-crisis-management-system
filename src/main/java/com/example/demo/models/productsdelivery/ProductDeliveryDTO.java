@@ -20,6 +20,6 @@ public class ProductDeliveryDTO {
     private DeliverySpecification deliverySpecification;
     private String description;
     private Set<ProductDTO> products = new HashSet<>();
-    private Double capacity;
+    private DeliveryAddress startingAddress;
     private Double totalWeight;
 }

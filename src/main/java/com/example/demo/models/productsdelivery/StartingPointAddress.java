@@ -27,6 +27,7 @@ public class StartingPointAddress {
     )
     private Long startingPointAddressId;
     private String postCode;
+    private String street;
     private String city;
 
 }

@@ -30,10 +30,22 @@ public class TransportMovement {
             mappedBy = "transportMovement"
     )
     private List<HandlingEvent> handlingEvents;
-    @OneToOne()
+    @OneToOne(
+            cascade = CascadeType.ALL
+    )
+    @JoinColumn(
+            name = "delivery_specification_id",
+            referencedColumnName = "deliverySpecificationId"
+    )
     private DeliverySpecification deliverySpecification;
-    @OneToOne()
-    private StartingPointAddress startingPointAddress;
+    @OneToOne(
+            cascade = CascadeType.ALL
+    )
+    @JoinColumn(
+            name = "starting_address_id",
+            referencedColumnName = "deliveryAddressId"
+    )
+    private DeliveryAddress startingAddress;
     @ManyToOne(
             fetch = FetchType.LAZY,
             cascade = CascadeType.ALL

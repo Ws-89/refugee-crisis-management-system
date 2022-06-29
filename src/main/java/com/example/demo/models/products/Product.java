@@ -3,9 +3,8 @@ package com.example.demo.models.products;
 import com.example.demo.models.productsdelivery.ProductDelivery;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -15,6 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "tbl_product")
+@Builder
 @Entity
 public class Product implements Serializable {
 
@@ -30,7 +30,6 @@ public class Product implements Serializable {
     )
     private Long productId;
     private String name;
-    private String category;
     private LocalDateTime expirationDate;
     private String description;
     private double weight;
@@ -40,13 +39,17 @@ public class Product implements Serializable {
     private boolean fragile;
     @Enumerated(value = EnumType.STRING)
     private State state;
+    @Embedded
+    private Category category;
 
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.LAZY)
+    @ManyToOne(
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST},
+            fetch = FetchType.LAZY)
     @JoinColumn(name = "delivery_id", referencedColumnName = "deliveryId")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private ProductDelivery productDelivery;
 
-    public Product(String name, String category, LocalDateTime expirationDate
+    public Product(String name, Category category, LocalDateTime expirationDate
                    , String description, double weight, Long amount, Status reserved, boolean fragile, State state) {
         this.name = name;
         this.category = category;
@@ -60,10 +63,11 @@ public class Product implements Serializable {
     }
 
     public void update(ProductDTO product){
+
         this.productId = product.getProductId();
         this.name = product.getName();
         this.description = product.getDescription();
-        this.category = product.getProductType();
+        this.category = product.getCategory();
         this.expirationDate = product.getExpirationDate();
         this.weight = product.getWeight();
         this.amount = product.getAmount();
@@ -132,11 +136,11 @@ public class Product implements Serializable {
         return fragile;
     }
 
-    public String getCategory() {
+    public Category getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(Category category) {
         this.category = category;
     }
 

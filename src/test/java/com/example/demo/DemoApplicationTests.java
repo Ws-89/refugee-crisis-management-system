@@ -1,13 +1,22 @@
 package com.example.demo;
 
 import com.example.demo.controller.ProductDeliveryController;
+import com.example.demo.exception.NotFoundException;
 import com.example.demo.models.productsdelivery.*;
+import com.example.demo.models.vehicles.Vehicle;
+import com.example.demo.repo.DeliveryAddressRepository;
+import com.example.demo.repo.HandlingEventRepository;
 import com.example.demo.repo.ProductDeliveryRepository;
+import com.example.demo.repo.TransportMovementRepo;
 import com.example.demo.service.ProductDeliveryServiceImplementation;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.time.Month;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -31,6 +40,14 @@ class DemoApplicationTests {
 	@Autowired
 	private ProductDeliveryController productDeliveryController;
 
+	@Autowired
+	private HandlingEventRepository handlingEventRepository;
+
+	@Autowired
+	private TransportMovementRepo transportMovementRepo;
+
+	@Autowired
+	private DeliveryAddressRepository deliveryAddressRepository;
 //	@Test
 //	void refugeeSave(){
 //		Refugee refugee = Refugee.builder()
@@ -46,7 +63,6 @@ class DemoApplicationTests {
 	void saveProductDelivery(){
 		ProductDelivery productDelivery = new ProductDelivery();
 		productDelivery.setDescription("First delivery");
-		productDelivery.setCapacity(10.0);
 
 		DeliveryHistory history = new DeliveryHistory();
 		HandlingEvent handlingEvent = new HandlingEvent();
@@ -64,6 +80,51 @@ class DemoApplicationTests {
 //		product.setFoodType(Fruits);
 //		productDelivery.addProduct(product);
 //		productDeliveryRepository.save(productDelivery);
+	}
+
+	@Test
+	void SaveEventHandling(){
+
+		Vehicle vehicle = Vehicle.builder()
+				.vehicleCategory("Truck")
+				.capacity(12000.0)
+				.brand("Volvo")
+				.model("Truck")
+				.engine("6.0")
+				.licensePlate("123asdfq")
+				.build();
+
+		DeliveryAddress deliveryAddress = DeliveryAddress.builder()
+				.city("Warszawa")
+				.street("Marszałkowska")
+				.postCode("123")
+				.build();
+
+		DeliverySpecification deliverySpecification = DeliverySpecification.builder()
+//				.deliveryAddress(deliveryAddressRepository.save(deliveryAddress))
+				.deliveryAddress(deliveryAddress)
+				.arrivalTime(LocalDateTime.of(2022, Month.DECEMBER, 1, 1, 1, 1, 1))
+				.build();
+
+		DeliveryAddress startingPointAddress = DeliveryAddress.builder()
+				.city("Bydgoszcz")
+				.postCode("123")
+				.street("Gdańska")
+				.build();
+
+		TransportMovement transportMovement = TransportMovement.builder()
+				.startingAddress(startingPointAddress)
+				.deliverySpecification(deliverySpecification)
+				.vehicle(vehicle)
+				.build();
+
+		HandlingEvent handlingEvent = HandlingEvent.builder()
+						.transportMovement(transportMovement)
+								.build();
+
+		ProductDelivery productDelivery = productDeliveryRepository.findById(1L).orElseThrow(() -> new NotFoundException("Not found"));
+		handlingEvent.setDeliveryHistory(productDelivery.getDeliveryHistory());
+		handlingEventRepository.save(handlingEvent);
 	}
 
 

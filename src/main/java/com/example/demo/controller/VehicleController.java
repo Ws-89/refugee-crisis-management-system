@@ -6,6 +6,7 @@ import com.example.demo.service.VehicleService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:4200")
@@ -37,6 +38,11 @@ public class VehicleController {
     @GetMapping("/list")
     public ResponseEntity<List<Vehicle>> findAllVehicles(){
         return ResponseEntity.ok(vehicleService.findAllVehicles());
+    }
+
+    @GetMapping("/highest-capacity")
+    public ResponseEntity<List<Double>> capacityList(){
+        return ResponseEntity.ok(vehicleService.highestCapacity());
     }
 
 //    @GetMapping("/list/vans")

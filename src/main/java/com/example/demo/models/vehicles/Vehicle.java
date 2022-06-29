@@ -1,8 +1,7 @@
 package com.example.demo.models.vehicles;
 
 import com.example.demo.models.productsdelivery.TransportMovement;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -10,10 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Table(name = "tbl_vehicle")
 @Data
-public abstract class Vehicle implements Serializable {
+public class Vehicle implements Serializable, Comparable<Vehicle> {
 
     @Id
     @SequenceGenerator(
@@ -26,6 +27,9 @@ public abstract class Vehicle implements Serializable {
             generator = "vehicle_sequence"
     )
     private Long vehicleId;
+    private String brand;
+    private String model;
+    private String engine;
     private Double capacity;
     private String vehicleCategory;
     private String licensePlate;
@@ -39,7 +43,29 @@ public abstract class Vehicle implements Serializable {
         this.licensePlate = licensePlate;
     }
 
-    public void update(VehicleDTO vehicle){
-
+    public void update(VehicleDTO source){
+        this.vehicleId = source.getVehicleId();
+        this.brand = source.getBrand();
+        this.model = source.getModel();
+        this.engine = source.getEngine();
+        this.capacity = source.getCapacity();
+        this.vehicleCategory = source.getVehicleCategory();
+        this.licensePlate = source.getLicensePlate();
     };
+
+    @Override
+    public int compareTo(Vehicle o) {
+        return getCapacity().compareTo(o.getCapacity());
+    }
+
+    @Override
+    public String toString() {
+        return "Vehicle{" +
+                "vehicleId=" + vehicleId +
+                ", capacity=" + capacity +
+                ", vehicleCategory='" + vehicleCategory + '\'' +
+                ", licensePlate='" + licensePlate + '\'' +
+                ", transportMovement=" + transportMovement +
+                '}';
+    }
 }

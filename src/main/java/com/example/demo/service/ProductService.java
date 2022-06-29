@@ -10,8 +10,8 @@ import java.util.List;
 public interface ProductService {
 
     public Product getOne(Long id);
-    public Product saveProduct(ProductDTO product);
-    public Product updateProduct(ProductDTO product);
+    public Product saveProduct(Product product);
+    public Product updateProduct(Product product);
     public Long deleteProduct(Long id);
     public List<Product> findAllProducts();
 //    public List<Product> findAllHygieneProducts();

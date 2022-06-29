@@ -20,12 +20,12 @@ public class ProductController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<Product> saveProduct(@RequestBody ProductDTO product) {
+    public ResponseEntity<Product> saveProduct(@RequestBody Product product) {
         return ResponseEntity.ok(productService.saveProduct(product));
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Product> updateProduct(@RequestBody ProductDTO product){
+    public ResponseEntity<Product> updateProduct(@RequestBody Product product){
         return ResponseEntity.ok(productService.updateProduct(product));
     }
 

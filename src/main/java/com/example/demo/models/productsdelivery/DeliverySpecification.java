@@ -26,11 +26,11 @@ public class DeliverySpecification {
     private Long deliverySpecificationId;
     private LocalDateTime arrivalTime;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "delivery_address_id", referencedColumnName = "deliveryAddressId")
     private DeliveryAddress deliveryAddress;
     @JsonIgnore
-    @OneToOne(mappedBy = "deliverySpecification")
+    @OneToOne(mappedBy = "deliverySpecification", cascade = CascadeType.ALL)
     private ProductDelivery productDelivery;
 
     public Long getDeliverySpecificationId() {

@@ -2,7 +2,6 @@ package com.example.demo.service;
 
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.models.products.*;
-import com.example.demo.models.productsdelivery.DeliveryAddress;
 import com.example.demo.models.productsdelivery.DeliverySpecification;
 import com.example.demo.models.productsdelivery.ProductDelivery;
 import com.example.demo.models.productsdelivery.ProductDeliveryDTO;
@@ -12,6 +11,7 @@ import com.example.demo.repo.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -40,16 +40,15 @@ public class ProductDeliveryServiceImplementation implements ProductDeliveryServ
     @Transactional
     public ProductDelivery saveProductDelivery(ProductDeliveryDTO source){
 
-        DeliveryAddress deliveryAddress = deliveryAddressRepository.save(source.getDeliverySpecification().getDeliveryAddress());
         DeliverySpecification deliverySpecification = source.getDeliverySpecification();
-        deliverySpecification.setDeliveryAddress(deliveryAddress);
+        deliverySpecification.setDeliveryAddress(deliveryAddressRepository.save(source.getDeliverySpecification().getDeliveryAddress()));
 
         ProductDelivery productDelivery = ProductDelivery.builder()
                 .deliveryHistory(source.getDeliveryHistory())
                 .deliverySpecification(deliverySpecification)
                 .description(source.getDescription())
-                .capacity(source.getCapacity())
                 .totalWeight(source.getTotalWeight())
+                .startingAddress(source.getStartingAddress())
                 .build();
 
         Set<Product> productsSet = source.getProducts().stream()
@@ -60,10 +59,9 @@ public class ProductDeliveryServiceImplementation implements ProductDeliveryServ
                     return product;
                 }).collect(Collectors.toSet());
 
-        productDelivery.setProducts(productRepository.saveAll(productsSet).stream().collect(Collectors.toSet()));
-
-        return productDelivery.getProducts().stream().findFirst().get().getProductDelivery();
+        return productRepository.saveAll(productsSet).stream().collect(Collectors.toSet()).stream().findFirst().get().getProductDelivery();
     }
+
 
     @Override
     public ProductDelivery updateProductDelivery(ProductDelivery productDelivery) {

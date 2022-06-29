@@ -11,7 +11,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class VehicleDTO {
     private Long vehicleId;
+    private String brand;
+    private String model;
+    private String engine;
     private Double capacity;
-    private VehicleType vehicleType;
     private String licensePlate;
+    private String vehicleCategory;
 }
