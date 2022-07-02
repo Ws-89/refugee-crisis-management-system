@@ -1,8 +1,6 @@
 package com.example.demo.models.productsdelivery;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -33,6 +31,7 @@ public class HandlingEvent {
             generator = "handling_event_sequence"
     )
     private long handlingEventId;
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(
             cascade = CascadeType.MERGE,
             fetch = FetchType.LAZY
@@ -41,9 +40,12 @@ public class HandlingEvent {
             name = "transport_movement_id",
             referencedColumnName = "transportMovementId"
     )
+    @JsonIdentityInfo(
+            generator = ObjectIdGenerators.PropertyGenerator.class,
+            property = "transportMovementId")
     private TransportMovement transportMovement;
     @ManyToOne(
-            cascade = {CascadeType.MERGE},
+            cascade = CascadeType.MERGE,
             fetch = FetchType.LAZY
     )
     @JoinColumn(
@@ -51,6 +53,9 @@ public class HandlingEvent {
             referencedColumnName = "deliveryHistoryId"
     )
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JsonIdentityInfo(
+            generator = ObjectIdGenerators.PropertyGenerator.class,
+            property = "deliveryHistoryId")
     private DeliveryHistory deliveryHistory;
     @Enumerated(value = EnumType.STRING)
     private HandlingEventState state;
@@ -92,7 +97,8 @@ public class HandlingEvent {
         this.timeStamp = timeStamp;
     }
 
-    private void setTransportMovement(TransportMovement loadedOnto) {
+    public void setTransportMovement(TransportMovement transportMovement) {
+        this.transportMovement = transportMovement;
     }
 
 

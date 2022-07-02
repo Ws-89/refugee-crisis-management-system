@@ -30,6 +30,9 @@ public class TransportMovement {
     @OneToMany(
             mappedBy = "transportMovement"
     )
+    @JsonIdentityInfo(
+            generator = ObjectIdGenerators.PropertyGenerator.class,
+            property = "handlingEventId")
     private List<HandlingEvent> handlingEvents;
     @OneToOne(
             cascade = CascadeType.ALL
@@ -61,6 +64,10 @@ public class TransportMovement {
             property = "vehicleId")
     private Vehicle vehicle;
 
+    public void addHandlingEvent(HandlingEvent event){
+        this.handlingEvents.add(event);
+        event.setTransportMovement(this);
+    }
 
     public Long getTransportMovementId() {
         return transportMovementId;

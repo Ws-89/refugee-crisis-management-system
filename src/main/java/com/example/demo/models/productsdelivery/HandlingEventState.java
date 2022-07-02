@@ -1,5 +1,5 @@
 package com.example.demo.models.productsdelivery;
 
 public enum HandlingEventState {
-    LOADING_EVENT, UNLOADING_EVENT
+    INITIALIZING_EVENT, LOADING_EVENT, SHIPPING_EVENT, UNLOADING_EVENT, COMPLETED_EVENT
 }

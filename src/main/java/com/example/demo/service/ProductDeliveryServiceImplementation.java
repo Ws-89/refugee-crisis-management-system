@@ -60,6 +60,7 @@ public class ProductDeliveryServiceImplementation implements ProductDeliveryServ
                 .build();
 
         Set<Product> productsSet = source.getProducts().stream()
+                .filter(p -> p.getReserved() ==  Status.Available)
                 .map(p ->
                         Product.builder()
                                 .productId(p.getProductId())

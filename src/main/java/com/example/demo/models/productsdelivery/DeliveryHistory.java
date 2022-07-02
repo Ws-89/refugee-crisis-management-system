@@ -1,8 +1,10 @@
 package com.example.demo.models.productsdelivery;
 
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -36,6 +38,9 @@ public class DeliveryHistory {
             mappedBy = "deliveryHistory",
             orphanRemoval = true
     )
+    @JsonIdentityInfo(
+            generator = ObjectIdGenerators.PropertyGenerator.class,
+            property = "handlingEventId")
     private List<HandlingEvent> handlingEvents = new ArrayList<HandlingEvent>();
     @JsonIgnore
     @OneToOne(
@@ -45,6 +50,7 @@ public class DeliveryHistory {
 
     public void addEvent(HandlingEvent event){
         this.handlingEvents.add(event);
+        event.setDeliveryHistory(this);
     }
 
     public List<HandlingEvent> getHandlingEvents() {
