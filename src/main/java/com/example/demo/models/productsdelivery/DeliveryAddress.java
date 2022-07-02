@@ -35,16 +35,12 @@ public class DeliveryAddress {
     private String postCode;
     private String city;
     private String street;
+    private String state;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "deliveryAddress", orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "deliveryAddress", cascade = CascadeType.PERSIST)
     private Set<DeliverySpecification> deliverySpecifications = new HashSet<>();
 
-    public void update(DeliveryAddress source) {
-        this.setPostCode(source.getPostCode());
-        this.setCity(source.getCity());
-        this.setStreet(source.getStreet());
-    }
 
     public void addDeliverySpecification(DeliverySpecification deliverySpecification){
         this.deliverySpecifications.add(deliverySpecification);
@@ -94,5 +90,13 @@ public class DeliveryAddress {
 
     public void setDeliverySpecifications(Set<DeliverySpecification> deliverySpecifications) {
         this.deliverySpecifications = deliverySpecifications;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 }

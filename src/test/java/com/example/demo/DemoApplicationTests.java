@@ -2,6 +2,8 @@ package com.example.demo;
 
 import com.example.demo.controller.ProductDeliveryController;
 import com.example.demo.exception.NotFoundException;
+import com.example.demo.models.products.Category;
+import com.example.demo.models.products.Product;
 import com.example.demo.models.productsdelivery.*;
 import com.example.demo.models.vehicles.Vehicle;
 import com.example.demo.repo.DeliveryAddressRepository;
@@ -17,6 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -48,6 +53,9 @@ class DemoApplicationTests {
 
 	@Autowired
 	private DeliveryAddressRepository deliveryAddressRepository;
+
+	@Autowired
+	private ProductDeliveryDAO productDeliveryDao;
 //	@Test
 //	void refugeeSave(){
 //		Refugee refugee = Refugee.builder()
@@ -128,6 +136,52 @@ class DemoApplicationTests {
 	}
 
 
+	@Test
+	void getListByEntityManager(){
+		List<ProductDelivery> list = this.productDeliveryDao.getList();
+		System.out.println(list);
+	}
 
+	@Test
+	void saveByEntityManager(){
+
+		DeliverySpecification deliverySpecification = DeliverySpecification.builder()
+				.arrivalTime(LocalDateTime.now())
+				.build();
+
+		System.out.println(deliverySpecification);
+
+		ProductDelivery newProductDelivery = new ProductDelivery();
+		DeliveryAddress deliveryAddress = DeliveryAddress.builder()
+				.city("Bydgoszcz")
+				.postCode("85-164")
+				.street("Karpacka")
+				.build();
+
+		Set<DeliverySpecification> deliverySpecifications = new HashSet<>();
+		deliverySpecifications.add(deliverySpecification);
+
+		deliveryAddress.setDeliverySpecifications(deliverySpecifications);
+		deliverySpecification.setDeliveryAddress(deliveryAddress);
+
+		newProductDelivery.setDeliverySpecification(deliverySpecification);
+
+		Category category = Category.builder()
+				.categoryName("Food")
+				.build();
+
+		Product product = Product.builder()
+				.description("1")
+				.category(category)
+				.build();
+
+		Set<Product> products = new HashSet<>();
+		products.add(product);
+
+		newProductDelivery.setProducts(products);
+
+		ProductDelivery productDelivery = this.productDeliveryDao.save(newProductDelivery);
+		System.out.println(productDelivery);
+	}
 
 }

@@ -1,6 +1,7 @@
 package com.example.demo.models.productsdelivery;
 
 import com.example.demo.models.products.ProductDTO;
+import com.example.demo.models.products.Status;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,4 +23,5 @@ public class ProductDeliveryDTO {
     private Set<ProductDTO> products = new HashSet<>();
     private DeliveryAddress startingAddress;
     private Double totalWeight;
+    private Status status;
 }

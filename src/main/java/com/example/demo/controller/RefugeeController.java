@@ -7,11 +7,8 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/refugees")
-public class RefugeeController extends GenericController<Refugee> {
+public class RefugeeController {
 
-    protected RefugeeController(RefugeeService service) {
-        super(service);
-    }
 
     /* METHODS
     @GetMapping("")

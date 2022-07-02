@@ -1,8 +1,10 @@
 package com.example.demo.models.productsdelivery;
 
 import com.example.demo.models.products.Product;
+import com.example.demo.models.products.Status;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -32,39 +34,37 @@ public class ProductDelivery implements Serializable {
     private long deliveryId;
     private String description;
     private Double totalWeight;
+    @Enumerated(value = EnumType.STRING)
+    private Status status;
 
-    @OneToOne(cascade= {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
+    @OneToOne(cascade= CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "delivery_history_id", referencedColumnName = "deliveryHistoryId")
     private DeliveryHistory deliveryHistory;
 
-    @OneToOne(cascade= {CascadeType.MERGE, CascadeType.PERSIST})
+    @OneToOne(cascade= CascadeType.MERGE)
     @JoinColumn(name = "starting_address_id", referencedColumnName = "deliveryAddressId")
     private DeliveryAddress startingAddress;
 
-    @OneToOne(cascade= {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
+    @OneToOne(cascade= CascadeType.PERSIST, orphanRemoval = true)
     @JoinColumn(name = "delivery_specification_id", referencedColumnName = "deliverySpecificationId")
     private DeliverySpecification deliverySpecification;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "productDelivery", orphanRemoval = true, cascade = CascadeType.ALL)
+
+    @OneToMany(mappedBy = "productDelivery", orphanRemoval = true)
     private Set<Product> products = new HashSet<>();
-
-
-
 
     public void update(ProductDelivery source) {
         this.description = source.getDescription();
     }
 
-
     public void addProduct(Product product){
-        product.setProductDelivery(this);
         this.products.add(product);
+        product.setProductDelivery(this);
     }
 
     public void removeProduct(Product product){
-        product.setProductDelivery(null);
         this.products.remove(product);
+        product.setProductDelivery(null);
     }
 
     public long getDeliveryId() {
@@ -102,7 +102,7 @@ public class ProductDelivery implements Serializable {
     public void setDeliverySpecification(DeliverySpecification deliverySpecification) {
         this.deliverySpecification = deliverySpecification;
     }
-
+    @JsonManagedReference
     public Set<Product> getProducts() {
         return products;
     }

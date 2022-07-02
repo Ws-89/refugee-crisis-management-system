@@ -1,6 +1,7 @@
 package com.example.demo.models.products;
 
 import com.example.demo.models.productsdelivery.ProductDelivery;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,7 +35,7 @@ public class Product implements Serializable {
     private String description;
     private double weight;
     private Long amount;
-    @Enumerated(value = EnumType.STRING)
+    @Enumerated(EnumType.STRING)
     private Status reserved;
     private boolean fragile;
     @Enumerated(value = EnumType.STRING)
@@ -61,20 +62,6 @@ public class Product implements Serializable {
         this.fragile = fragile;
         this.state = state;
     }
-
-    public void update(ProductDTO product){
-
-        this.productId = product.getProductId();
-        this.name = product.getName();
-        this.description = product.getDescription();
-        this.category = product.getCategory();
-        this.expirationDate = product.getExpirationDate();
-        this.weight = product.getWeight();
-        this.amount = product.getAmount();
-        this.reserved = product.getReserved();
-        this.fragile = product.isFragile();
-        this.state = product.getState();
-    };
 
     public Long getProductId() {
         return productId;
@@ -156,6 +143,7 @@ public class Product implements Serializable {
         this.state = state;
     }
 
+    @JsonBackReference
     public ProductDelivery getProductDelivery() {
         return productDelivery;
     }
@@ -180,4 +168,6 @@ public class Product implements Serializable {
                 ", productDelivery=" + productDelivery +
                 '}';
     }
+
+
 }

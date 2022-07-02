@@ -41,9 +41,15 @@ public class DeliveryAddressService {
     }
 
     public DeliveryAddress update(DeliveryAddress deliveryAddress){
-        DeliveryAddress address = deliveryAddressRepository.findById(deliveryAddress.getDeliveryAddressId()).orElseThrow(() -> new NotFoundException("Addres not found"));
-        address.update(deliveryAddress);
-        return deliveryAddressRepository.save(address);
+        return deliveryAddressRepository.findById(deliveryAddress.getDeliveryAddressId())
+                .map(a -> {
+                    a.setCity(deliveryAddress.getCity());
+                    a.setStreet(deliveryAddress.getStreet());
+                    a.setPostCode(deliveryAddress.getPostCode());
+                    a.setState(deliveryAddress.getState());
+                    return deliveryAddressRepository.save(a);
+                })
+                .orElseThrow(() -> new NotFoundException("Addres not found"));
     }
 
     public Long delete(Long id){

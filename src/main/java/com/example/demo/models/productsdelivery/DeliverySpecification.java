@@ -26,7 +26,7 @@ public class DeliverySpecification {
     private Long deliverySpecificationId;
     private LocalDateTime arrivalTime;
 
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "delivery_address_id", referencedColumnName = "deliveryAddressId")
     private DeliveryAddress deliveryAddress;
     @JsonIgnore

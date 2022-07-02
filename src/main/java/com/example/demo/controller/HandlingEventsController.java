@@ -17,8 +17,9 @@ public class HandlingEventsController {
         this.handlingEventService = handlingEventService;
     }
 
-    @PostMapping("/save/{id}")
-    public ResponseEntity<HandlingEvent> saveHandlingEvent(@RequestBody HandlingEventDTO handlingEventDTO, @PathVariable("id") Long id){
-        return ResponseEntity.ok(handlingEventService.saveHandlingEvent(handlingEventDTO, 15L));
+    @PostMapping("/save/{deliveryId}/{transportId}")
+    public ResponseEntity<HandlingEvent> saveHandlingEvent(@RequestBody HandlingEventDTO handlingEventDTO,
+                                                           @PathVariable("deliveryId") Long deliveryId, @PathVariable("transportId") Long transportId){
+        return ResponseEntity.ok(handlingEventService.saveHandlingEvent(handlingEventDTO, deliveryId, transportId));
     }
 }

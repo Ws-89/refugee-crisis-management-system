@@ -7,11 +7,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/lodging")
-public class LodgingController extends GenericController<Lodging> {
+public class LodgingController {
 
-    protected LodgingController(GenericService<Lodging> service) {
-        super(service);
-    }
 
 
 }

@@ -1,5 +1,7 @@
 package com.example.demo.models.productsdelivery;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,7 +34,7 @@ public class HandlingEvent {
     )
     private long handlingEventId;
     @ManyToOne(
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+            cascade = CascadeType.MERGE,
             fetch = FetchType.LAZY
     )
     @JoinColumn(
@@ -54,31 +56,43 @@ public class HandlingEvent {
     private HandlingEventState state;
     private LocalDateTime timeStamp;
 
-    public HandlingEvent(TransportMovement transportMovement, HandlingEventState state, LocalDateTime timeStamp) {
-        this.transportMovement = transportMovement;
+    public long getHandlingEventId() {
+        return handlingEventId;
+    }
+
+    public void setHandlingEventId(long handlingEventId) {
+        this.handlingEventId = handlingEventId;
+    }
+
+    public TransportMovement getTransportMovement() {
+        return transportMovement;
+    }
+
+    public DeliveryHistory getDeliveryHistory() {
+        return deliveryHistory;
+    }
+
+    public void setDeliveryHistory(DeliveryHistory deliveryHistory) {
+        this.deliveryHistory = deliveryHistory;
+    }
+
+    public HandlingEventState getState() {
+        return state;
+    }
+
+    public void setState(HandlingEventState state) {
         this.state = state;
+    }
+
+    public LocalDateTime getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(LocalDateTime timeStamp) {
         this.timeStamp = timeStamp;
     }
 
-    public static HandlingEvent newLoading(TransportMovement loadedOnto, LocalDateTime timeStamp) {
-        HandlingEvent result = new HandlingEvent(loadedOnto, LOADING_EVENT, timeStamp);
-        return result;
-    }
-
-    public static HandlingEvent newUnload(TransportMovement unloadedFrom, LocalDateTime timeStamp) {
-        HandlingEvent result = new HandlingEvent(unloadedFrom, UNLOADING_EVENT, timeStamp);
-        return result;
-    }
-
     private void setTransportMovement(TransportMovement loadedOnto) {
-    }
-
-    public void update(HandlingEventDTO source){
-//        this.setHandlingEventId(source.getHandlingEventId());
-        this.setTransportMovement(source.getTransportMovement());
-        this.setDeliveryHistory(source.getDeliveryHistory());
-        this.setState(source.getState());
-        this.setTimeStamp(source.getTimeStamp());
     }
 
 
