@@ -50,18 +50,6 @@ public class Product implements Serializable {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private ProductDelivery productDelivery;
 
-    public Product(String name, Category category, LocalDateTime expirationDate
-                   , String description, double weight, Long amount, Status reserved, boolean fragile, State state) {
-        this.name = name;
-        this.category = category;
-        this.expirationDate = expirationDate;
-        this.description = description;
-        this.weight = weight;
-        this.amount = amount;
-        this.reserved = reserved;
-        this.fragile = fragile;
-        this.state = state;
-    }
 
     public Long getProductId() {
         return productId;

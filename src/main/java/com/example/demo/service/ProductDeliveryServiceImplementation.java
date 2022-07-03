@@ -59,29 +59,26 @@ public class ProductDeliveryServiceImplementation implements ProductDeliveryServ
                 .status(source.getStatus())
                 .build();
 
-        Set<Product> productsSet = source.getProducts().stream()
-                .filter(p -> p.getReserved() ==  Status.Available)
-                .map(p ->
-                        Product.builder()
-                                .productId(p.getProductId())
-                                .name(p.getName())
-                                .expirationDate(p.getExpirationDate())
-                                .description(p.getDescription())
-                                .weight(p.getWeight())
-                                .amount(p.getAmount())
-                                .reserved(Status.Reserved)
-                                .fragile(p.isFragile())
-                                .state(p.getState())
-                                .category(p.getCategory())
-                                .productDelivery(productDelivery)
-                                .build()
-                ).collect(Collectors.toSet());
-
-        productDelivery.setProducts(productsSet);
-
-        return productRepository.saveAll(productsSet).stream().collect(Collectors.toSet()).stream().findFirst().get().getProductDelivery();
+        return productDeliveryRepository.save(productDelivery);
     }
 
+    public void assignProductToDelivery(Long deliveryId, Long productId){
+        Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("Product not found"));
+        ProductDelivery productDelivery = productDeliveryRepository.findById(deliveryId).orElseThrow(() -> new NotFoundException("Product delivery not found"));
+
+        product.setReserved(Status.Reserved);
+        productDelivery.addProduct(product);
+        productRepository.save(product);
+    }
+
+    public void removeProductFromPackage(Long deliveryId, Long productId){
+        Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("Product not found"));
+        ProductDelivery productDelivery = productDeliveryRepository.findById(deliveryId).orElseThrow(() -> new NotFoundException("Product delivery not found"));
+
+        product.setReserved(Status.Available);
+        productDelivery.removeProduct(product);
+        productRepository.save(product);
+    }
 
     @Override
     public ProductDelivery updateProductDelivery(ProductDelivery productDelivery) {

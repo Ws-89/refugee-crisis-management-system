@@ -16,4 +16,6 @@ public interface ProductDeliveryService {
     public ProductDelivery updateProductDelivery(ProductDelivery productDelivery);
     public Long deleteProductDelivery(Long id);
     public List<ProductDelivery> findAllProductDeliveries();
+    public void assignProductToDelivery(Long deliveryId, Long productId);
+    public void removeProductFromPackage(Long deliveryId, Long productId);
 }

@@ -111,5 +111,23 @@ public class ProductDelivery implements Serializable {
         this.products = products;
     }
 
+    public void setDeliveryId(long deliveryId) {
+        this.deliveryId = deliveryId;
+    }
 
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public DeliveryAddress getStartingAddress() {
+        return startingAddress;
+    }
+
+    public void setStartingAddress(DeliveryAddress startingAddress) {
+        this.startingAddress = startingAddress;
+    }
 }

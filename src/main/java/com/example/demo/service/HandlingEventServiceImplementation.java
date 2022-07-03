@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.exception.NotFoundException;
+import com.example.demo.models.products.Status;
 import com.example.demo.models.productsdelivery.*;
 import com.example.demo.repo.HandlingEventRepository;
 import com.example.demo.repo.ProductDeliveryRepository;
@@ -47,6 +48,7 @@ public class HandlingEventServiceImplementation implements HandlingEventService 
                                 .build();
 
         productDelivery.getDeliveryHistory().addEvent(handlingEvent);
+        productDelivery.setStatus(Status.Reserved);
         transportMovement.addHandlingEvent(handlingEvent);
 
         return handlingEventRepository.save(handlingEvent);
@@ -67,6 +69,7 @@ public class HandlingEventServiceImplementation implements HandlingEventService 
 
     @Override
     public Long removeHandlingEvent(Long id) {
+
         return handlingEventRepository.findById(id)
                 .map(e -> {
                     handlingEventRepository.delete(e);
