@@ -49,9 +49,9 @@ public class HandlingEventServiceImplementation implements HandlingEventService 
         ProductDelivery productDelivery = productDeliveryRepository.findById(deliveryId).orElseThrow(() -> new NotFoundException("Delivery not found"));
 //        TransportMovement transportMovement = transportMovementRepo.findById(transportId).orElseThrow(() -> new NotFoundException("Transport not found"));
 
-        EntityGraph<?> graph = em.getEntityGraph("TransportMovement.handlingEvents");
-        Map<String, Object> hints = new HashMap<String, Object>();
+        EntityGraph<?> graph = em.getEntityGraph("graph.TransportMovementHandlingEvents");
 
+        Map<String, Object> hints = new HashMap<String, Object>();
         hints.put("javax.persistence.fetchgraph", graph);
 
         TransportMovement transportMovement = null;

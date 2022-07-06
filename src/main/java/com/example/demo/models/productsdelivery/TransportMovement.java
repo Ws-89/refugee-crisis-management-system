@@ -15,7 +15,16 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@NamedEntityGraph(name = "TransportMovement.handlingEvents", attributeNodes = {@NamedAttributeNode("handlingEvents")})
+@NamedEntityGraph(name = "graph.TransportMovementHandlingEvents",
+        attributeNodes = {
+            @NamedAttributeNode(value = "handlingEvents"),
+            @NamedAttributeNode(value = "startingAddress"),
+            @NamedAttributeNode(value = "vehicle", subgraph = "subgraph.vehicleTransportMovement"),
+            @NamedAttributeNode(value = "deliverySpecification", subgraph = "subgraph.deliverySpecification")},
+        subgraphs = {
+            @NamedSubgraph(name = "subgraph.deliverySpecification", attributeNodes = {@NamedAttributeNode(value = "deliveryAddress")}),
+            @NamedSubgraph(name = "subgraph.vehicleTransportMovement", attributeNodes = {@NamedAttributeNode(value = "transportMovement")})
+        })
 public class TransportMovement {
 
     @Id

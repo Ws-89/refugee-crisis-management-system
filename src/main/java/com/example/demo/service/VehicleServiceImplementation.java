@@ -28,7 +28,7 @@ public class VehicleServiceImplementation implements VehicleService {
         this.em = entityManager;
     }
 
-
+ /* returns vehicle with transport movement list */
     @Override
     public Vehicle findById(Long id) {
         return vehicleRepository.findById(id)

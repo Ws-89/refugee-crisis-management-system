@@ -11,9 +11,4 @@ import javax.transaction.Transactional;
 @Repository
 public interface TransportMovementRepo extends JpaRepository<TransportMovement, Long> {
 
-    @Transactional
-    @Query("select s from TransportMovement s where s.transportMovementId = ?1")
-    TransportMovementDTO findDtoByID(Long id);
-
-
 }
