@@ -21,12 +21,12 @@ public class VehicleController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<Vehicle> saveVehicle(@RequestBody VehicleDTO product) {
+    public ResponseEntity<Vehicle> saveVehicle(@RequestBody Vehicle product) {
         return ResponseEntity.ok(vehicleService.saveVehicle(product));
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Vehicle> updateVehicle(@RequestBody VehicleDTO product){
+    public ResponseEntity<Vehicle> updateVehicle(@RequestBody Vehicle product){
         return ResponseEntity.ok(vehicleService.updateVehicle(product));
     }
 
@@ -36,8 +36,9 @@ public class VehicleController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<Vehicle>> findAllVehicles(){
-        return ResponseEntity.ok(vehicleService.findAllVehicles());
+    public ResponseEntity<List<VehicleDTO>> findAllVehicles(){
+        return ResponseEntity.ok(vehicleService.findAllVehiclesWithoutTransportMovement());
+//        return ResponseEntity.ok(vehicleService.findAllVehicles());
     }
 
     @GetMapping("/highest-capacity")

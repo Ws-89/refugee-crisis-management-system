@@ -9,10 +9,11 @@ import com.example.demo.repo.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
+import javax.persistence.EntityGraph;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 @Service
 public class ProductDeliveryServiceImplementation implements ProductDeliveryService{
@@ -20,16 +21,15 @@ public class ProductDeliveryServiceImplementation implements ProductDeliveryServ
     private final ProductDeliveryRepository productDeliveryRepository;
     private final ProductRepository productRepository;
     private final DeliveryAddressRepository deliveryAddressRepository;
-    private final ProductDeliveryDAO productDeliveryDao;
 
 
     public ProductDeliveryServiceImplementation(ProductDeliveryRepository productDeliveryRepository,
                                                 ProductRepository productRepository,
-                                                DeliveryAddressRepository deliveryAddressRepository, ProductDeliveryDAO productDeliveryDao) {
+                                                DeliveryAddressRepository deliveryAddressRepository) {
         this.productDeliveryRepository = productDeliveryRepository;
         this.productRepository = productRepository;
         this.deliveryAddressRepository = deliveryAddressRepository;
-        this.productDeliveryDao = productDeliveryDao;
+
     }
 
     @Override
@@ -39,7 +39,7 @@ public class ProductDeliveryServiceImplementation implements ProductDeliveryServ
 
     @Override
     @Transactional
-    public ProductDelivery saveProductDelivery(ProductDeliveryDTO source){
+    public ProductDelivery saveProductDelivery(ProductDelivery source){
 
         DeliveryAddress destinationAddress = deliveryAddressRepository.findById(source.getDeliverySpecification()
                 .getDeliveryAddress().getDeliveryAddressId()).orElseThrow(()-> new NotFoundException("Addres not found"));
@@ -88,6 +88,12 @@ public class ProductDeliveryServiceImplementation implements ProductDeliveryServ
     }
 
     @Override
+    public List<ProductDelivery> selectProductDeliveryForDisplayingWithoutProducts() {
+
+        return null;
+    }
+
+    @Override
     public Long deleteProductDelivery(Long id) {
         ProductDelivery productToDelete = getOne(id);
         productDeliveryRepository.delete(productToDelete);
@@ -95,7 +101,8 @@ public class ProductDeliveryServiceImplementation implements ProductDeliveryServ
     }
 
     @Override
-    public List<ProductDelivery> findAllProductDeliveries() {
+    public List<ProductDelivery> findAllProductDelivery() {
+//        return productDeliveryRepository.findAll();
         return productDeliveryRepository.findAll();
     }
 

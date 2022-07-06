@@ -1,15 +1,16 @@
 package com.example.demo.controller;
 
 import com.example.demo.models.products.Product;
-import com.example.demo.models.products.ProductDTO;
 import com.example.demo.service.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
+
 @RequestMapping("/api/v1/products")
 public class ProductController {
 

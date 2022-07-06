@@ -20,9 +20,9 @@ public class HandlingEventsController {
     }
 
     @PostMapping("/save/{deliveryId}/{transportId}")
-    public ResponseEntity<HandlingEvent> saveHandlingEvent(@RequestBody HandlingEventDTO handlingEventDTO,
+    public ResponseEntity<HandlingEvent> saveHandlingEvent(@RequestBody HandlingEvent handlingEvent,
                                                            @PathVariable("deliveryId") Long deliveryId, @PathVariable("transportId") Long transportId){
-        return ResponseEntity.ok(handlingEventService.saveHandlingEvent(handlingEventDTO, deliveryId, transportId));
+        return ResponseEntity.ok(handlingEventService.saveHandlingEvent(handlingEvent, deliveryId, transportId));
     }
 
     @GetMapping("/get/{id}")
@@ -36,8 +36,8 @@ public class HandlingEventsController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<HandlingEvent> updateHandlingEvent(@RequestBody HandlingEventDTO handlingEventDTO){
-        return ResponseEntity.ok(handlingEventService.updateHandlingEvent(handlingEventDTO));
+    public ResponseEntity<HandlingEvent> updateHandlingEvent(@RequestBody HandlingEvent handlingEvent){
+        return ResponseEntity.ok(handlingEventService.updateHandlingEvent(handlingEvent));
     }
 
     @DeleteMapping("/delete/{id}")

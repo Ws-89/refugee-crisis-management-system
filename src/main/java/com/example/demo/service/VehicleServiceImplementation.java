@@ -6,18 +6,26 @@ import com.example.demo.models.vehicles.VehicleDTO;
 import com.example.demo.repo.VehicleRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
+import javax.persistence.EntityGraph;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 public class VehicleServiceImplementation implements VehicleService {
 
     private final VehicleRepository vehicleRepository;
+//    @PersistenceContext
+    private final EntityManager em;
 
-    public VehicleServiceImplementation(VehicleRepository vehicleRepository) {
+    public VehicleServiceImplementation(VehicleRepository vehicleRepository, EntityManager entityManager) {
         this.vehicleRepository = vehicleRepository;
+        this.em = entityManager;
     }
 
 
@@ -29,7 +37,7 @@ public class VehicleServiceImplementation implements VehicleService {
 
 
     @Override
-    public Vehicle saveVehicle(VehicleDTO source) {
+    public Vehicle saveVehicle(Vehicle source) {
         Optional<Vehicle> ifExists = vehicleRepository.findByLicensePlate(source.getLicensePlate());
         if(ifExists.isPresent()) {
             throw new IllegalStateException(String.format("Vehicle with license plate %s", source.getLicensePlate()));
@@ -41,7 +49,8 @@ public class VehicleServiceImplementation implements VehicleService {
     }
 
     @Override
-    public Vehicle updateVehicle(VehicleDTO source) {
+    @Transactional
+    public Vehicle updateVehicle(Vehicle source) {
         Vehicle vehicleToUpdate = findById(source.getVehicleId());
         vehicleToUpdate.update(source);
         return vehicleRepository.save(vehicleToUpdate);
@@ -55,8 +64,20 @@ public class VehicleServiceImplementation implements VehicleService {
     }
 
     @Override
+    @Transactional
     public List<Vehicle> findAllVehicles() {
+
+//        EntityGraph<?> graph = em.createEntityGraph("graph.VehicleTransportMovement");
+//        TypedQuery<Vehicle> q = em.createQuery("SELECT v FROM Vehicle v", Vehicle.class);
+//        q.setHint("javax.persistence.fetchgraph",graph);
+//        return q.getResultList();
         return vehicleRepository.findAll();
+    }
+
+    public List<VehicleDTO> findAllVehiclesWithoutTransportMovement(){
+        TypedQuery<VehicleDTO> q = em.createQuery("SELECT new com.example.demo.models.vehicles.VehicleDTO(v.vehicleId,v.brand,v.model,v.engine," +
+                "v.capacity, v.vehicleCategory, v.licensePlate) FROM Vehicle v", VehicleDTO.class);
+        return q.getResultList();
     }
 
     @Override

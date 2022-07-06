@@ -30,15 +30,17 @@ public class HandlingEvent {
             strategy = GenerationType.SEQUENCE,
             generator = "handling_event_sequence"
     )
+    @Column(name = "handling_event_id")
     private long handlingEventId;
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+//    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(
-            cascade = CascadeType.MERGE,
-            fetch = FetchType.LAZY
+            cascade = CascadeType.MERGE
+//            ,
+//            fetch = FetchType.LAZY
     )
     @JoinColumn(
             name = "transport_movement_id",
-            referencedColumnName = "transportMovementId"
+            referencedColumnName = "transport_movement_id"
     )
     @JsonIdentityInfo(
             generator = ObjectIdGenerators.PropertyGenerator.class,
@@ -50,7 +52,7 @@ public class HandlingEvent {
     )
     @JoinColumn(
             name = "delivery_history_id",
-            referencedColumnName = "deliveryHistoryId"
+            referencedColumnName = "delivery_history_id"
     )
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @JsonIdentityInfo(

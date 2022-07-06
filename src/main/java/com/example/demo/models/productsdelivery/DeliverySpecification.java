@@ -1,6 +1,7 @@
 package com.example.demo.models.productsdelivery;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import javax.persistence.*;
@@ -23,22 +24,23 @@ public class DeliverySpecification {
             strategy = GenerationType.SEQUENCE,
             generator = "delivery_specification_sequence"
     )
-    private Long deliverySpecificationId;
+    private Long delivery_specification_id;
     private LocalDateTime arrivalTime;
-
-    @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "delivery_address_id", referencedColumnName = "deliveryAddressId")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @JoinColumn(name = "delivery_address_id", referencedColumnName = "delivery_address_id")
     private DeliveryAddress deliveryAddress;
     @JsonIgnore
-    @OneToOne(mappedBy = "deliverySpecification", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @OneToOne(mappedBy = "deliverySpecification", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private ProductDelivery productDelivery;
 
     public Long getDeliverySpecificationId() {
-        return deliverySpecificationId;
+        return delivery_specification_id;
     }
 
     public void setDeliverySpecificationId(Long deliverySpecificationId) {
-        this.deliverySpecificationId = deliverySpecificationId;
+        this.delivery_specification_id = deliverySpecificationId;
     }
 
     public LocalDateTime getArrivalTime() {

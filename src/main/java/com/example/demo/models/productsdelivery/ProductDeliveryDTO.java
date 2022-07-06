@@ -10,18 +10,12 @@ import lombok.NoArgsConstructor;
 import java.util.HashSet;
 import java.util.Set;
 
-@NoArgsConstructor
-@Data
-@AllArgsConstructor
-@Builder
-public class ProductDeliveryDTO {
+public interface ProductDeliveryDTO {
 
-    private Long deliveryId;
-    private DeliveryHistory deliveryHistory;
-    private DeliverySpecification deliverySpecification;
-    private String description;
-    private Set<ProductDTO> products = new HashSet<>();
-    private DeliveryAddress startingAddress;
-    private Double totalWeight;
-    private Status status;
+     Long getDeliveryId();
+     DeliverySpecification getDeliverySpecification();
+     String getDescription();
+     DeliveryAddress getStartingAddress();
+     Double getTotalWeight();
+     Status getStatus();
 }

@@ -1,12 +1,8 @@
 package com.example.demo.controller;
 
 import com.example.demo.models.productsdelivery.ProductDelivery;
-import com.example.demo.models.productsdelivery.ProductDeliveryDTO;
 import com.example.demo.service.ProductDeliveryService;
-import com.example.demo.service.ProductDeliveryServiceImplementation;
 import com.google.gson.Gson;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,11 +25,11 @@ public class ProductDeliveryController {
 
     @GetMapping("/list")
     public ResponseEntity<List<ProductDelivery>> findAllDelivery() {
-        return ResponseEntity.ok(this.productDeliveryServiceImplementation.findAllProductDeliveries());
+        return ResponseEntity.ok(this.productDeliveryServiceImplementation.findAllProductDelivery());
     }
 
     @PostMapping("/save")
-    public ResponseEntity<ProductDelivery> createDelivery(@RequestBody ProductDeliveryDTO productDelivery){
+    public ResponseEntity<ProductDelivery> createDelivery(@RequestBody ProductDelivery productDelivery){
         return ResponseEntity.ok(this.productDeliveryServiceImplementation.saveProductDelivery(productDelivery));
     }
 

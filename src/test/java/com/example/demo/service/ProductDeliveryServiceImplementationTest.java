@@ -1,33 +1,60 @@
-//package com.example.demo.service;
-//
-//import com.example.demo.models.products.*;
-//import com.example.demo.models.productsdelivery.DeliveryAddress;
-//import com.example.demo.models.productsdelivery.DeliveryHistory;
-//import com.example.demo.models.productsdelivery.DeliverySpecification;
-//import com.example.demo.models.productsdelivery.ProductDelivery;
-//import com.example.demo.repo.ProductDeliveryRepository;
-//import org.junit.jupiter.api.Test;
-//import org.mockito.ArgumentCaptor;
-//import org.mockito.InjectMocks;
-//import org.mockito.Mock;
-//import org.springframework.boot.test.context.SpringBootTest;
-//
-//import java.time.LocalDateTime;
-//import java.time.Month;
-//import java.util.ArrayList;
-//import java.util.HashSet;
-//import java.util.List;
-//import java.util.Set;
-//
-//import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-//import static org.mockito.Mockito.verify;
-//
-//@SpringBootTest
-//class ProductDeliveryServiceImplementationTest {
+package com.example.demo.service;
+
+import com.example.demo.models.products.*;
+import com.example.demo.models.productsdelivery.DeliveryAddress;
+import com.example.demo.models.productsdelivery.DeliveryHistory;
+import com.example.demo.models.productsdelivery.DeliverySpecification;
+import com.example.demo.models.productsdelivery.ProductDelivery;
+import com.example.demo.repo.ProductDeliveryRepository;
+import org.hibernate.Session;
+import org.hibernate.stat.Statistics;
+import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import javax.persistence.EntityGraph;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.util.*;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.Mockito.verify;
+
+@SpringBootTest
+class ProductDeliveryServiceImplementationTest {
+
+    @PersistenceContext
+    EntityManager entityManager;
+
+    @Test
+    @Transactional
+    void shouldFindAllProductDeliveries() {
+
+
+
+        EntityGraph<?> graph = entityManager.getEntityGraph("graph.DeliveryProduct");
+        Map<String, Object> hints = new HashMap<String, Object>();
+
+        hints.put("javax.persistence.fetchgraph", graph);
+
+        ProductDelivery productDelivery = entityManager.find(ProductDelivery.class, 1L, hints);
+        System.out.println(productDelivery);
+
+        System.out.println(productDelivery.getProducts().size() + " ROZMIAR LISTY PRODUKTÓW");
+
+    }
+
+
 //
 //    @InjectMocks
 //    ProductDeliveryServiceImplementation productDeliveryServiceImplementation;
-//
+////        ProductDelivery productDelivery = entityManager.find(ProductDelivery.class, 1L, hints);
 //    @Mock
 //    ProductDeliveryRepository productDeliveryRepository;
 //
@@ -117,4 +144,4 @@
 //    @Test
 //    void findAllProductDeliveries() {
 //    }
-//}
+}

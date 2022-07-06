@@ -8,8 +8,15 @@ import com.example.demo.models.vehicles.Vehicle;
 import com.example.demo.repo.DeliveryAddressRepository;
 import com.example.demo.repo.TransportMovementRepo;
 import com.example.demo.repo.VehicleRepository;
+import org.hibernate.HibernateException;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityGraph;
+import javax.persistence.EntityManager;
+
+import javax.transaction.Transactional;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -19,11 +26,13 @@ public class TransportMovementServiceImplementation implements TransportMovement
     private final TransportMovementRepo transportMovementRepo;
     private final DeliveryAddressRepository deliveryAddressRepository;
     private final VehicleRepository vehicleRepository;
+    private final EntityManager em;
 
-    public TransportMovementServiceImplementation(TransportMovementRepo transportMovementRepo, DeliveryAddressRepository deliveryAddressRepository, VehicleRepository vehicleRepository) {
+    public TransportMovementServiceImplementation(TransportMovementRepo transportMovementRepo, DeliveryAddressRepository deliveryAddressRepository, VehicleRepository vehicleRepository, EntityManager entityManager) {
         this.transportMovementRepo = transportMovementRepo;
         this.deliveryAddressRepository = deliveryAddressRepository;
         this.vehicleRepository = vehicleRepository;
+        this.em = entityManager;
     }
 
 
@@ -33,6 +42,7 @@ public class TransportMovementServiceImplementation implements TransportMovement
     }
 
     @Override
+    @Transactional
     public TransportMovement save(TransportMovement transportMovement) {
         DeliveryAddress startingAddress = deliveryAddressRepository.findById(
                 transportMovement.getStartingAddress().getDeliveryAddressId()
@@ -41,16 +51,16 @@ public class TransportMovementServiceImplementation implements TransportMovement
                 transportMovement.getDeliverySpecification().getDeliveryAddress().getDeliveryAddressId()
                 )
                     .orElseThrow(()-> new NotFoundException("Destination address not found"));
-        Vehicle vehicle = vehicleRepository.findById(
-                transportMovement.getVehicle().getVehicleId()
-        ).orElseThrow(()-> new NotFoundException("Vehicle not found"));
+
+        EntityGraph<?> graph = em.getEntityGraph("graph.VehicleTransportMovement");
+
+        Map<String, Object> hints = new HashMap<String, Object>();
+        hints.put("javax.persistence.fetchgraph",graph);
+
+        Vehicle vehicle = em.find(Vehicle.class,transportMovement.getVehicle().getVehicleId(), hints);
 
         DeliverySpecification deliverySpecification = transportMovement.getDeliverySpecification();
         deliverySpecification.setDeliveryAddress(destinationAddress);
-
-//        DeliverySpecification deliverySpecification = new DeliverySpecification();
-//        deliverySpecification.setDeliveryAddress(destinationAddress);
-//        destinationAddress.addDeliverySpecification(deliverySpecification);
 
         TransportMovement tmToSave = TransportMovement.builder()
                 .startingAddress(startingAddress)

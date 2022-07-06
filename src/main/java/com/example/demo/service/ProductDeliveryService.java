@@ -12,10 +12,11 @@ import java.util.List;
 public interface ProductDeliveryService {
 
     public ProductDelivery getOne(Long id);
-    public ProductDelivery saveProductDelivery(ProductDeliveryDTO productDelivery);
+    public ProductDelivery saveProductDelivery(ProductDelivery productDelivery);
     public ProductDelivery updateProductDelivery(ProductDelivery productDelivery);
+    public List<ProductDelivery> selectProductDeliveryForDisplayingWithoutProducts();
     public Long deleteProductDelivery(Long id);
-    public List<ProductDelivery> findAllProductDeliveries();
+    public List<ProductDelivery> findAllProductDelivery();
     public void assignProductToDelivery(Long deliveryId, Long productId);
     public void removeProductFromPackage(Long deliveryId, Long productId);
 }

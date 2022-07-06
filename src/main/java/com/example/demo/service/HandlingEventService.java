@@ -9,8 +9,8 @@ public interface HandlingEventService {
 
     public List<HandlingEvent> findAllByTransportMovementId(Long id);
     public HandlingEvent getHandlingEvent(Long id);
-    public HandlingEvent saveHandlingEvent(HandlingEventDTO event, Long deliveryId, Long transportId);
-    public HandlingEvent updateHandlingEvent(HandlingEventDTO event);
+    public HandlingEvent saveHandlingEvent(HandlingEvent event, Long deliveryId, Long transportId);
+    public HandlingEvent updateHandlingEvent(HandlingEvent event);
     public Long removeHandlingEvent(Long id);
 
 }

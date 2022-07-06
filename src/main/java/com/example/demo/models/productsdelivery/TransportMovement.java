@@ -8,12 +8,14 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "tbl_transport_movement")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@NamedEntityGraph(name = "TransportMovement.handlingEvents", attributeNodes = {@NamedAttributeNode("handlingEvents")})
 public class TransportMovement {
 
     @Id
@@ -26,6 +28,7 @@ public class TransportMovement {
             strategy = GenerationType.SEQUENCE,
             generator = "delivery_transport_sequence"
     )
+    @Column(name = "transport_movement_id")
     private Long transportMovementId;
     @OneToMany(
             mappedBy = "transportMovement"
@@ -33,21 +36,23 @@ public class TransportMovement {
     @JsonIdentityInfo(
             generator = ObjectIdGenerators.PropertyGenerator.class,
             property = "handlingEventId")
-    private List<HandlingEvent> handlingEvents;
+    private Set<HandlingEvent> handlingEvents;
     @OneToOne(
             cascade = CascadeType.ALL
     )
     @JoinColumn(
             name = "delivery_specification_id",
-            referencedColumnName = "deliverySpecificationId"
+            referencedColumnName = "delivery_specification_id"
     )
     private DeliverySpecification deliverySpecification;
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @OneToOne(
-            cascade = CascadeType.MERGE
+            cascade = CascadeType.MERGE,
+            fetch = FetchType.LAZY
     )
     @JoinColumn(
             name = "starting_address_id",
-            referencedColumnName = "deliveryAddressId"
+            referencedColumnName = "delivery_address_id"
     )
     private DeliveryAddress startingAddress;
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
@@ -57,7 +62,7 @@ public class TransportMovement {
     )
     @JoinColumn(
             name = "vehicle_id",
-            referencedColumnName = "vehicleId"
+            referencedColumnName = "vehicle_id"
     )
     @JsonIdentityInfo(
             generator = ObjectIdGenerators.PropertyGenerator.class,
@@ -77,11 +82,11 @@ public class TransportMovement {
         this.transportMovementId = transportMovementId;
     }
 
-    public List<HandlingEvent> getHandlingEvents() {
+    public Set<HandlingEvent> getHandlingEvents() {
         return handlingEvents;
     }
 
-    public void setHandlingEvents(List<HandlingEvent> handlingEvents) {
+    public void setHandlingEvents(Set<HandlingEvent> handlingEvents) {
         this.handlingEvents = handlingEvents;
     }
 

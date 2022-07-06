@@ -1,10 +1,7 @@
 package com.example.demo.models.productsdelivery;
 
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -32,6 +29,7 @@ public class DeliveryHistory {
             strategy = GenerationType.SEQUENCE,
             generator = "delivery_history_sequence"
     )
+    @Column(name = "delivery_history_id")
     private long deliveryHistoryId;
     @JsonIgnore
     @OneToMany(

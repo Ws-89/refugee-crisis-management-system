@@ -2,6 +2,7 @@ package com.example.demo.models.vehicles;
 
 import com.example.demo.models.productsdelivery.TransportMovement;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
@@ -9,13 +10,22 @@ import lombok.*;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Table(name = "tbl_vehicle")
+@NamedEntityGraphs({@NamedEntityGraph(name="graph.VehicleTransportMovement",
+        attributeNodes = {@NamedAttributeNode(value = "transportMovement", subgraph = "subgraph.transportMovement")},
+        subgraphs = {@NamedSubgraph(name = "subgraph.transportMovement", attributeNodes=@NamedAttributeNode(value = "handlingEvents")),
+                @NamedSubgraph(name = "subgraph.transportMovement", attributeNodes=@NamedAttributeNode(value = "startingAddress")),
+                @NamedSubgraph(name = "subgraph.transportMovement", attributeNodes = @NamedAttributeNode(value = "deliverySpecification", subgraph = "subgraph.deliverySpecification")),
+                @NamedSubgraph(name = "subgraph.deliverySpecification", attributeNodes = @NamedAttributeNode(value = "deliveryAddress"))
+        })})
 public class Vehicle implements Serializable, Comparable<Vehicle> {
 
     @Id
@@ -28,6 +38,7 @@ public class Vehicle implements Serializable, Comparable<Vehicle> {
             strategy = GenerationType.SEQUENCE,
             generator = "vehicle_sequence"
     )
+    @Column(name = "vehicle_id")
     private Long vehicleId;
     private String brand;
     private String model;
@@ -35,20 +46,21 @@ public class Vehicle implements Serializable, Comparable<Vehicle> {
     private Double capacity;
     private String vehicleCategory;
     private String licensePlate;
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @OneToMany(
             mappedBy = "vehicle"
     )
     @JsonIdentityInfo(
             generator = ObjectIdGenerators.PropertyGenerator.class,
             property = "transportMovementId")
-    private List<TransportMovement> transportMovement = new ArrayList<TransportMovement>();
+    private Set<TransportMovement> transportMovement = new HashSet<>();
 
     public Vehicle(Double capacity, String licensePlate) {
         this.capacity = capacity;
         this.licensePlate = licensePlate;
     }
 
-    public void update(VehicleDTO source){
+    public void update(Vehicle source){
         this.vehicleId = source.getVehicleId();
         this.brand = source.getBrand();
         this.model = source.getModel();
@@ -120,11 +132,11 @@ public class Vehicle implements Serializable, Comparable<Vehicle> {
     }
 
 
-    public List<TransportMovement> getTransportMovement() {
+    public Set<TransportMovement> getTransportMovement() {
         return transportMovement;
     }
 
-    public void setTransportMovement(List<TransportMovement> transportMovement) {
+    public void setTransportMovement(Set<TransportMovement> transportMovement) {
         this.transportMovement = transportMovement;
     }
 

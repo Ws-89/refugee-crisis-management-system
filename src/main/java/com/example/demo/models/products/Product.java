@@ -6,10 +6,15 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyToOne;
+import org.hibernate.annotations.LazyToOneOption;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+
 
 
 @NoArgsConstructor
@@ -29,6 +34,7 @@ public class Product implements Serializable {
             strategy = GenerationType.SEQUENCE,
             generator = "product_sequence"
     )
+    @Column(name = "product_id")
     private Long productId;
     private String name;
     private LocalDateTime expirationDate;
@@ -46,7 +52,7 @@ public class Product implements Serializable {
     @ManyToOne(
             cascade = {CascadeType.MERGE, CascadeType.PERSIST},
             fetch = FetchType.LAZY)
-    @JoinColumn(name = "delivery_id", referencedColumnName = "deliveryId")
+    @JoinColumn(name = "delivery_id", referencedColumnName = "delivery_id")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private ProductDelivery productDelivery;
 

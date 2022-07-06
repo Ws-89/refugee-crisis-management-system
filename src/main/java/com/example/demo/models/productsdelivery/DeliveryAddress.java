@@ -31,6 +31,7 @@ public class DeliveryAddress {
             strategy = GenerationType.SEQUENCE,
             generator = "delivery_address_sequence"
     )
+    @Column(name = "delivery_address_id")
     private Long deliveryAddressId;
     private String postCode;
     private String city;
@@ -38,6 +39,7 @@ public class DeliveryAddress {
     private String state;
 
     @JsonIgnore
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @OneToMany(mappedBy = "deliveryAddress", cascade = CascadeType.PERSIST)
     private Set<DeliverySpecification> deliverySpecifications = new HashSet<>();
 
