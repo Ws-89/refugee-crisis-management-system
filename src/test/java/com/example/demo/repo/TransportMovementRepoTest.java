@@ -16,11 +16,4 @@ public class TransportMovementRepoTest {
     @Autowired
     TransportMovementRepo transportMovementRepo;
 
-    @Test
-    void findDtoByID() {
-        TransportMovementDTO transportMovement = transportMovementRepo.findDtoByID(59L);
-
-        assertThat(transportMovement.getHandlingEvents()).isNotNull();
-
-    }
 }

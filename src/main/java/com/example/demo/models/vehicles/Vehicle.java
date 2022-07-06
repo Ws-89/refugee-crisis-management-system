@@ -19,13 +19,17 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @Table(name = "tbl_vehicle")
-@NamedEntityGraphs({@NamedEntityGraph(name="graph.VehicleTransportMovement",
+@NamedEntityGraph(name="graph.VehicleTransportMovement",
         attributeNodes = {@NamedAttributeNode(value = "transportMovement", subgraph = "subgraph.transportMovement")},
-        subgraphs = {@NamedSubgraph(name = "subgraph.transportMovement", attributeNodes=@NamedAttributeNode(value = "handlingEvents")),
-                @NamedSubgraph(name = "subgraph.transportMovement", attributeNodes=@NamedAttributeNode(value = "startingAddress")),
-                @NamedSubgraph(name = "subgraph.transportMovement", attributeNodes = @NamedAttributeNode(value = "deliverySpecification", subgraph = "subgraph.deliverySpecification")),
-                @NamedSubgraph(name = "subgraph.deliverySpecification", attributeNodes = @NamedAttributeNode(value = "deliveryAddress"))
-        })})
+        subgraphs = {@NamedSubgraph(
+                            name = "subgraph.transportMovement", attributeNodes= {
+                                @NamedAttributeNode(value = "handlingEvents"),
+                                @NamedAttributeNode(value = "startingAddress"),
+                                @NamedAttributeNode(value = "deliverySpecification", subgraph = "subgraph.deliverySpecification")}),
+                    @NamedSubgraph(
+                            name = "subgraph.deliverySpecification", attributeNodes =
+                                @NamedAttributeNode(value = "deliveryAddress"))
+        })
 public class Vehicle implements Serializable, Comparable<Vehicle> {
 
     @Id
