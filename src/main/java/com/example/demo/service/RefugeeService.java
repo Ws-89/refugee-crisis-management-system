@@ -1,25 +1,14 @@
 package com.example.demo.service;
 
-import com.example.demo.models.refugees.Refugee;
-import com.example.demo.repo.RefugeeRepo;
+import com.example.demo.models.Refugee;
+import com.example.demo.repo.GenericRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
-public class RefugeeService {
+public class RefugeeService extends  GenericService<Refugee>{
 
-    private final RefugeeRepo refugeeRepo;
-
-    public RefugeeService(RefugeeRepo refugeeRepo) {
-        this.refugeeRepo = refugeeRepo;
+    public RefugeeService(GenericRepository<Refugee> repository) {
+        super(repository);
     }
 
-    public List<Refugee> findAllRefugees(){
-        return this.refugeeRepo.findAll();
-    }
-
-    public Refugee saveRefugee(Refugee refugee){
-        return refugeeRepo.save(refugee);
-    }
 }

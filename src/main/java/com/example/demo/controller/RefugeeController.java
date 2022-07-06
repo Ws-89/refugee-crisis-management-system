@@ -1,30 +1,40 @@
 package com.example.demo.controller;
 
-import com.example.demo.models.refugees.Refugee;
+import com.example.demo.models.Refugee;
+import com.example.demo.repo.RefugeeRepo;
 import com.example.demo.service.RefugeeService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/refugees")
 public class RefugeeController {
 
-    private final RefugeeService refugeeService;
 
-    public RefugeeController(RefugeeService refugeeService) {
-        this.refugeeService = refugeeService;
+    /* METHODS
+    @GetMapping("")
+    public ResponseEntity<Page<T>> getPage(Pageable pageable){
+        return ResponseEntity.ok(service.getPage(pageable));
     }
 
-    @GetMapping
-    public ResponseEntity<List<Refugee>> getRefugees() {
-        return new ResponseEntity<List<Refugee>>(this.refugeeService.findAllRefugees(), HttpStatus.OK);
+    @GetMapping("/{id}")
+    public ResponseEntity<T> getOne(@PathVariable Long id){
+        return ResponseEntity.ok(service.get(id));
     }
 
-    @PostMapping
-    public ResponseEntity<Refugee> saveRefugee(@RequestBody Refugee refugee){
-        return new ResponseEntity<>(this.refugeeService.saveRefugee(refugee), HttpStatus.OK);
+    @PutMapping("")
+    public ResponseEntity<T> update(@RequestBody T updated){
+        return ResponseEntity.ok(service.update(updated));
     }
+
+    @PostMapping("")
+    public ResponseEntity<T> create(@RequestBody T created){
+        return ResponseEntity.ok(service.create(created));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> delete(@PathVariable Long id){
+        service.delete(id);
+        return ResponseEntity.ok("OK");
+    }
+     */
 }

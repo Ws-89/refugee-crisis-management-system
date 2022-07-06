@@ -1,4 +1,8 @@
 package com.example.demo.repo;
 
-public interface LodgingRepo {
+import com.example.demo.models.lodging.Lodging;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface LodgingRepo extends GenericRepository<Lodging> {
 }
