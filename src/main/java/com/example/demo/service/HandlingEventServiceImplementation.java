@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.HandlingEventDTO;
+import com.example.demo.dto.HandlingEventMapper;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.models.products.Status;
 import com.example.demo.models.productsdelivery.*;
@@ -15,6 +17,7 @@ import javax.persistence.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Transactional
 @Service
@@ -34,13 +37,13 @@ public class HandlingEventServiceImplementation implements HandlingEventService 
     }
 
     @Override
-    public List<HandlingEvent> findAllByTransportMovementId(Long id) {
+    public List<HandlingEventDTO> findAllByTransportMovementId(Long id) {
         EntityGraph<?> graph = em.getEntityGraph("graph.handlingEventTransportMovement");
 
         TypedQuery<HandlingEvent> query = em.createQuery("FROM HandlingEvent he WHERE he.transportMovement.transportMovementId = ?1", HandlingEvent.class);
         query.setParameter(1, id);
         query.setHint("javax.persistence.fetchgraph", graph);
-        return query.getResultList();
+        return query.getResultList().stream().map(h -> HandlingEventMapper.INSTANCE.entityToDTO(h)).collect(Collectors.toList());
 //        return this.handlingEventRepository.findAllByTransportMovementId(id);
     }
 

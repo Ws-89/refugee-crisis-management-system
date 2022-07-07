@@ -19,11 +19,10 @@ import java.util.Set;
         attributeNodes = {
             @NamedAttributeNode(value = "handlingEvents"),
             @NamedAttributeNode(value = "startingAddress"),
-            @NamedAttributeNode(value = "vehicle", subgraph = "subgraph.vehicleTransportMovement"),
+            @NamedAttributeNode(value = "vehicle"),
             @NamedAttributeNode(value = "deliverySpecification", subgraph = "subgraph.deliverySpecification")},
         subgraphs = {
-            @NamedSubgraph(name = "subgraph.deliverySpecification", attributeNodes = {@NamedAttributeNode(value = "deliveryAddress")}),
-            @NamedSubgraph(name = "subgraph.vehicleTransportMovement", attributeNodes = {@NamedAttributeNode(value = "transportMovement")})
+            @NamedSubgraph(name = "subgraph.deliverySpecification", attributeNodes = {@NamedAttributeNode(value = "deliveryAddress")})
         })
 public class TransportMovement {
 
@@ -45,7 +44,7 @@ public class TransportMovement {
     @JsonIdentityInfo(
             generator = ObjectIdGenerators.PropertyGenerator.class,
             property = "handlingEventId")
-    private Set<HandlingEvent> handlingEvents;
+    private List<HandlingEvent> handlingEvents;
     @OneToOne(
             cascade = CascadeType.ALL
     )
@@ -91,11 +90,11 @@ public class TransportMovement {
         this.transportMovementId = transportMovementId;
     }
 
-    public Set<HandlingEvent> getHandlingEvents() {
+    public List<HandlingEvent> getHandlingEvents() {
         return handlingEvents;
     }
 
-    public void setHandlingEvents(Set<HandlingEvent> handlingEvents) {
+    public void setHandlingEvents(List<HandlingEvent> handlingEvents) {
         this.handlingEvents = handlingEvents;
     }
 

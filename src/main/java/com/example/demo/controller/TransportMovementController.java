@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.TransportMovementDTO;
 import com.example.demo.models.productsdelivery.TransportMovement;
 import com.example.demo.service.TransportMovementService;
 import org.apache.coyote.Response;
@@ -26,7 +27,7 @@ public class TransportMovementController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<Set<TransportMovement>> findAll(){
+    public ResponseEntity<List<TransportMovementDTO>> findAll(){
         return ResponseEntity.ok(this.transportMovementService.findAll());
     }
 

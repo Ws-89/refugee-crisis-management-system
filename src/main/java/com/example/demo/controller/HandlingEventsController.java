@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.HandlingEventDTO;
 import com.example.demo.models.productsdelivery.HandlingEvent;
 import com.example.demo.service.HandlingEventService;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +31,7 @@ public class HandlingEventsController {
     }
 
     @GetMapping("/list-of-transport-movement/{id}")
-    public ResponseEntity<List<HandlingEvent>> findAllByTransportMovement(@PathVariable("id") Long id){
+    public ResponseEntity<List<HandlingEventDTO>> findAllByTransportMovement(@PathVariable("id") Long id){
         return ResponseEntity.ok(handlingEventService.findAllByTransportMovementId(id));
     }
 

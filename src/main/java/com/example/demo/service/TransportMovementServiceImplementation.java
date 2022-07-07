@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.TransportMovementDTO;
+import com.example.demo.dto.TransportMovementMapper;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.models.productsdelivery.DeliveryAddress;
 import com.example.demo.models.productsdelivery.DeliverySpecification;
@@ -99,13 +101,13 @@ public class TransportMovementServiceImplementation implements TransportMovement
 
     @Override
     @Transactional
-    public Set<TransportMovement> findAll() {
+    public List<TransportMovementDTO> findAll() {
         EntityGraph<?> graph = em.getEntityGraph("graph.TransportMovementHandlingEvents");
 
         TypedQuery<TransportMovement> query = em.createQuery("from TransportMovement", TransportMovement.class);
         query.setHint("javax.persistence.fetchgraph",graph);
 
-        return new HashSet<>( query.getResultList());
+        return query.getResultList().stream().map(t -> TransportMovementMapper.INSTANCE.entityToDTO(t)).collect(Collectors.toList());
     }
 
 }

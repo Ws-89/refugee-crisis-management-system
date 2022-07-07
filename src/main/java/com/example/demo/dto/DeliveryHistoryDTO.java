@@ -4,13 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class DeliveryHistoryDTO {
     private long deliveryHistoryId;
-    private List<HandlingEventDTO> handlingEvents;
-
+    private ProductDeliveryTransportMovementDTO productDelivery;
 }

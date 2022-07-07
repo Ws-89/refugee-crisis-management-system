@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 public class HandlingEventDTO {
 
     private long handlingEventId;
-    private TransportMovementDTO transportMovement;
     private DeliveryHistoryDTO deliveryHistory;
     private HandlingEventState state;
     private LocalDateTime timeStamp;
