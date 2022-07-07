@@ -48,14 +48,15 @@ public class HandlingEventServiceImplementation implements HandlingEventService 
     }
 
     @Override
-    public HandlingEvent getHandlingEvent(Long id) {
-        return handlingEventRepository.findById(id).orElseThrow(() -> new NotFoundException("Handling event not found"));
+    public HandlingEventDTO getHandlingEvent(Long id) {
+        return handlingEventRepository.findById(id)
+                .map(h -> HandlingEventMapper.INSTANCE.entityToDTO(h)).orElseThrow(() -> new NotFoundException("Handling event not found"));
     }
 
 
     @Override
     @Transactional
-    public HandlingEvent saveHandlingEvent(HandlingEvent event, Long deliveryId, Long transportId) {
+    public HandlingEventDTO saveHandlingEvent(HandlingEvent event, Long deliveryId, Long transportId) {
         ProductDelivery productDelivery = productDeliveryRepository.findById(deliveryId).orElseThrow(() -> new NotFoundException("Delivery not found"));
 
 
@@ -87,18 +88,18 @@ public class HandlingEventServiceImplementation implements HandlingEventService 
         productDelivery.getDeliveryHistory().addEvent(handlingEvent);
         transportMovement.addHandlingEvent(handlingEvent);
 
-        return handlingEventRepository.save(handlingEvent);
+        return HandlingEventMapper.INSTANCE.entityToDTO(handlingEventRepository.save(handlingEvent));
     }
 
     @Override
-    public HandlingEvent updateHandlingEvent(HandlingEvent event) {
+    public HandlingEventDTO updateHandlingEvent(HandlingEvent event) {
         return handlingEventRepository.findById(event.getHandlingEventId())
                 .map(e -> {
                     e.setTransportMovement(event.getTransportMovement());
                     e.setDeliveryHistory(event.getDeliveryHistory());
                     e.setState(event.getState());
                     e.setTimeStamp(event.getTimeStamp());
-                    return handlingEventRepository.save(e);
+                    return HandlingEventMapper.INSTANCE.entityToDTO(handlingEventRepository.save(e));
                 }).orElseThrow(()-> new NotFoundException("Handling event not found"));
     }
 

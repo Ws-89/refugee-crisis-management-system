@@ -31,14 +31,15 @@ public class VehicleServiceImplementation implements VehicleService {
 
  /* returns vehicle with transport movement list */
     @Override
-    public Vehicle findById(Long id) {
+    public VehicleDTO findById(Long id) {
         return vehicleRepository.findById(id)
+                .map(v -> VehicleMapper.INSTANCE.entityToDTO(v))
                 .orElseThrow(() -> new NotFoundException(String.format("Vehicle with id %s not found", id)));
     }
 
 
     @Override
-    public Vehicle saveVehicle(Vehicle source) {
+    public VehicleDTO saveVehicle(Vehicle source) {
         Optional<Vehicle> ifExists = vehicleRepository.findByLicensePlate(source.getLicensePlate());
         if(ifExists.isPresent()) {
             throw new IllegalStateException(String.format("Vehicle with license plate %s", source.getLicensePlate()));
@@ -46,32 +47,27 @@ public class VehicleServiceImplementation implements VehicleService {
         Vehicle vehicle = new Vehicle();
         vehicle.update(source);
 
-        return vehicleRepository.save(vehicle);
+        return VehicleMapper.INSTANCE.entityToDTO(vehicleRepository.save(vehicle));
     }
 
     @Override
     @Transactional
     public VehicleDTO updateVehicle(Vehicle source) {
-        Vehicle vehicleToUpdate = findById(source.getVehicleId());
-        vehicleToUpdate.update(source);
-        Vehicle vehicle = vehicleRepository.save(vehicleToUpdate);
-        VehicleDTO vehicleDTO = new VehicleDTO(
-                vehicle.getVehicleId(),
-                vehicle.getBrand(),
-                vehicle.getModel(),
-                vehicle.getEngine(),
-                vehicle.getCapacity(),
-                vehicle.getVehicleCategory(),
-                vehicle.getLicensePlate()
-        );
-        return vehicleDTO;
+        return vehicleRepository.findById(source.getVehicleId())
+                .map(v -> {
+                    v.update(source);
+                    return VehicleMapper.INSTANCE.entityToDTO(vehicleRepository.save(v)); })
+                .orElseThrow(() -> new NotFoundException(String.format("Vehicle with id %s not found", source.getVehicleId())));
     }
 
     @Override
     public Long deleteVehicle(Long id) {
-        Vehicle vehicleToDelete = findById(id);
-        vehicleRepository.delete(vehicleToDelete);
-        return vehicleToDelete.getVehicleId();
+        return vehicleRepository.findById(id)
+                .map(v -> {
+                    vehicleRepository.delete(v);
+                    return v.getVehicleId();
+                })
+                .orElseThrow(() -> new NotFoundException(String.format("Vehicle with id %s not found", id)));
     }
 
     @Override

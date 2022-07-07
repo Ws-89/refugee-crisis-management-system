@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -19,17 +21,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @Table(name = "tbl_vehicle")
-@NamedEntityGraph(name="graph.VehicleTransportMovement",
-        attributeNodes = {@NamedAttributeNode(value = "transportMovement", subgraph = "subgraph.transportMovement")},
-        subgraphs = {@NamedSubgraph(
-                            name = "subgraph.transportMovement", attributeNodes= {
-                                @NamedAttributeNode(value = "handlingEvents"),
-                                @NamedAttributeNode(value = "startingAddress"),
-                                @NamedAttributeNode(value = "deliverySpecification", subgraph = "subgraph.deliverySpecification")}),
-                    @NamedSubgraph(
-                            name = "subgraph.deliverySpecification", attributeNodes =
-                                @NamedAttributeNode(value = "deliveryAddress"))
-        })
+@NamedEntityGraph(name="graph.VehicleTransportMovement", attributeNodes = {@NamedAttributeNode(value = "transportMovement")})
 public class Vehicle implements Serializable, Comparable<Vehicle> {
 
     @Id
@@ -50,14 +42,10 @@ public class Vehicle implements Serializable, Comparable<Vehicle> {
     private Double capacity;
     private String vehicleCategory;
     private String licensePlate;
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @OneToMany(
             mappedBy = "vehicle"
     )
-    @JsonIdentityInfo(
-            generator = ObjectIdGenerators.PropertyGenerator.class,
-            property = "transportMovementId")
-    private Set<TransportMovement> transportMovement = new HashSet<>();
+    private List<TransportMovement> transportMovement = new ArrayList<>();
 
     public Vehicle(Double capacity, String licensePlate) {
         this.capacity = capacity;
@@ -136,11 +124,11 @@ public class Vehicle implements Serializable, Comparable<Vehicle> {
     }
 
 
-    public Set<TransportMovement> getTransportMovement() {
+    public List<TransportMovement> getTransportMovement() {
         return transportMovement;
     }
 
-    public void setTransportMovement(Set<TransportMovement> transportMovement) {
+    public void setTransportMovement(List<TransportMovement> transportMovement) {
         this.transportMovement = transportMovement;
     }
 

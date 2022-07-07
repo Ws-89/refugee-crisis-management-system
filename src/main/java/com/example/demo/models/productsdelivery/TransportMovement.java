@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.List;
@@ -17,12 +19,14 @@ import java.util.Set;
 @AllArgsConstructor
 @NamedEntityGraph(name = "graph.TransportMovementHandlingEvents",
         attributeNodes = {
-            @NamedAttributeNode(value = "handlingEvents"),
+            @NamedAttributeNode(value = "handlingEvents", subgraph = "subgraph.handlingEvents"),
             @NamedAttributeNode(value = "startingAddress"),
-            @NamedAttributeNode(value = "vehicle"),
+            @NamedAttributeNode(value = "vehicle"
+            ),
             @NamedAttributeNode(value = "deliverySpecification", subgraph = "subgraph.deliverySpecification")},
         subgraphs = {
-            @NamedSubgraph(name = "subgraph.deliverySpecification", attributeNodes = {@NamedAttributeNode(value = "deliveryAddress")})
+            @NamedSubgraph(name = "subgraph.deliverySpecification", attributeNodes = {@NamedAttributeNode(value = "deliveryAddress")}),
+            @NamedSubgraph(name = "subgraph.handlingEvents", attributeNodes = {@NamedAttributeNode(value = "transportMovement")})
         })
 public class TransportMovement {
 
@@ -41,9 +45,6 @@ public class TransportMovement {
     @OneToMany(
             mappedBy = "transportMovement"
     )
-    @JsonIdentityInfo(
-            generator = ObjectIdGenerators.PropertyGenerator.class,
-            property = "handlingEventId")
     private List<HandlingEvent> handlingEvents;
     @OneToOne(
             cascade = CascadeType.ALL
@@ -53,7 +54,6 @@ public class TransportMovement {
             referencedColumnName = "delivery_specification_id"
     )
     private DeliverySpecification deliverySpecification;
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @OneToOne(
             cascade = CascadeType.MERGE,
             fetch = FetchType.LAZY
@@ -63,7 +63,6 @@ public class TransportMovement {
             referencedColumnName = "delivery_address_id"
     )
     private DeliveryAddress startingAddress;
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(
             fetch = FetchType.LAZY,
             cascade = CascadeType.MERGE
@@ -72,9 +71,6 @@ public class TransportMovement {
             name = "vehicle_id",
             referencedColumnName = "vehicle_id"
     )
-    @JsonIdentityInfo(
-            generator = ObjectIdGenerators.PropertyGenerator.class,
-            property = "vehicleId")
     private Vehicle vehicle;
 
     public void addHandlingEvent(HandlingEvent event){

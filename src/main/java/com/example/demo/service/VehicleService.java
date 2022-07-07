@@ -7,8 +7,8 @@ import java.util.List;
 
 public interface VehicleService {
 
-    public Vehicle findById(Long id);
-    public Vehicle saveVehicle(Vehicle product);
+    public VehicleDTO findById(Long id);
+    public VehicleDTO saveVehicle(Vehicle product);
     public VehicleDTO updateVehicle(Vehicle product);
     public List<VehicleDTO> findAllVehiclesWithoutTransportMovement();
     public Long deleteVehicle(Long id);

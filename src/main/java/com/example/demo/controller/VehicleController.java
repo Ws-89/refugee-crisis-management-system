@@ -21,7 +21,7 @@ public class VehicleController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<Vehicle> saveVehicle(@RequestBody Vehicle product) {
+    public ResponseEntity<VehicleDTO> saveVehicle(@RequestBody Vehicle product) {
         return ResponseEntity.ok(vehicleService.saveVehicle(product));
     }
 

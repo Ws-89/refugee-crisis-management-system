@@ -20,13 +20,13 @@ public class HandlingEventsController {
     }
 
     @PostMapping("/save/{deliveryId}/{transportId}")
-    public ResponseEntity<HandlingEvent> saveHandlingEvent(@RequestBody HandlingEvent handlingEvent,
+    public ResponseEntity<HandlingEventDTO> saveHandlingEvent(@RequestBody HandlingEvent handlingEvent,
                                                            @PathVariable("deliveryId") Long deliveryId, @PathVariable("transportId") Long transportId){
         return ResponseEntity.ok(handlingEventService.saveHandlingEvent(handlingEvent, deliveryId, transportId));
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<HandlingEvent> findOne(@PathVariable("id") Long id){
+    public ResponseEntity<HandlingEventDTO> findOne(@PathVariable("id") Long id){
         return ResponseEntity.ok(handlingEventService.getHandlingEvent(id));
     }
 
@@ -36,7 +36,7 @@ public class HandlingEventsController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<HandlingEvent> updateHandlingEvent(@RequestBody HandlingEvent handlingEvent){
+    public ResponseEntity<HandlingEventDTO> updateHandlingEvent(@RequestBody HandlingEvent handlingEvent){
         return ResponseEntity.ok(handlingEventService.updateHandlingEvent(handlingEvent));
     }
 

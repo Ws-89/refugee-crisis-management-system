@@ -22,7 +22,7 @@ public class TransportMovementController {
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<TransportMovement> findById(@PathVariable("id") Long id) {
+    public ResponseEntity<TransportMovementDTO> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(this.transportMovementService.findById(id));
     }
 
@@ -32,7 +32,7 @@ public class TransportMovementController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<TransportMovement> save(@RequestBody TransportMovement transportMovement){
+    public ResponseEntity<TransportMovementDTO> save(@RequestBody TransportMovement transportMovement){
         return ResponseEntity.ok(this.transportMovementService.save(transportMovement));
     }
 
@@ -42,7 +42,7 @@ public class TransportMovementController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<TransportMovement> update(@RequestBody TransportMovement transportMovement){
+    public ResponseEntity<TransportMovementDTO> update(@RequestBody TransportMovement transportMovement){
         return ResponseEntity.ok(this.transportMovementService.update(transportMovement));
     }
 

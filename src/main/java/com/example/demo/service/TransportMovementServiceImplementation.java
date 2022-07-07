@@ -38,13 +38,14 @@ public class TransportMovementServiceImplementation implements TransportMovement
 
 
     @Override
-    public TransportMovement findById(Long id) {
-        return transportMovementRepo.findById(id).orElseThrow(()-> new NotFoundException("Transport movement not found"));
+    public TransportMovementDTO findById(Long id) {
+        return transportMovementRepo.findById(id).map(t -> TransportMovementMapper.INSTANCE.entityToDTO(t))
+                .orElseThrow(()-> new NotFoundException("Transport movement not found"));
     }
 
     @Override
     @Transactional
-    public TransportMovement save(TransportMovement transportMovement) {
+    public TransportMovementDTO save(TransportMovement transportMovement) {
 
         DeliveryAddress startingAddress = deliveryAddressRepository.findById(
                 transportMovement.getStartingAddress().getDeliveryAddressId()
@@ -74,7 +75,7 @@ public class TransportMovementServiceImplementation implements TransportMovement
 
         vehicle.addTransportMovement(tmToSave);
 
-        return transportMovementRepo.save(tmToSave);
+        return TransportMovementMapper.INSTANCE.entityToDTO(transportMovementRepo.save(tmToSave));
     }
 
     @Override
@@ -87,14 +88,14 @@ public class TransportMovementServiceImplementation implements TransportMovement
     }
 
     @Override
-    public TransportMovement update(TransportMovement transportMovement) {
+    public TransportMovementDTO update(TransportMovement transportMovement) {
         return transportMovementRepo.findById(transportMovement.getTransportMovementId())
                 .map(transport -> {
                     transport.setDeliverySpecification(transportMovement.getDeliverySpecification());
                     transport.setHandlingEvents(transportMovement.getHandlingEvents());
                     transport.setStartingAddress(transportMovement.getStartingAddress());
                     transport.setVehicle(transportMovement.getVehicle());
-                    return transportMovementRepo.save(transport);
+                    return TransportMovementMapper.INSTANCE.entityToDTO(transportMovementRepo.save(transport));
                 })
                 .orElseThrow(()-> new NotFoundException("Transport movement not found"));
     }

@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.HandlingEventDTO;
 import com.example.demo.models.productsdelivery.HandlingEvent;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,7 +27,7 @@ class HandlingEventServiceImplementationTest {
     @Test
     void saveHandlingEvent() {
 
-        HandlingEvent handlingEvent = this.handlingEventService.saveHandlingEvent(null, 26L, 44L);
+        HandlingEventDTO handlingEvent = this.handlingEventService.saveHandlingEvent(null, 26L, 44L);
         assertThat(handlingEvent).isInstanceOf(HandlingEvent.class);
     }
 

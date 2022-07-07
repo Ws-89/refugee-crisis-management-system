@@ -7,10 +7,10 @@ import java.util.List;
 
 public interface TransportMovementService {
 
-    TransportMovement findById(Long id);
-    TransportMovement save(TransportMovement transportMovement);
+    TransportMovementDTO findById(Long id);
+    TransportMovementDTO save(TransportMovement transportMovement);
     Long delete(Long id);
-    TransportMovement update(TransportMovement transportMovement);
+    TransportMovementDTO update(TransportMovement transportMovement);
     List<TransportMovementDTO> findAll();
 
 
