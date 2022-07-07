@@ -26,7 +26,7 @@ public class VehicleController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Vehicle> updateVehicle(@RequestBody Vehicle product){
+    public ResponseEntity<VehicleDTO> updateVehicle(@RequestBody Vehicle product){
         return ResponseEntity.ok(vehicleService.updateVehicle(product));
     }
 

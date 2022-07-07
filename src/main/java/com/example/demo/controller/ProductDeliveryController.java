@@ -20,7 +20,7 @@ public class ProductDeliveryController {
 
     @GetMapping("/get/{id}")
     public ResponseEntity<ProductDelivery> findOne(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(this.productDeliveryServiceImplementation.getOne(id));
+        return ResponseEntity.ok(this.productDeliveryServiceImplementation.findById(id));
     }
 
     @GetMapping("/list")

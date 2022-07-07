@@ -1,9 +1,6 @@
 package com.example.demo.productsDelivery;
 
-import com.example.demo.models.productsdelivery.ProductDelivery;
-import com.example.demo.models.productsdelivery.ProductDeliveryDTO;
 import com.example.demo.repo.ProductDeliveryRepository;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 

@@ -33,7 +33,7 @@ public class ProductDeliveryServiceImplementation implements ProductDeliveryServ
     }
 
     @Override
-    public ProductDelivery getOne(Long id) {
+    public ProductDelivery findById(Long id) {
         return productDeliveryRepository.findById(id).orElseThrow(() -> new NotFoundException(String.format("Product delivery with id %s not found", id)));
     }
 
@@ -82,7 +82,9 @@ public class ProductDeliveryServiceImplementation implements ProductDeliveryServ
 
     @Override
     public ProductDelivery updateProductDelivery(ProductDelivery productDelivery) {
-        ProductDelivery productToUpdate = getOne(productDelivery.getDeliveryId());
+
+
+        ProductDelivery productToUpdate = findById(productDelivery.getDeliveryId());
         productToUpdate.update(productDelivery);
         return productDeliveryRepository.save(productToUpdate);
     }
@@ -95,7 +97,7 @@ public class ProductDeliveryServiceImplementation implements ProductDeliveryServ
 
     @Override
     public Long deleteProductDelivery(Long id) {
-        ProductDelivery productToDelete = getOne(id);
+        ProductDelivery productToDelete = findById(id);
         productDeliveryRepository.delete(productToDelete);
         return productToDelete.getDeliveryId();
     }

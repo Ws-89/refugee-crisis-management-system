@@ -24,23 +24,20 @@ public class DeliverySpecification {
             strategy = GenerationType.SEQUENCE,
             generator = "delivery_specification_sequence"
     )
-    private Long delivery_specification_id;
+    @Column(name = "delivery_specification_id")
+    private Long deliverySpecificationId;
     private LocalDateTime arrivalTime;
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "delivery_address_id", referencedColumnName = "delivery_address_id")
     private DeliveryAddress deliveryAddress;
-    @JsonIgnore
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    @OneToOne(mappedBy = "deliverySpecification", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private ProductDelivery productDelivery;
 
     public Long getDeliverySpecificationId() {
-        return delivery_specification_id;
+        return deliverySpecificationId;
     }
 
     public void setDeliverySpecificationId(Long deliverySpecificationId) {
-        this.delivery_specification_id = deliverySpecificationId;
+        this.deliverySpecificationId = deliverySpecificationId;
     }
 
     public LocalDateTime getArrivalTime() {
@@ -59,11 +56,4 @@ public class DeliverySpecification {
         this.deliveryAddress = deliveryAddress;
     }
 
-    public ProductDelivery getProductDelivery() {
-        return productDelivery;
-    }
-
-    public void setProductDelivery(ProductDelivery productDelivery) {
-        this.productDelivery = productDelivery;
-    }
 }

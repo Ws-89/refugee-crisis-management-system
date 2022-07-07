@@ -11,18 +11,19 @@ import org.hibernate.HibernateException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityGraph;
-import javax.persistence.EntityManager;
+import javax.persistence.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Transactional
 @Service
 public class HandlingEventServiceImplementation implements HandlingEventService {
 
     private final ProductDeliveryRepository productDeliveryRepository;
     private final HandlingEventRepository handlingEventRepository;
     private final TransportMovementRepo transportMovementRepo;
+    @PersistenceContext(type = PersistenceContextType.EXTENDED)
     private final EntityManager em;
 
     public HandlingEventServiceImplementation(ProductDeliveryRepository productDeliveryRepository, HandlingEventRepository handlingEventRepository, TransportMovementRepo transportMovementRepo, EntityManager entityManager) {
@@ -34,7 +35,13 @@ public class HandlingEventServiceImplementation implements HandlingEventService 
 
     @Override
     public List<HandlingEvent> findAllByTransportMovementId(Long id) {
-        return this.handlingEventRepository.findAllByTransportMovementId(id);
+        EntityGraph<?> graph = em.getEntityGraph("graph.handlingEventTransportMovement");
+
+        TypedQuery<HandlingEvent> query = em.createQuery("FROM HandlingEvent he WHERE he.transportMovement.transportMovementId = ?1", HandlingEvent.class);
+        query.setParameter(1, id);
+        query.setHint("javax.persistence.fetchgraph", graph);
+        return query.getResultList();
+//        return this.handlingEventRepository.findAllByTransportMovementId(id);
     }
 
     @Override
@@ -47,7 +54,13 @@ public class HandlingEventServiceImplementation implements HandlingEventService 
     @Transactional
     public HandlingEvent saveHandlingEvent(HandlingEvent event, Long deliveryId, Long transportId) {
         ProductDelivery productDelivery = productDeliveryRepository.findById(deliveryId).orElseThrow(() -> new NotFoundException("Delivery not found"));
-//        TransportMovement transportMovement = transportMovementRepo.findById(transportId).orElseThrow(() -> new NotFoundException("Transport not found"));
+
+
+        Boolean isAreadyInThisTransport = productDelivery.getDeliveryHistory().getHandlingEvents().stream().filter(x -> x.getState() == HandlingEventState.INITIALIZING_EVENT)
+                .anyMatch(x -> x.getTransportMovement().getTransportMovementId().equals(transportId));
+        if(isAreadyInThisTransport){
+            throw new IllegalStateException("This package has already been placed on this transport");
+        }
 
         EntityGraph<?> graph = em.getEntityGraph("graph.TransportMovementHandlingEvents");
 
@@ -61,15 +74,14 @@ public class HandlingEventServiceImplementation implements HandlingEventService 
         }catch(HibernateException ex) {
             ex.printStackTrace();
         }
-        System.out.println(transportMovement);
         HandlingEvent handlingEvent = HandlingEvent.builder()
                         .state(event.getState())
                         .timeStamp(event.getTimeStamp())
                                 .build();
 
-        productDelivery.getDeliveryHistory().addEvent(handlingEvent);
 
-        productDelivery.setStatus(Status.Reserved);
+
+        productDelivery.getDeliveryHistory().addEvent(handlingEvent);
         transportMovement.addHandlingEvent(handlingEvent);
 
         return handlingEventRepository.save(handlingEvent);

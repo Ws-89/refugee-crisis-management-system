@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.ProductDTO;
 import com.example.demo.models.products.Product;
 import com.example.demo.service.ProductService;
 import org.springframework.http.ResponseEntity;
@@ -21,12 +22,12 @@ public class ProductController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<Product> saveProduct(@RequestBody Product product) {
+    public ResponseEntity<ProductDTO> saveProduct(@RequestBody Product product) {
         return ResponseEntity.ok(productService.saveProduct(product));
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Product> updateProduct(@RequestBody Product product){
+    public ResponseEntity<ProductDTO> updateProduct(@RequestBody Product product){
         return ResponseEntity.ok(productService.updateProduct(product));
     }
 
@@ -36,8 +37,13 @@ public class ProductController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<Product>> findAllHProducts(){
+    public ResponseEntity<List<ProductDTO>> findAllHProducts(){
         return ResponseEntity.ok(productService.findAllProducts());
+    }
+
+    @GetMapping("/find/{id}")
+    public ResponseEntity<ProductDTO> findOne(@PathVariable("id") Long id){
+        return ResponseEntity.ok(productService.findById(id));
     }
 
 //    @GetMapping("/list/hygiene")

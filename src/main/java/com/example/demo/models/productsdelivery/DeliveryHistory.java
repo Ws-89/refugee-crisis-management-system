@@ -40,7 +40,7 @@ public class DeliveryHistory {
             generator = ObjectIdGenerators.PropertyGenerator.class,
             property = "handlingEventId")
     private List<HandlingEvent> handlingEvents = new ArrayList<HandlingEvent>();
-    @JsonIgnore
+//    @JsonIgnore
     @OneToOne(
             mappedBy = "deliveryHistory"
     )

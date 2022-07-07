@@ -13,7 +13,9 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -76,7 +78,7 @@ public class ProductDelivery implements Serializable {
     private DeliverySpecification deliverySpecification;
 
     @OneToMany(mappedBy = "productDelivery", orphanRemoval = true)
-    private Set<Product> products = new HashSet<>();
+    private List<Product> products = new ArrayList<>();
 
     public void update(ProductDelivery source) {
         this.description = source.getDescription();
@@ -128,11 +130,11 @@ public class ProductDelivery implements Serializable {
         this.deliverySpecification = deliverySpecification;
     }
     @JsonManagedReference
-    public Set<Product> getProducts() {
+    public List<Product> getProducts() {
         return products;
     }
 
-    public void setProducts(Set<Product> products) {
+    public void setProducts(List<Product> products) {
         this.products = products;
     }
 

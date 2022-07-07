@@ -21,6 +21,7 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
 //    public List<Vehicle> getTrucks();
 
 
+
     @EntityGraph(value = "graph.VehicleTransportMovement", type = EntityGraph.EntityGraphType.FETCH)
     Optional<Vehicle> findById(Long id);
 

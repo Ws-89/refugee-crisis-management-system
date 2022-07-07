@@ -18,6 +18,15 @@ import static com.example.demo.models.productsdelivery.HandlingEventState.UNLOAD
 @AllArgsConstructor
 @Data
 @Builder
+@NamedEntityGraph(name = "graph.handlingEventTransportMovement",
+        attributeNodes = {
+            @NamedAttributeNode(value = "transportMovement", subgraph = "subgraph.HandlingEventTransportMovement"),
+            @NamedAttributeNode(value = "deliveryHistory", subgraph = "subgraph.HandlingEventDeliveryHistory")
+        },
+        subgraphs = {
+            @NamedSubgraph(name = "subgraph.HandlingEventTransportMovement", attributeNodes = {@NamedAttributeNode(value = "deliverySpecification")}),
+            @NamedSubgraph(name = "subgraph.HandlingEventDeliveryHistory", attributeNodes = {@NamedAttributeNode(value = "productDelivery")})
+        })
 public class HandlingEvent {
 
     @Id

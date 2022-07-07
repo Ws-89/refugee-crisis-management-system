@@ -1,7 +1,6 @@
 package com.example.demo.service;
 
 import com.example.demo.models.productsdelivery.HandlingEvent;
-import com.example.demo.models.productsdelivery.HandlingEventDTO;
 
 import java.util.List;
 

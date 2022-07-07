@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import com.example.demo.models.productsdelivery.HandlingEvent;
-import com.example.demo.models.productsdelivery.HandlingEventDTO;
 import com.example.demo.service.HandlingEventService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

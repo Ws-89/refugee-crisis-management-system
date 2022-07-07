@@ -54,19 +54,6 @@ class DemoApplicationTests {
 	@Autowired
 	private DeliveryAddressRepository deliveryAddressRepository;
 
-	@Autowired
-	private ProductDeliveryDAO productDeliveryDao;
-//	@Test
-//	void refugeeSave(){
-//		Refugee refugee = Refugee.builder()
-//				.person(Person.builder().name("John").surname("Doe").age(99).nationality("Some nationality").build())
-//				.address(Address.builder().city("Some other city").street("Some street").country("Some country").build())
-//				.contact(Contact.builder().email("some@wp.pl").telephoneNumber("123456789").build())
-//				.build();
-//
-//		refugeeService.saveRefugee(refugee);
-//	}
-
 	@Test
 	void saveProductDelivery(){
 //		ProductDelivery productDelivery = new ProductDelivery();
@@ -133,55 +120,6 @@ class DemoApplicationTests {
 //		ProductDelivery productDelivery = productDeliveryRepository.findById(1L).orElseThrow(() -> new NotFoundException("Not found"));
 //		handlingEvent.setDeliveryHistory(productDelivery.getDeliveryHistory());
 //		handlingEventRepository.save(handlingEvent);
-	}
+	}}
 
 
-	@Test
-	void getListByEntityManager(){
-		List<ProductDelivery> list = this.productDeliveryDao.getList();
-		System.out.println(list);
-	}
-
-	@Test
-	void saveByEntityManager(){
-
-		DeliverySpecification deliverySpecification = DeliverySpecification.builder()
-				.arrivalTime(LocalDateTime.now())
-				.build();
-
-		System.out.println(deliverySpecification);
-
-		ProductDelivery newProductDelivery = new ProductDelivery();
-		DeliveryAddress deliveryAddress = DeliveryAddress.builder()
-				.city("Bydgoszcz")
-				.postCode("85-164")
-				.street("Karpacka")
-				.build();
-
-		Set<DeliverySpecification> deliverySpecifications = new HashSet<>();
-		deliverySpecifications.add(deliverySpecification);
-
-		deliveryAddress.setDeliverySpecifications(deliverySpecifications);
-		deliverySpecification.setDeliveryAddress(deliveryAddress);
-
-		newProductDelivery.setDeliverySpecification(deliverySpecification);
-
-		Category category = Category.builder()
-				.categoryName("Food")
-				.build();
-
-		Product product = Product.builder()
-				.description("1")
-				.category(category)
-				.build();
-
-		Set<Product> products = new HashSet<>();
-		products.add(product);
-
-		newProductDelivery.setProducts(products);
-
-		ProductDelivery productDelivery = this.productDeliveryDao.save(newProductDelivery);
-		System.out.println(productDelivery);
-	}
-
-}

@@ -8,6 +8,7 @@ import com.example.demo.models.vehicles.Vehicle;
 import com.example.demo.repo.DeliveryAddressRepository;
 import com.example.demo.repo.TransportMovementRepo;
 import com.example.demo.repo.VehicleRepository;
+import org.hibernate.transform.ResultTransformer;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityGraph;
@@ -15,13 +16,11 @@ import javax.persistence.EntityManager;
 
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class TransportMovementServiceImplementation implements TransportMovementService {
+public class TransportMovementServiceImplementation implements TransportMovementService  {
 
     private final TransportMovementRepo transportMovementRepo;
     private final DeliveryAddressRepository deliveryAddressRepository;
@@ -100,13 +99,12 @@ public class TransportMovementServiceImplementation implements TransportMovement
     @Override
     @Transactional
     public Set<TransportMovement> findAll() {
-
         EntityGraph<?> graph = em.getEntityGraph("graph.TransportMovementHandlingEvents");
 
         TypedQuery<TransportMovement> query = em.createQuery("from TransportMovement", TransportMovement.class);
         query.setHint("javax.persistence.fetchgraph",graph);
-        Set<TransportMovement> transportMovement = query.getResultStream().collect(Collectors.toSet());
-        return transportMovement;
-//        return transportMovementRepo.findAll().stream().collect(Collectors.toSet());
+
+        return new HashSet<>( query.getResultList());
     }
+
 }

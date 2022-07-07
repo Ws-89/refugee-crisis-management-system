@@ -50,10 +50,20 @@ public class VehicleServiceImplementation implements VehicleService {
 
     @Override
     @Transactional
-    public Vehicle updateVehicle(Vehicle source) {
+    public VehicleDTO updateVehicle(Vehicle source) {
         Vehicle vehicleToUpdate = findById(source.getVehicleId());
         vehicleToUpdate.update(source);
-        return vehicleRepository.save(vehicleToUpdate);
+        Vehicle vehicle = vehicleRepository.save(vehicleToUpdate);
+        VehicleDTO vehicleDTO = new VehicleDTO(
+                vehicle.getVehicleId(),
+                vehicle.getBrand(),
+                vehicle.getModel(),
+                vehicle.getEngine(),
+                vehicle.getCapacity(),
+                vehicle.getVehicleCategory(),
+                vehicle.getLicensePlate()
+        );
+        return vehicleDTO;
     }
 
     @Override
@@ -66,11 +76,6 @@ public class VehicleServiceImplementation implements VehicleService {
     @Override
     @Transactional
     public List<Vehicle> findAllVehicles() {
-
-//        EntityGraph<?> graph = em.createEntityGraph("graph.VehicleTransportMovement");
-//        TypedQuery<Vehicle> q = em.createQuery("SELECT v FROM Vehicle v", Vehicle.class);
-//        q.setHint("javax.persistence.fetchgraph",graph);
-//        return q.getResultList();
         return vehicleRepository.findAll();
     }
 

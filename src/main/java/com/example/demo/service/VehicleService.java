@@ -9,7 +9,7 @@ public interface VehicleService {
 
     public Vehicle findById(Long id);
     public Vehicle saveVehicle(Vehicle product);
-    public Vehicle updateVehicle(Vehicle product);
+    public VehicleDTO updateVehicle(Vehicle product);
     public List<VehicleDTO> findAllVehiclesWithoutTransportMovement();
     public Long deleteVehicle(Long id);
     public List<Vehicle> findAllVehicles();
