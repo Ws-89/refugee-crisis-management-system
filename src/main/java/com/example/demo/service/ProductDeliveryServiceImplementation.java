@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.ProductDeliveryDTO;
+import com.example.demo.dto.ProductDeliveryMapper;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.models.products.*;
 import com.example.demo.models.productsdelivery.*;
@@ -9,11 +11,8 @@ import com.example.demo.repo.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityGraph;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductDeliveryServiceImplementation implements ProductDeliveryService{
@@ -33,13 +32,15 @@ public class ProductDeliveryServiceImplementation implements ProductDeliveryServ
     }
 
     @Override
-    public ProductDelivery findById(Long id) {
-        return productDeliveryRepository.findById(id).orElseThrow(() -> new NotFoundException(String.format("Product delivery with id %s not found", id)));
+    public ProductDeliveryDTO findById(Long id) {
+        return productDeliveryRepository.findById(id)
+                .map(p -> ProductDeliveryMapper.INSTANCE.entityToDTO(p))
+                .orElseThrow(() -> new NotFoundException(String.format("Product delivery with id %s not found", id)));
     }
 
     @Override
     @Transactional
-    public ProductDelivery saveProductDelivery(ProductDelivery source){
+    public ProductDeliveryDTO saveProductDelivery(ProductDelivery source){
 
         DeliveryAddress destinationAddress = deliveryAddressRepository.findById(source.getDeliverySpecification()
                 .getDeliveryAddress().getDeliveryAddressId()).orElseThrow(()-> new NotFoundException("Addres not found"));
@@ -59,7 +60,7 @@ public class ProductDeliveryServiceImplementation implements ProductDeliveryServ
                 .status(source.getStatus())
                 .build();
 
-        return productDeliveryRepository.save(productDelivery);
+        return ProductDeliveryMapper.INSTANCE.entityToDTO(productDeliveryRepository.save(productDelivery));
     }
 
     public void assignProductToDelivery(Long deliveryId, Long productId){
@@ -81,31 +82,28 @@ public class ProductDeliveryServiceImplementation implements ProductDeliveryServ
     }
 
     @Override
-    public ProductDelivery updateProductDelivery(ProductDelivery productDelivery) {
-
-
-        ProductDelivery productToUpdate = findById(productDelivery.getDeliveryId());
-        productToUpdate.update(productDelivery);
-        return productDeliveryRepository.save(productToUpdate);
-    }
-
-    @Override
-    public List<ProductDelivery> selectProductDeliveryForDisplayingWithoutProducts() {
-
-        return null;
+    public ProductDeliveryDTO updateProductDelivery(ProductDelivery productDelivery) {
+        return productDeliveryRepository.findById(productDelivery.getDeliveryId())
+                .map(p -> { p.update(productDelivery);
+                    productDeliveryRepository.save(p);
+                    return ProductDeliveryMapper.INSTANCE.entityToDTO(p);
+                })
+                .orElseThrow(() -> new NotFoundException(String.format("Product delivery with id %s not found", productDelivery.getDeliveryId())));
     }
 
     @Override
     public Long deleteProductDelivery(Long id) {
-        ProductDelivery productToDelete = findById(id);
-        productDeliveryRepository.delete(productToDelete);
-        return productToDelete.getDeliveryId();
+        return productDeliveryRepository.findById(id)
+                .map(p -> {
+                    productDeliveryRepository.delete(p);
+                    return p.getDeliveryId();
+                })
+                .orElseThrow(() -> new NotFoundException(String.format("Product delivery with id %s not found", id)));
     }
 
     @Override
-    public List<ProductDelivery> findAllProductDelivery() {
-//        return productDeliveryRepository.findAll();
-        return productDeliveryRepository.findAll();
+    public List<ProductDeliveryDTO> findAllProductDelivery() {
+        return productDeliveryRepository.findAll().stream().map(p -> ProductDeliveryMapper.INSTANCE.entityToDTO(p)).collect(Collectors.toList());
     }
 
 

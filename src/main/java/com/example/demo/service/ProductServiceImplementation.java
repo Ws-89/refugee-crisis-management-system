@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.ProductDTO;
+import com.example.demo.dto.ProductMapper;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.models.products.Product;
 import com.example.demo.repo.ProductRepository;
@@ -20,32 +21,15 @@ public class ProductServiceImplementation implements ProductService{
     }
 
     public ProductDTO findById(Long id) {
-        return productRepository.findById(id).map(p -> new ProductDTO(
-                p.getProductId(),
-                p.getExpirationDate(),
-                p.getName(),
-                p.getDescription(),
-                p.getWeight(),
-                p.getAmount(),
-                p.getState(),
-                p.getCategory(),
-                p.getReserved()))
+        return productRepository.findById(id)
+                .map(p -> ProductMapper.INSTANCE.productToProductDTO(p))
                 .orElseThrow(()-> new NotFoundException(String.format("Product with id %s not found", id)));
     }
 
     @Override
     public ProductDTO saveProduct(Product product) {
         Product p = productRepository.save(product);
-        return new ProductDTO(
-                p.getProductId(),
-                p.getExpirationDate(),
-                p.getName(),
-                p.getDescription(),
-                p.getWeight(),
-                p.getAmount(),
-                p.getState(),
-                p.getCategory(),
-                p.getReserved());
+        return ProductMapper.INSTANCE.productToProductDTO(p);
     }
 
     @Override
@@ -64,17 +48,7 @@ public class ProductServiceImplementation implements ProductService{
                     p.setProductDelivery(product.getProductDelivery());
 
                     productRepository.save(p);
-
-                    return new ProductDTO(
-                            p.getProductId(),
-                            p.getExpirationDate(),
-                            p.getName(),
-                            p.getDescription(),
-                            p.getWeight(),
-                            p.getAmount(),
-                            p.getState(),
-                            p.getCategory(),
-                            p.getReserved());
+                    return ProductMapper.INSTANCE.productToProductDTO(p);
                 } )
                 .orElseThrow(()-> new NotFoundException(String.format("Product with id %s not found", product.getProductId())));
     }
@@ -89,15 +63,6 @@ public class ProductServiceImplementation implements ProductService{
 
     @Override
     public List<ProductDTO> findAllProducts() {
-        return productRepository.findAll().stream().map(p -> new ProductDTO(
-                p.getProductId(),
-                p.getExpirationDate(),
-                p.getName(),
-                p.getDescription(),
-                p.getWeight(),
-                p.getAmount(),
-                p.getState(),
-                p.getCategory(),
-                p.getReserved())).collect(Collectors.toList());
-    }
+        return productRepository.findAll().stream().map(p -> ProductMapper.INSTANCE.productToProductDTO(p)).collect(Collectors.toList());
+}
 }

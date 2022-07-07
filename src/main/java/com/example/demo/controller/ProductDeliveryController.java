@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.ProductDeliveryDTO;
 import com.example.demo.models.productsdelivery.ProductDelivery;
 import com.example.demo.service.ProductDeliveryService;
 import com.google.gson.Gson;
@@ -19,22 +20,22 @@ public class ProductDeliveryController {
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<ProductDelivery> findOne(@PathVariable("id") Long id) {
+    public ResponseEntity<ProductDeliveryDTO> findOne(@PathVariable("id") Long id) {
         return ResponseEntity.ok(this.productDeliveryServiceImplementation.findById(id));
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<ProductDelivery>> findAllDelivery() {
+    public ResponseEntity<List<ProductDeliveryDTO>> findAllDelivery() {
         return ResponseEntity.ok(this.productDeliveryServiceImplementation.findAllProductDelivery());
     }
 
     @PostMapping("/save")
-    public ResponseEntity<ProductDelivery> createDelivery(@RequestBody ProductDelivery productDelivery){
+    public ResponseEntity<ProductDeliveryDTO> createDelivery(@RequestBody ProductDelivery productDelivery){
         return ResponseEntity.ok(this.productDeliveryServiceImplementation.saveProductDelivery(productDelivery));
     }
 
     @PutMapping("/update")
-    public ResponseEntity<ProductDelivery> updateDelivery(@RequestBody ProductDelivery productDelivery){
+    public ResponseEntity<ProductDeliveryDTO> updateDelivery(@RequestBody ProductDelivery productDelivery){
         return ResponseEntity.ok(this.productDeliveryServiceImplementation.updateProductDelivery(productDelivery));
     }
 

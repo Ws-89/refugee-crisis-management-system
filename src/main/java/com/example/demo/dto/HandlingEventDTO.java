@@ -1,13 +1,21 @@
 package com.example.demo.dto;
 
-import com.example.demo.dto.DeliveryHistoryDTO;
 import com.example.demo.models.productsdelivery.HandlingEventState;
-import com.example.demo.models.productsdelivery.TransportMovement;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
-public record HandlingEventDTO(Long handlingEventId,
-                               DeliveryHistoryDTO deliveryHistory,
-                               TransportMovementDTO transportMovement,
-                               HandlingEventState state,
-                               LocalDateTime timeStamp) { }
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class HandlingEventDTO {
+
+    private long handlingEventId;
+    private TransportMovementDTO transportMovement;
+    private DeliveryHistoryDTO deliveryHistory;
+    private HandlingEventState state;
+    private LocalDateTime timeStamp;
+}

@@ -47,6 +47,7 @@ public class TransportMovementServiceImplementation implements TransportMovement
         DeliveryAddress startingAddress = deliveryAddressRepository.findById(
                 transportMovement.getStartingAddress().getDeliveryAddressId()
         ).orElseThrow(()-> new NotFoundException("Starting address not found"));
+
         DeliveryAddress destinationAddress = deliveryAddressRepository.findById(
                 transportMovement.getDeliverySpecification().getDeliveryAddress().getDeliveryAddressId()
                 )

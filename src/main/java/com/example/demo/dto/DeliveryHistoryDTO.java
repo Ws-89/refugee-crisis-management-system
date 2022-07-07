@@ -1,4 +1,16 @@
 package com.example.demo.dto;
 
-public record DeliveryHistoryDTO(Long deliveryHistoryId,
-                                 ProductDeliveryDTO productDelivery) {}
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class DeliveryHistoryDTO {
+    private long deliveryHistoryId;
+    private List<HandlingEventDTO> handlingEvents;
+
+}

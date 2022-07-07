@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.DeliveryAddressDTO;
 import com.example.demo.models.productsdelivery.DeliveryAddress;
 import com.example.demo.service.DeliveryAddressService;
 import org.springframework.http.ResponseEntity;
@@ -19,12 +20,12 @@ public class DeliveryAddressController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<DeliveryAddress> save(@RequestBody DeliveryAddress deliveryAddress){
+    public ResponseEntity<DeliveryAddressDTO> save(@RequestBody DeliveryAddress deliveryAddress){
         return ResponseEntity.ok(deliveryAddressService.save(deliveryAddress));
     }
 
     @PutMapping("/update")
-    public ResponseEntity<DeliveryAddress> update(@RequestBody DeliveryAddress deliveryAddress){
+    public ResponseEntity<DeliveryAddressDTO> update(@RequestBody DeliveryAddress deliveryAddress){
         return ResponseEntity.ok(deliveryAddressService.update(deliveryAddress));
     }
 
@@ -34,12 +35,12 @@ public class DeliveryAddressController {
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<DeliveryAddress> findById(@PathVariable("id")Long id){
+    public ResponseEntity<DeliveryAddressDTO> findById(@PathVariable("id")Long id){
         return ResponseEntity.ok(deliveryAddressService.findById(id));
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<DeliveryAddress>> findAll(){
+    public ResponseEntity<List<DeliveryAddressDTO>> findAll(){
         return ResponseEntity.ok(deliveryAddressService.findAll());
     }
 }

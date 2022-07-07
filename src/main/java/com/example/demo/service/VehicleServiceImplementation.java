@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.models.vehicles.Vehicle;
 import com.example.demo.models.vehicles.VehicleDTO;
+import com.example.demo.models.vehicles.VehicleMapper;
 import com.example.demo.repo.VehicleRepository;
 import org.springframework.stereotype.Service;
 
@@ -75,8 +76,8 @@ public class VehicleServiceImplementation implements VehicleService {
 
     @Override
     @Transactional
-    public List<Vehicle> findAllVehicles() {
-        return vehicleRepository.findAll();
+    public List<VehicleDTO> findAllVehicles() {
+        return vehicleRepository.findAll().stream().map(v -> VehicleMapper.INSTANCE.entityToDTO(v)).collect(Collectors.toList());
     }
 
     public List<VehicleDTO> findAllVehiclesWithoutTransportMovement(){

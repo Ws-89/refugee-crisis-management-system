@@ -37,7 +37,7 @@ public class VehicleController {
 
     @GetMapping("/list")
     public ResponseEntity<List<VehicleDTO>> findAllVehicles(){
-        return ResponseEntity.ok(vehicleService.findAllVehiclesWithoutTransportMovement());
+        return ResponseEntity.ok(vehicleService.findAllVehicles());
 //        return ResponseEntity.ok(vehicleService.findAllVehicles());
     }
 

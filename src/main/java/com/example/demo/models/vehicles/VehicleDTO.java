@@ -5,15 +5,18 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-public record VehicleDTO (
-     Long vehicleId,
-     String brand,
-     String model,
-     String engine,
-     Double capacity,
-     String vehicleCategory,
-     String licensePlate
-){}
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class VehicleDTO {
+    private Long vehicleId;
+    private String brand;
+    private String model;
+    private String engine;
+    private Double capacity;
+    private String vehicleCategory;
+    private String licensePlate;
+}
 
 
 

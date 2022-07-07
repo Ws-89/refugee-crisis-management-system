@@ -1,14 +1,21 @@
 package com.example.demo.dto;
 
-import com.example.demo.models.products.Product;
 import com.example.demo.models.products.Status;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.Set;
+import java.util.List;
 
-public record ProductDeliveryDTO(Long deliveryId,
-                                 DeliverySpecificationDTO deliverySpecification,
-                                 String description,
-                                 DeliveryAddressDTO startingAddress,
-                                 Double getTotalWeight,
-                                 Set<Product> products,
-                                    Status getStatus){}
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class ProductDeliveryDTO{
+    private long deliveryId;
+    private String description;
+    private Double totalWeight;
+    private Status status;
+    private DeliveryAddressDTO startingAddress;
+    private DeliverySpecificationDTO deliverySpecification;
+    private List<ProductDTO> products;
+}

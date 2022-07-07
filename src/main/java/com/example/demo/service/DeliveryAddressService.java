@@ -1,11 +1,14 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.DeliveryAddressDTO;
+import com.example.demo.dto.DeliveryAddressMapper;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.models.productsdelivery.DeliveryAddress;
 import com.example.demo.repo.DeliveryAddressRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class DeliveryAddressService {
@@ -16,38 +19,42 @@ public class DeliveryAddressService {
         this.deliveryAddressRepository = deliveryAddressRepository;
     }
 
-    public DeliveryAddress findById(Long id){
-        return deliveryAddressRepository.findById(id).orElseThrow(() -> new NotFoundException("Addres not found"));
+    public DeliveryAddressDTO findById(Long id){
+        return deliveryAddressRepository.findById(id)
+                .map(a -> DeliveryAddressMapper.INSTANCE.entityToDTO(a)).orElseThrow(() -> new NotFoundException("Addres not found"));
     }
 
-    public DeliveryAddress findByCity(String city){
-        return deliveryAddressRepository.findByCity(city).orElseThrow(() -> new NotFoundException("Addres not found"));
+    public DeliveryAddressDTO findByCity(String city){
+        return deliveryAddressRepository.findByCity(city)
+                .map(a -> DeliveryAddressMapper.INSTANCE.entityToDTO(a)).orElseThrow(() -> new NotFoundException("Addres not found"));
     }
 
-    public DeliveryAddress findByPostCode(String postCode){
-        return deliveryAddressRepository.findByPostCode(postCode).orElseThrow(() -> new NotFoundException("Addres not found"));
+    public DeliveryAddressDTO findByPostCode(String postCode){
+        return deliveryAddressRepository.findByPostCode(postCode)
+                .map(a -> DeliveryAddressMapper.INSTANCE.entityToDTO(a)).orElseThrow(() -> new NotFoundException("Addres not found"));
     }
 
-    public DeliveryAddress findByStreet(String street){
-        return deliveryAddressRepository.findByStreet(street).orElseThrow(() -> new NotFoundException("Addres not found"));
+    public DeliveryAddressDTO findByStreet(String street){
+        return deliveryAddressRepository.findByStreet(street)
+                .map(a -> DeliveryAddressMapper.INSTANCE.entityToDTO(a)).orElseThrow(() -> new NotFoundException("Addres not found"));
     }
 
-    public List<DeliveryAddress> findAll(){
-        return deliveryAddressRepository.findAll();
+    public List<DeliveryAddressDTO> findAll(){
+        return deliveryAddressRepository.findAll().stream().map(a -> DeliveryAddressMapper.INSTANCE.entityToDTO(a)).collect(Collectors.toList());
     }
 
-    public DeliveryAddress save(DeliveryAddress deliveryAddress){
-        return deliveryAddressRepository.save(deliveryAddress);
+    public DeliveryAddressDTO save(DeliveryAddress deliveryAddress){
+        return DeliveryAddressMapper.INSTANCE.entityToDTO(deliveryAddressRepository.save(deliveryAddress));
     }
 
-    public DeliveryAddress update(DeliveryAddress deliveryAddress){
+    public DeliveryAddressDTO update(DeliveryAddress deliveryAddress){
         return deliveryAddressRepository.findById(deliveryAddress.getDeliveryAddressId())
                 .map(a -> {
                     a.setCity(deliveryAddress.getCity());
                     a.setStreet(deliveryAddress.getStreet());
                     a.setPostCode(deliveryAddress.getPostCode());
                     a.setState(deliveryAddress.getState());
-                    return deliveryAddressRepository.save(a);
+                    return DeliveryAddressMapper.INSTANCE.entityToDTO(deliveryAddressRepository.save(a));
                 })
                 .orElseThrow(() -> new NotFoundException("Addres not found"));
     }

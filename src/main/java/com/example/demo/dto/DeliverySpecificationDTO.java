@@ -1,10 +1,17 @@
 package com.example.demo.dto;
 
-import com.example.demo.models.productsdelivery.DeliveryAddress;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-public record DeliverySpecificationDTO(Long deliverySpecificationId,
-                                       LocalDateTime arrivalTime,
-                                       DeliveryAddress deliveryAddress) {
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class DeliverySpecificationDTO {
+    private Long deliverySpecificationId;
+    private LocalDateTime arrivalTime;
+    private DeliveryAddressDTO deliveryAddress;
+
 }
