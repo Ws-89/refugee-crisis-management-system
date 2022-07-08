@@ -31,7 +31,6 @@ public class DeliveryHistory {
     )
     @Column(name = "delivery_history_id")
     private long deliveryHistoryId;
-    @JsonIgnore
     @OneToMany(
             mappedBy = "deliveryHistory",
             orphanRemoval = true
@@ -39,8 +38,8 @@ public class DeliveryHistory {
     @JsonIdentityInfo(
             generator = ObjectIdGenerators.PropertyGenerator.class,
             property = "handlingEventId")
+    @JsonManagedReference
     private List<HandlingEvent> handlingEvents = new ArrayList<HandlingEvent>();
-//    @JsonIgnore
     @OneToOne(
             mappedBy = "deliveryHistory"
     )

@@ -1,14 +1,13 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.HandlingEventDTO;
-import com.example.demo.dto.HandlingEventMapper;
+import com.example.demo.mappers.HandlingEventMapper;
 import com.example.demo.exception.NotFoundException;
-import com.example.demo.models.products.Status;
 import com.example.demo.models.productsdelivery.*;
-import com.example.demo.models.vehicles.Vehicle;
 import com.example.demo.repo.HandlingEventRepository;
 import com.example.demo.repo.ProductDeliveryRepository;
 import com.example.demo.repo.TransportMovementRepo;
+import lombok.RequiredArgsConstructor;
 import org.hibernate.HibernateException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,30 +20,25 @@ import java.util.stream.Collectors;
 
 @Transactional
 @Service
+@RequiredArgsConstructor
 public class HandlingEventServiceImplementation implements HandlingEventService {
 
     private final ProductDeliveryRepository productDeliveryRepository;
     private final HandlingEventRepository handlingEventRepository;
     private final TransportMovementRepo transportMovementRepo;
-    @PersistenceContext(type = PersistenceContextType.EXTENDED)
+    @PersistenceContext(type = PersistenceContextType.TRANSACTION)
     private final EntityManager em;
 
-    public HandlingEventServiceImplementation(ProductDeliveryRepository productDeliveryRepository, HandlingEventRepository handlingEventRepository, TransportMovementRepo transportMovementRepo, EntityManager entityManager) {
-        this.productDeliveryRepository = productDeliveryRepository;
-        this.handlingEventRepository = handlingEventRepository;
-        this.transportMovementRepo = transportMovementRepo;
-        this.em = entityManager;
-    }
+    public static final String GET_ALL_HANDLING_EVENTS_BY_TRANSPORT_MOVEMENT_ID = "FROM HandlingEvent he WHERE he.transportMovement.transportMovementId = ?1";
 
     @Override
     public List<HandlingEventDTO> findAllByTransportMovementId(Long id) {
         EntityGraph<?> graph = em.getEntityGraph("graph.handlingEventTransportMovement");
 
-        TypedQuery<HandlingEvent> query = em.createQuery("FROM HandlingEvent he WHERE he.transportMovement.transportMovementId = ?1", HandlingEvent.class);
+        TypedQuery<HandlingEvent> query = em.createQuery(GET_ALL_HANDLING_EVENTS_BY_TRANSPORT_MOVEMENT_ID, HandlingEvent.class);
         query.setParameter(1, id);
         query.setHint("javax.persistence.fetchgraph", graph);
         return query.getResultList().stream().map(h -> HandlingEventMapper.INSTANCE.entityToDTO(h)).collect(Collectors.toList());
-//        return this.handlingEventRepository.findAllByTransportMovementId(id);
     }
 
     @Override
@@ -53,19 +47,32 @@ public class HandlingEventServiceImplementation implements HandlingEventService 
                 .map(h -> HandlingEventMapper.INSTANCE.entityToDTO(h)).orElseThrow(() -> new NotFoundException("Handling event not found"));
     }
 
-
     @Override
     @Transactional
     public HandlingEventDTO saveHandlingEvent(HandlingEvent event, Long deliveryId, Long transportId) {
         ProductDelivery productDelivery = productDeliveryRepository.findById(deliveryId).orElseThrow(() -> new NotFoundException("Delivery not found"));
 
+        Boolean isAreadyInThisTransport = isAreadyInThisTransport(transportId, productDelivery);
 
-        Boolean isAreadyInThisTransport = productDelivery.getDeliveryHistory().getHandlingEvents().stream().filter(x -> x.getState() == HandlingEventState.INITIALIZING_EVENT)
-                .anyMatch(x -> x.getTransportMovement().getTransportMovementId().equals(transportId));
         if(isAreadyInThisTransport){
             throw new IllegalStateException("This package has already been placed on this transport");
+
         }
 
+        TransportMovement transportMovement = getTransportMovement(transportId);
+
+        HandlingEvent handlingEvent = HandlingEvent.builder()
+                        .state(event.getState())
+                        .timeStamp(event.getTimeStamp())
+                                .build();
+
+        productDelivery.getDeliveryHistory().addEvent(handlingEvent);
+        transportMovement.addHandlingEvent(handlingEvent);
+
+        return HandlingEventMapper.INSTANCE.entityToDTO(handlingEventRepository.save(handlingEvent));
+    }
+
+    private TransportMovement getTransportMovement(Long transportId) {
         EntityGraph<?> graph = em.getEntityGraph("graph.TransportMovementHandlingEvents");
 
         Map<String, Object> hints = new HashMap<String, Object>();
@@ -78,17 +85,12 @@ public class HandlingEventServiceImplementation implements HandlingEventService 
         }catch(HibernateException ex) {
             ex.printStackTrace();
         }
-        HandlingEvent handlingEvent = HandlingEvent.builder()
-                        .state(event.getState())
-                        .timeStamp(event.getTimeStamp())
-                                .build();
+        return transportMovement;
+    }
 
-
-
-        productDelivery.getDeliveryHistory().addEvent(handlingEvent);
-        transportMovement.addHandlingEvent(handlingEvent);
-
-        return HandlingEventMapper.INSTANCE.entityToDTO(handlingEventRepository.save(handlingEvent));
+    private boolean isAreadyInThisTransport(Long transportId, ProductDelivery productDelivery) {
+        return productDelivery.getDeliveryHistory().getHandlingEvents().stream().filter(x -> x.getState() == HandlingEventState.INITIALIZING_EVENT)
+                .anyMatch(x -> x.getTransportMovement().getTransportMovementId().equals(transportId));
     }
 
     @Override
@@ -105,7 +107,6 @@ public class HandlingEventServiceImplementation implements HandlingEventService 
 
     @Override
     public Long removeHandlingEvent(Long id) {
-
         return handlingEventRepository.findById(id)
                 .map(e -> {
                     handlingEventRepository.delete(e);

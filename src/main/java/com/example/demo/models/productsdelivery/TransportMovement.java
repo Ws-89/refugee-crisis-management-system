@@ -4,6 +4,7 @@ import com.example.demo.models.vehicles.Vehicle;
 import com.fasterxml.jackson.annotation.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
@@ -15,6 +16,7 @@ import java.util.Set;
 @Entity
 @Table(name = "tbl_transport_movement")
 @Builder
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @NamedEntityGraph(name = "graph.TransportMovementHandlingEvents",
@@ -78,44 +80,4 @@ public class TransportMovement {
         event.setTransportMovement(this);
     }
 
-    public Long getTransportMovementId() {
-        return transportMovementId;
-    }
-
-    public void setTransportMovementId(Long transportMovementId) {
-        this.transportMovementId = transportMovementId;
-    }
-
-    public List<HandlingEvent> getHandlingEvents() {
-        return handlingEvents;
-    }
-
-    public void setHandlingEvents(List<HandlingEvent> handlingEvents) {
-        this.handlingEvents = handlingEvents;
-    }
-
-    public DeliverySpecification getDeliverySpecification() {
-        return deliverySpecification;
-    }
-
-    public void setDeliverySpecification(DeliverySpecification deliverySpecification) {
-        this.deliverySpecification = deliverySpecification;
-    }
-
-    public DeliveryAddress getStartingAddress() {
-        return startingAddress;
-    }
-
-    public void setStartingAddress(DeliveryAddress startingAddress) {
-        this.startingAddress = startingAddress;
-    }
-
-
-    public Vehicle getVehicle() {
-        return vehicle;
-    }
-
-    public void setVehicle(Vehicle vehicle) {
-        this.vehicle = vehicle;
-    }
 }

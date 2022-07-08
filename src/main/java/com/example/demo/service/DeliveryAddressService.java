@@ -1,23 +1,21 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.DeliveryAddressDTO;
-import com.example.demo.dto.DeliveryAddressMapper;
+import com.example.demo.mappers.DeliveryAddressMapper;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.models.productsdelivery.DeliveryAddress;
 import com.example.demo.repo.DeliveryAddressRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class DeliveryAddressService {
 
     private final DeliveryAddressRepository deliveryAddressRepository;
-
-    public DeliveryAddressService(DeliveryAddressRepository deliveryAddressRepository) {
-        this.deliveryAddressRepository = deliveryAddressRepository;
-    }
 
     public DeliveryAddressDTO findById(Long id){
         return deliveryAddressRepository.findById(id)

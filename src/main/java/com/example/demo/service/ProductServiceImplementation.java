@@ -1,7 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.ProductDTO;
-import com.example.demo.dto.ProductMapper;
+import com.example.demo.mappers.ProductMapper;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.models.products.Product;
 import com.example.demo.repo.ProductRepository;
@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class ProductServiceImplementation implements ProductService{

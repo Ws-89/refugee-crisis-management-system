@@ -1,7 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.TransportMovementDTO;
-import com.example.demo.dto.TransportMovementMapper;
+import com.example.demo.mappers.TransportMovementMapper;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.models.productsdelivery.DeliveryAddress;
 import com.example.demo.models.productsdelivery.DeliverySpecification;
@@ -10,7 +10,7 @@ import com.example.demo.models.vehicles.Vehicle;
 import com.example.demo.repo.DeliveryAddressRepository;
 import com.example.demo.repo.TransportMovementRepo;
 import com.example.demo.repo.VehicleRepository;
-import org.hibernate.transform.ResultTransformer;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityGraph;
@@ -22,20 +22,13 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class TransportMovementServiceImplementation implements TransportMovementService  {
 
     private final TransportMovementRepo transportMovementRepo;
     private final DeliveryAddressRepository deliveryAddressRepository;
     private final VehicleRepository vehicleRepository;
     private final EntityManager em;
-
-    public TransportMovementServiceImplementation(TransportMovementRepo transportMovementRepo, DeliveryAddressRepository deliveryAddressRepository, VehicleRepository vehicleRepository, EntityManager entityManager) {
-        this.transportMovementRepo = transportMovementRepo;
-        this.deliveryAddressRepository = deliveryAddressRepository;
-        this.vehicleRepository = vehicleRepository;
-        this.em = entityManager;
-    }
-
 
     @Override
     public TransportMovementDTO findById(Long id) {

@@ -1,5 +1,6 @@
-package com.example.demo.dto;
+package com.example.demo.mappers;
 
+import com.example.demo.dto.ProductDeliveryDTO;
 import com.example.demo.models.productsdelivery.ProductDelivery;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

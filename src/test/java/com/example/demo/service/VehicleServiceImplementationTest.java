@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.exception.NotFoundException;
 import com.example.demo.models.vehicles.*;
 import com.example.demo.repo.VehicleRepository;
 import org.junit.jupiter.api.Test;
@@ -7,13 +8,16 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -43,84 +47,94 @@ class VehicleServiceImplementationTest {
 
         when(vehicleRepository.findAll()).thenReturn(vehicles);
 
-        assertThat(vehicleServiceImplementation.highestCapacity()).isEqualTo(10.0);
+        assertThat(vehicleServiceImplementation.highestCapacity()).isEqualTo(Arrays.asList(10.0, 7.0, 5.0, 2.0, 1.0));
     }
 
     @Test
-    void findById() {
-//        Truck truck = new Truck(300.0, "123", TruckType.light);
-//
-//        when(vehicleRepository.findById(1L)).thenReturn(Optional.of(truck));
-//        Vehicle vehicle = vehicleServiceImplementation.findById(1L);
-//        Truck truckToCheck = (Truck)vehicle;
-//
-//        assertThat(truck.getCapacity()).isEqualTo(truckToCheck.getCapacity());
-//        assertThat(truck.getTruckType()).isEqualTo(truckToCheck.getTruckType());
+    void findVehicleByIdShouldThrowException() {
 
+        when(vehicleRepository.findById(1L)).thenThrow(NotFoundException.class);
+        assertThrows(NotFoundException.class, () -> vehicleServiceImplementation.findById(1L));
+
+
+    }
+
+    @Test
+    void shouldFindVehicleById() {
+        Vehicle vehicle = Vehicle.builder().vehicleId(1L).brand("Mercedes")
+                .model("Vito").engine("2.0").capacity(750.0)
+                .vehicleCategory("Van").licensePlate("cb-12345")
+                .build();
+
+        when(vehicleRepository.findById(1L)).thenReturn(Optional.of(vehicle));
+        VehicleDTO result = vehicleServiceImplementation.findById(1L);
+
+        VehicleDTO vehicleDTO = VehicleMapper.INSTANCE.entityToDTO(vehicle);
+
+        assertThat(result.getCapacity()).isEqualTo(vehicleDTO.getCapacity());
+        assertThat(result.getVehicleCategory()).isEqualTo(vehicleDTO.getVehicleCategory());
     }
 
     @Test
     void saveProduct() {
-//        VehicleDTO vehicleDTO = new VehicleDTO().builder()
-//                .vehicleType(VehicleType.Truck)
-//                .truckType(TruckType.light)
-//                .capacity(300.0)
-//                .licensePlate("123")
-//                .build();
-//
-//        Truck truck = new Truck(300.0, "123", TruckType.light);
-//
-//        when(vehicleRepository.findByLicensePlate("123")).thenReturn(Optional.ofNullable(null));
-//        vehicleServiceImplementation.saveVehicle(vehicleDTO);
-//
-//        ArgumentCaptor<Truck> vehicleCaptor = ArgumentCaptor.forClass(Truck.class);
-//        verify(vehicleRepository).save(vehicleCaptor.capture());
-//
-//        Truck truckVehicle = vehicleCaptor.getValue();
-//
-//        assertThat(truckVehicle.getTruckType()).isEqualTo(vehicleDTO.getTruckType());
-//        assertThat(truckVehicle.getCapacity()).isEqualTo(vehicleDTO.getCapacity());
-//        assertThat(truckVehicle.getLicensePlate()).isEqualTo(vehicleDTO.getLicensePlate());
+        Vehicle vehicle = Vehicle.builder().vehicleId(1L).brand("Mercedes")
+                .model("Vito").engine("2.0").capacity(750.0)
+                .vehicleCategory("Van").licensePlate("cb-12345")
+                .build();
+
+        when(vehicleRepository.save(Mockito.any(Vehicle.class))).thenReturn(vehicle);
+
+        VehicleDTO vehicleDTO = vehicleServiceImplementation.saveVehicle(vehicle);
+
+        assertThat(vehicleDTO.getVehicleId()).isEqualTo(vehicle.getVehicleId());
+        assertThat(vehicleDTO.getBrand()).isEqualTo(vehicle.getBrand());
+        assertThat(vehicleDTO.getModel()).isEqualTo(vehicle.getModel());
+        assertThat(vehicleDTO.getEngine()).isEqualTo(vehicle.getEngine());
+        assertThat(vehicleDTO.getCapacity()).isEqualTo(vehicle.getCapacity());
+        assertThat(vehicleDTO.getVehicleCategory()).isEqualTo(vehicle.getVehicleCategory());
+        assertThat(vehicleDTO.getLicensePlate()).isEqualTo(vehicle.getLicensePlate());
     }
 
     @Test
     void updateProduct() {
-//        VehicleDTO vehicleDTO = new VehicleDTO().builder()
-//                .vehicleId(1L)
-//                .vehicleType(VehicleType.Truck)
-//                .truckType(TruckType.light)
-//                .capacity(300.0)
-//                .licensePlate("123")
-//                .build();
-//
-//        Truck truckToUpdate = new Truck(150.0, "123", TruckType.light);
-//
-//        when(vehicleRepository.findById(1L)).thenReturn(Optional.ofNullable(truckToUpdate));
-//        vehicleServiceImplementation.updateVehicle(vehicleDTO);
-//
-//        ArgumentCaptor<Truck> vehicleCaptor = ArgumentCaptor.forClass(Truck.class);
-//        verify(vehicleRepository).save(vehicleCaptor.capture());
-//
-//        Truck updatedTruck = vehicleCaptor.getValue();
-//
-//        assertThat(updatedTruck.getTruckType()).isEqualTo(vehicleDTO.getTruckType());
-//        assertThat(updatedTruck.getCapacity()).isEqualTo(vehicleDTO.getCapacity());
+        Vehicle vehicle = Vehicle.builder().vehicleId(1L).brand("Mercedes")
+                .model("Vito").engine("2.0").capacity(750.0)
+                .vehicleCategory("Van").licensePlate("cb-12345")
+                .build();
+
+        Vehicle updatedVehicle = Vehicle.builder().vehicleId(1L).brand("Mercedes")
+                .model("Vito").engine("2.0").capacity(850.0)
+                .vehicleCategory("Van").licensePlate("cb-12345")
+                .build();
+
+        when(vehicleRepository.findById(1L)).thenReturn(Optional.ofNullable(vehicle));
+        when(vehicleRepository.save(Mockito.any(Vehicle.class))).thenReturn(updatedVehicle);
+        VehicleDTO vehicleDTO = vehicleServiceImplementation.updateVehicle(updatedVehicle);
+
+
+        assertThat(vehicleDTO.getVehicleCategory()).isEqualTo(updatedVehicle.getVehicleCategory());
+        assertThat(vehicleDTO.getCapacity()).isEqualTo(updatedVehicle.getCapacity());
     }
 
     @Test
     void deleteProduct() {
-//        Truck truck = new Truck(150.0, "123", TruckType.light);
-//
-//        when(vehicleRepository.findById(1L)).thenReturn(Optional.ofNullable(truck));
-//        vehicleServiceImplementation.deleteVehicle(1L);
-//
-//        ArgumentCaptor<Truck> vehicleCaptor = ArgumentCaptor.forClass(Truck.class);
-//        verify(vehicleRepository).delete(vehicleCaptor.capture());
-//
-//        Truck deletedTruck = vehicleCaptor.getValue();
-//
-//        assertThat(deletedTruck.getTruckType()).isEqualTo(truck.getTruckType());
-//        assertThat(deletedTruck.getCapacity()).isEqualTo(truck.getCapacity());
+        Vehicle vehicle = Vehicle.builder().vehicleId(1L).brand("Mercedes")
+                .model("Vito").engine("2.0").capacity(750.0)
+                .vehicleCategory("Van").licensePlate("cb-12345")
+                .build();
+
+        when(vehicleRepository.findById(1L)).thenReturn(Optional.ofNullable(vehicle));
+        vehicleServiceImplementation.deleteVehicle(1L);
+
+        verify(vehicleRepository).delete(vehicle);
+    }
+
+    @Test
+    void deleteShouldThrowException() {
+
+        when(vehicleRepository.findById(1L)).thenThrow(NotFoundException.class);
+
+        assertThrows(NotFoundException.class, () -> vehicleServiceImplementation.deleteVehicle(1L));
     }
 
     @Test

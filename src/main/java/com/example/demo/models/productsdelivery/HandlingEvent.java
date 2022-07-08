@@ -63,7 +63,7 @@ public class HandlingEvent {
             name = "delivery_history_id",
             referencedColumnName = "delivery_history_id"
     )
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JsonBackReference
     @JsonIdentityInfo(
             generator = ObjectIdGenerators.PropertyGenerator.class,
             property = "deliveryHistoryId")

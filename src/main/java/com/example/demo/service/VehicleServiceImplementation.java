@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class VehicleServiceImplementation implements VehicleService {
 
     private final VehicleRepository vehicleRepository;
-//    @PersistenceContext
+
     private final EntityManager em;
 
     public VehicleServiceImplementation(VehicleRepository vehicleRepository, EntityManager entityManager) {

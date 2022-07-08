@@ -1,7 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.ProductDeliveryDTO;
-import com.example.demo.dto.ProductDeliveryMapper;
+import com.example.demo.mappers.ProductDeliveryMapper;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.models.products.*;
 import com.example.demo.models.productsdelivery.*;
