@@ -107,7 +107,7 @@ class VehicleServiceImplementationTest {
                 .vehicleCategory("Van").licensePlate("cb-12345")
                 .build();
 
-        when(vehicleRepository.findById(1L)).thenReturn(Optional.ofNullable(vehicle));
+        when(vehicleRepository.findById(1L)).thenReturn(Optional.of(vehicle));
         when(vehicleRepository.save(Mockito.any(Vehicle.class))).thenReturn(updatedVehicle);
         VehicleDTO vehicleDTO = vehicleServiceImplementation.updateVehicle(updatedVehicle);
 

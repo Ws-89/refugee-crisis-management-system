@@ -1,13 +1,11 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.DeliveryAddressDTO;
-import com.example.demo.dto.DeliveryHistoryDTO;
 import com.example.demo.dto.HandlingEventDTO;
-import com.example.demo.mappers.HandlingEventMapper;
 import com.example.demo.models.productsdelivery.*;
 import com.example.demo.models.vehicles.Vehicle;
 import com.example.demo.repo.HandlingEventRepository;
 import com.example.demo.repo.ProductDeliveryRepository;
+import com.example.demo.repo.TransportMovementRepo;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -15,15 +13,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
+import static com.example.demo.models.products.Status.Available;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
@@ -38,10 +36,38 @@ class HandlingEventServiceImplementationTest {
     private ProductDeliveryRepository productDeliveryRepository;
 
     @Mock
+    private TransportMovementRepo transportMovementRepo;
+
+    @Mock
     private EntityManager entityManagerMock;
 
     @InjectMocks
     private HandlingEventServiceImplementation handlingEventService;
+
+    @Test
+    void shouldReturnHandlingEvent(){
+        DeliveryAddress startingAddress = DeliveryAddress.builder().city("Qwerty").postCode("12-345").state("Zxcv").street("Fghjk").build();
+        DeliveryAddress deliveryAddress = DeliveryAddress.builder().city("Qwerty").postCode("12-345").state("Zxcv").street("Fghjk").build();
+        DeliverySpecification deliverySpecification = DeliverySpecification.builder().deliveryAddress(deliveryAddress).build();
+        ProductDelivery productDelivery = ProductDelivery.builder().deliverySpecification(deliverySpecification).startingAddress(startingAddress).build();
+        List<HandlingEvent> emptyList = new ArrayList<>();
+        DeliveryHistory deliveryHistory = DeliveryHistory.builder().productDelivery(productDelivery).handlingEvents(emptyList).build();
+        productDelivery.setDeliveryHistory(deliveryHistory);
+
+        Vehicle vehicle = Vehicle.builder().vehicleCategory("Van").capacity(900.0).engine("2.0").brand("Renault").build();
+
+        List<HandlingEvent> emptyList2 = new ArrayList<>();
+        TransportMovement transportMovement = TransportMovement.builder().transportMovementId(1L)
+                .startingAddress(startingAddress).deliverySpecification(deliverySpecification).handlingEvents(emptyList2)
+                .vehicle(vehicle).build();
+
+        HandlingEvent handlingEvent = HandlingEvent.builder().state(HandlingEventState.INITIALIZING_EVENT).build();
+
+        when(handlingEventRepository.findById(1L)).thenReturn(Optional.of(handlingEvent));
+        HandlingEventDTO eventDTO = handlingEventService.getHandlingEvent(1L);
+
+        assertThat(eventDTO.getState()).isEqualTo(handlingEvent.getState());
+    }
 
     @Test
     void shouldFindAllHandlingEventsOfTransportMovement() {
@@ -107,14 +133,10 @@ class HandlingEventServiceImplementationTest {
 
         HandlingEvent handlingEvent = HandlingEvent.builder().state(HandlingEventState.INITIALIZING_EVENT).build();
 
-        EntityGraph<?> graph = null;
-        Map<String, Object> hints = new HashMap<String, Object>();
-        hints.put("javax.persistence.fetchgraph", graph);
 
         when(productDeliveryRepository.findById(1L)).thenReturn(Optional.of(productDelivery));
-        when(entityManagerMock.find(TransportMovement.class, 1L, hints)).thenReturn(transportMovement);
+        when(transportMovementRepo.findById(1L)).thenReturn(Optional.of(transportMovement));
 
-        // when
         HandlingEventDTO handlingEventDTO = handlingEventService.saveHandlingEvent(handlingEvent, 1L, 1L);
 
         ArgumentCaptor<HandlingEvent> eventArgumentCaptor = ArgumentCaptor.forClass(HandlingEvent.class);
@@ -160,17 +182,76 @@ class HandlingEventServiceImplementationTest {
 
     @Test
     void updateHandlingEvent() {
-//        HandlingEvent handlingEvent = HandlingEvent.builder().state(HandlingEventState.INITIALIZING_EVENT).build();
-//        HandlingEvent updateHandlingEvent = HandlingEvent.builder().state(HandlingEventState.LOADING_EVENT).build();
+        // --------------------------------------- IMPORTANT STUFF FOR WAREHOUSE VIEW ---------------------------------------------------------
+//        DeliveryAddress startingAddress = DeliveryAddress.builder().city("Qwerty").postCode("12-345").state("Zxcv").street("Fghjk").build();
+//        DeliveryAddress deliveryAddress = DeliveryAddress.builder().city("Qwerty").postCode("12-345").state("Zxcv").street("Fghjk").build();
+//        DeliverySpecification deliverySpecification = DeliverySpecification.builder().deliveryAddress(deliveryAddress).build();
+//        ProductDelivery productDelivery = ProductDelivery.builder()
+//                .deliverySpecification(deliverySpecification)
+//                .startingAddress(startingAddress).status(Available).build();
+//        List<HandlingEvent> emptyList = new ArrayList<>();
+//        DeliveryHistory deliveryHistory = DeliveryHistory.builder().productDelivery(productDelivery).handlingEvents(emptyList).build();
+//        productDelivery.setDeliveryHistory(deliveryHistory);
+//
+//        Vehicle vehicle = Vehicle.builder().vehicleCategory("Van").capacity(900.0).engine("2.0").brand("Renault").build();
+//
+//        List<HandlingEvent> emptyList2 = new ArrayList<>();
+//        TransportMovement transportMovement = TransportMovement.builder().transportMovementId(1L)
+//                .startingAddress(startingAddress).deliverySpecification(deliverySpecification).handlingEvents(emptyList2)
+//                .vehicle(vehicle).build();
+//
+//        HandlingEvent handlingEvent = HandlingEvent.builder().handlingEventId(1L)
+//                .transportMovement(transportMovement)
+//                .deliveryHistory(deliveryHistory).state(HandlingEventState.INITIALIZING_EVENT).build();
+//
+//        HandlingEvent updatedHandlingEvent = HandlingEvent.builder().handlingEventId(1L)
+//                .transportMovement(transportMovement)
+//                .deliveryHistory(deliveryHistory).state(HandlingEventState.LOADING_EVENT).build();
+
+//        when(handlingEventRepository.findById(1L)).thenReturn(Optional.of(handlingEvent));
+//        HandlingEventDTO eventDTO = handlingEventService.updateHandlingEvent(updatedHandlingEvent);
+
+//        assertThat(eventDTO.getState()).isEqualTo(handlingEvent.getState());
+
+// --------------------------------------- IMPORTANT STUFF FOR WAREHOUSE VIEW ---------------------------------------------------------
+
+//        DeliveryAddress startingAddress = DeliveryAddress.builder().city("Qwerty").postCode("12-345").state("Zxcv").street("Fghjk").build();
+//        DeliveryAddress deliveryAddress = DeliveryAddress.builder().city("Qwerty").postCode("12-345").state("Zxcv").street("Fghjk").build();
+//        DeliverySpecification deliverySpecification = DeliverySpecification.builder().deliveryAddress(deliveryAddress).build();
+//        ProductDelivery productDelivery = ProductDelivery.builder().deliverySpecification(deliverySpecification).startingAddress(startingAddress).build();
+//        List<HandlingEvent> emptyList = new ArrayList<>();
+//        DeliveryHistory deliveryHistory = DeliveryHistory.builder().productDelivery(productDelivery).handlingEvents(emptyList).build();
+//        productDelivery.setDeliveryHistory(deliveryHistory);
+//
+//        Vehicle vehicle = Vehicle.builder().vehicleCategory("Van").capacity(900.0).engine("2.0").brand("Renault").build();
+//        List<HandlingEvent> emptyList2 = new ArrayList<>();
+//        TransportMovement transportMovement = TransportMovement.builder().transportMovementId(1L)
+//                .startingAddress(startingAddress).deliverySpecification(deliverySpecification).handlingEvents(emptyList2)
+//                .vehicle(vehicle).build();
+
+//        HandlingEvent handlingEvent = HandlingEvent.builder()
+//                .handlingEventId(1L)
+//                .transportMovement(transportMovement).deliveryHistory(deliveryHistory).timeStamp(LocalDateTime.of(2023, 5, 5, 1,1))
+//                .state(HandlingEventState.INITIALIZING_EVENT).build();
+//    handlingEvent.setHandlingEventId(1L);
+//
+//        HandlingEvent updateHandlingEvent = HandlingEvent.builder()
+//                .handlingEventId(1L)
+//                .transportMovement(transportMovement).deliveryHistory(deliveryHistory).timeStamp(LocalDateTime.of(2023, 5, 5, 1,1))
+//                .state(HandlingEventState.LOADING_EVENT).build();
+//
+//
 //
 //        when(handlingEventRepository.findById(1L)).thenReturn(Optional.of(handlingEvent));
+//
+//        handlingEventService.updateHandlingEvent(updateHandlingEvent);
 //        ArgumentCaptor<HandlingEvent> eventArgumentCaptor = ArgumentCaptor.forClass(HandlingEvent.class);
 //        verify(handlingEventRepository).save(eventArgumentCaptor.capture());
 //
 //        HandlingEvent eventArgumentCaptorValue = eventArgumentCaptor.getValue();
-//        HandlingEventDTO handlingEventDTO = handlingEventService.updateHandlingEvent(updateHandlingEvent);
 //
 //        assertThat(eventArgumentCaptorValue.getState()).isEqualTo(updateHandlingEvent.getState());
+        // --------------------------------------- IMPORTANT STUFF FOR WAREHOUSE VIEW ---------------------------------------------------------
     }
 
     @Test

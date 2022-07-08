@@ -8,6 +8,7 @@ import com.example.demo.models.productsdelivery.*;
 import com.example.demo.repo.DeliveryAddressRepository;
 import com.example.demo.repo.ProductDeliveryRepository;
 import com.example.demo.repo.ProductRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,21 +16,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class ProductDeliveryServiceImplementation implements ProductDeliveryService{
 
     private final ProductDeliveryRepository productDeliveryRepository;
     private final ProductRepository productRepository;
     private final DeliveryAddressRepository deliveryAddressRepository;
-
-
-    public ProductDeliveryServiceImplementation(ProductDeliveryRepository productDeliveryRepository,
-                                                ProductRepository productRepository,
-                                                DeliveryAddressRepository deliveryAddressRepository) {
-        this.productDeliveryRepository = productDeliveryRepository;
-        this.productRepository = productRepository;
-        this.deliveryAddressRepository = deliveryAddressRepository;
-
-    }
 
     @Override
     public ProductDeliveryDTO findById(Long id) {
