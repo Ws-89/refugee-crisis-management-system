@@ -80,10 +80,6 @@ public class ProductDelivery implements Serializable {
     @OneToMany(mappedBy = "productDelivery", orphanRemoval = true)
     private List<Product> products = new ArrayList<>();
 
-    public void update(ProductDelivery source) {
-        this.description = source.getDescription();
-    }
-
     public void addProduct(Product product){
         this.products.add(product);
         product.setProductDelivery(this);

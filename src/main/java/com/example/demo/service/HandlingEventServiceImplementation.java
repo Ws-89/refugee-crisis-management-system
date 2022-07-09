@@ -8,11 +8,14 @@ import com.example.demo.repo.HandlingEventRepository;
 import com.example.demo.repo.ProductDeliveryRepository;
 import com.example.demo.repo.TransportMovementRepo;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.HibernateException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Transactional
@@ -77,14 +80,15 @@ public class HandlingEventServiceImplementation implements HandlingEventService 
 
     @Override
     public HandlingEventDTO updateHandlingEvent(HandlingEvent event) {
-        return handlingEventRepository.findById(event.getHandlingEventId())
+        HandlingEvent result = handlingEventRepository.findById(event.getHandlingEventId())
                 .map(e -> {
-                    System.out.println(e);
-                    e.setDeliveryHistory(event.getDeliveryHistory());
-                    e.setState(event.getState());
-                    e.setTimeStamp(event.getTimeStamp());
-                    return HandlingEventMapper.INSTANCE.entityToDTO(handlingEventRepository.save(e));
+                    HandlingEvent updatedHandlingEvent = e;
+                    updatedHandlingEvent.setDeliveryHistory(event.getDeliveryHistory());
+                    updatedHandlingEvent.setState(event.getState());
+                    updatedHandlingEvent.setTimeStamp(event.getTimeStamp());
+                    return updatedHandlingEvent;
                 }).orElseThrow(()-> new NotFoundException("Handling event not found"));
+        return HandlingEventMapper.INSTANCE.entityToDTO(handlingEventRepository.save(result));
     }
 
     @Override

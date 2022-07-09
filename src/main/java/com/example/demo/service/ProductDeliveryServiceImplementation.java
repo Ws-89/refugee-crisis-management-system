@@ -75,12 +75,20 @@ public class ProductDeliveryServiceImplementation implements ProductDeliveryServ
 
     @Override
     public ProductDeliveryDTO updateProductDelivery(ProductDelivery productDelivery) {
-        return productDeliveryRepository.findById(productDelivery.getDeliveryId())
-                .map(p -> { p.update(productDelivery);
-                    productDeliveryRepository.save(p);
-                    return ProductDeliveryMapper.INSTANCE.entityToDTO(p);
+        ProductDelivery result = productDeliveryRepository.findById(productDelivery.getDeliveryId())
+                .map(p -> {
+                    ProductDelivery newProductDelivery = p;
+                    newProductDelivery.setDescription(productDelivery.getDescription());
+                    newProductDelivery.setTotalWeight(productDelivery.getTotalWeight());
+                    newProductDelivery.setStatus(productDelivery.getStatus());
+                    newProductDelivery.setDeliveryHistory(productDelivery.getDeliveryHistory());
+                    newProductDelivery.setStartingAddress(productDelivery.getStartingAddress());
+                    newProductDelivery.setDeliverySpecification(productDelivery.getDeliverySpecification());
+                    newProductDelivery.setProducts(productDelivery.getProducts());
+                    return newProductDelivery;
                 })
                 .orElseThrow(() -> new NotFoundException(String.format("Product delivery with id %s not found", productDelivery.getDeliveryId())));
+        return ProductDeliveryMapper.INSTANCE.entityToDTO(productDeliveryRepository.save(result));
     }
 
     @Override

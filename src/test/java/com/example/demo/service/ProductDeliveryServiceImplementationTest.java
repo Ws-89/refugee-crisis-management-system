@@ -195,7 +195,7 @@ class ProductDeliveryServiceImplementationTest {
         assertThat(capturedProductDelivery.getProducts()).isEqualTo(productDelivery.getProducts());
 
     }
-//
+
     @Test
     void updateProductDeliveryShouldPass() {
         Category category = Category.builder().categoryName("Food").attr1Caption("Drink").build();
@@ -231,17 +231,31 @@ class ProductDeliveryServiceImplementationTest {
         DeliveryAddress startingAddress = DeliveryAddress.builder().deliveryAddressId(1L).city("Qwerty").postCode("12-345").state("Zxcv").street("Fghjk").build();
         DeliveryAddress deliveryAddress = DeliveryAddress.builder().city("Qwerty").deliveryAddressId(2L).postCode("12-345").state("Zxcv").street("Fghjk").build();
 
-        when(deliveryAddressRepository.findById(1L)).thenReturn(Optional.of(startingAddress));
-        when(deliveryAddressRepository.findById(2L)).thenReturn(Optional.of(deliveryAddress));
-
         DeliveryAddress emptyDeliveryAddress = new DeliveryAddress();
         DeliverySpecification deliverySpecification = DeliverySpecification.builder().deliveryAddress(deliveryAddress).build();
         ProductDelivery productDelivery = ProductDelivery.builder().deliveryId(1L)
                 .startingAddress(startingAddress)
                 .deliverySpecification(deliverySpecification)
-                .description("Some snacks")
+                .description("Coffee")
                 .totalWeight(230.0)
                 .build();
+
+        ProductDelivery updatedProductDelivery = ProductDelivery.builder().deliveryId(1L)
+                .startingAddress(startingAddress)
+                .deliverySpecification(deliverySpecification)
+                .description("Coffee")
+                .totalWeight(250.0)
+                .build();
+
+        when(productDeliveryRepository.findById(1L)).thenReturn(Optional.of(productDelivery));
+
+        ProductDeliveryDTO productDeliveryDTO = productDeliveryService.updateProductDelivery(updatedProductDelivery);
+
+        ArgumentCaptor<ProductDelivery> productDeliveryCaptor = ArgumentCaptor.forClass(ProductDelivery.class);
+        verify(productDeliveryRepository).save(productDeliveryCaptor.capture());
+        ProductDelivery capturedProductDelivery = productDeliveryCaptor.getValue();
+
+        assertThat(capturedProductDelivery.getTotalWeight()).isEqualTo(250.0);
     }
 
     @Test
@@ -279,7 +293,6 @@ class ProductDeliveryServiceImplementationTest {
         DeliveryAddress startingAddress = DeliveryAddress.builder().deliveryAddressId(1L).city("Qwerty").postCode("12-345").state("Zxcv").street("Fghjk").build();
         DeliveryAddress deliveryAddress = DeliveryAddress.builder().city("Qwerty").deliveryAddressId(2L).postCode("12-345").state("Zxcv").street("Fghjk").build();
 
-        DeliveryAddress emptyDeliveryAddress = new DeliveryAddress();
         DeliverySpecification deliverySpecification = DeliverySpecification.builder().deliveryAddress(deliveryAddress).build();
         ProductDelivery productDelivery = ProductDelivery.builder().deliveryId(1L)
                 .startingAddress(startingAddress)

@@ -30,6 +30,8 @@ public class TransportMovementServiceImplementation implements TransportMovement
     private final VehicleRepository vehicleRepository;
     private final EntityManager em;
 
+    public static final String GET_ALL_TRANSPORT_MOVEMENTS = "from TransportMovement";
+
     @Override
     public TransportMovementDTO findById(Long id) {
         return transportMovementRepo.findById(id).map(t -> TransportMovementMapper.INSTANCE.entityToDTO(t))
@@ -49,12 +51,7 @@ public class TransportMovementServiceImplementation implements TransportMovement
                 )
                     .orElseThrow(()-> new NotFoundException("Destination address not found"));
 
-        EntityGraph<?> graph = em.getEntityGraph("graph.VehicleTransportMovement");
-
-        Map<String, Object> hints = new HashMap<String, Object>();
-        hints.put("javax.persistence.fetchgraph",graph);
-
-        Vehicle vehicle = em.find(Vehicle.class,transportMovement.getVehicle().getVehicleId(), hints);
+        Vehicle vehicle = vehicleRepository.findById(transportMovement.getVehicle().getVehicleId()).orElseThrow(() -> new NotFoundException("Vehicle not found"));
 
         DeliverySpecification deliverySpecification = transportMovement.getDeliverySpecification();
         deliverySpecification.setDeliveryAddress(destinationAddress);
@@ -82,15 +79,17 @@ public class TransportMovementServiceImplementation implements TransportMovement
 
     @Override
     public TransportMovementDTO update(TransportMovement transportMovement) {
-        return transportMovementRepo.findById(transportMovement.getTransportMovementId())
+        TransportMovement result = transportMovementRepo.findById(transportMovement.getTransportMovementId())
                 .map(transport -> {
-                    transport.setDeliverySpecification(transportMovement.getDeliverySpecification());
-                    transport.setHandlingEvents(transportMovement.getHandlingEvents());
-                    transport.setStartingAddress(transportMovement.getStartingAddress());
-                    transport.setVehicle(transportMovement.getVehicle());
-                    return TransportMovementMapper.INSTANCE.entityToDTO(transportMovementRepo.save(transport));
+                    TransportMovement updatedTransportMovement = transport;
+                    updatedTransportMovement.setDeliverySpecification(transportMovement.getDeliverySpecification());
+                    updatedTransportMovement.setHandlingEvents(transportMovement.getHandlingEvents());
+                    updatedTransportMovement.setStartingAddress(transportMovement.getStartingAddress());
+                    updatedTransportMovement.setVehicle(transportMovement.getVehicle());
+                    return updatedTransportMovement;
                 })
                 .orElseThrow(()-> new NotFoundException("Transport movement not found"));
+        return TransportMovementMapper.INSTANCE.entityToDTO(transportMovementRepo.save(result));
     }
 
     @Override
@@ -98,7 +97,7 @@ public class TransportMovementServiceImplementation implements TransportMovement
     public List<TransportMovementDTO> findAll() {
         EntityGraph<?> graph = em.getEntityGraph("graph.TransportMovementHandlingEvents");
 
-        TypedQuery<TransportMovement> query = em.createQuery("from TransportMovement", TransportMovement.class);
+        TypedQuery<TransportMovement> query = em.createQuery(GET_ALL_TRANSPORT_MOVEMENTS, TransportMovement.class);
         query.setHint("javax.persistence.fetchgraph",graph);
 
         return query.getResultList().stream().map(t -> TransportMovementMapper.INSTANCE.entityToDTO(t)).collect(Collectors.toList());

@@ -33,23 +33,25 @@ public class ProductServiceImplementation implements ProductService{
 
     @Override
     public ProductDTO updateProduct(Product product) {
-        return productRepository.findById(product.getProductId())
+        Product result = productRepository.findById(product.getProductId())
                 .map(p -> {
-                    p.setName(product.getName());
-                    p.setDescription(product.getDescription());
-                    p.setExpirationDate(product.getExpirationDate());
-                    p.setWeight(product.getWeight());
-                    p.setAmount(product.getAmount());
-                    p.setReserved(product.getReserved());
-                    p.setFragile(product.isFragile());
-                    p.setState(product.getState());
-                    p.setCategory(product.getCategory());
-                    p.setProductDelivery(product.getProductDelivery());
-
-                    productRepository.save(p);
-                    return ProductMapper.INSTANCE.productToProductDTO(p);
-                } )
+                        Product newProduct = p;
+                            newProduct.setName(product.getName());
+                            newProduct.setDescription(product.getDescription());
+                            newProduct.setExpirationDate(product.getExpirationDate());
+                            newProduct.setWeight(product.getWeight());
+                            newProduct.setAmount(product.getAmount());
+                            newProduct.setReserved(product.getReserved());
+                            newProduct.setFragile(product.isFragile());
+                            newProduct.setState(product.getState());
+                            newProduct.setCategory(product.getCategory());
+                            newProduct.setProductDelivery(product.getProductDelivery());
+                            return newProduct;
+                })
                 .orElseThrow(()-> new NotFoundException(String.format("Product with id %s not found", product.getProductId())));
+
+        return ProductMapper.INSTANCE.productToProductDTO(productRepository.save(result));
+
     }
 
     @Override

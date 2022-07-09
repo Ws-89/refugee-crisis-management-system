@@ -76,7 +76,7 @@ class VehicleServiceImplementationTest {
     }
 
     @Test
-    void saveProduct() {
+    void shouldSaveVehicle() {
         Vehicle vehicle = Vehicle.builder().vehicleId(1L).brand("Mercedes")
                 .model("Vito").engine("2.0").capacity(750.0)
                 .vehicleCategory("Van").licensePlate("cb-12345")
@@ -96,7 +96,7 @@ class VehicleServiceImplementationTest {
     }
 
     @Test
-    void updateProduct() {
+    void shouldUpdateVehicle() {
         Vehicle vehicle = Vehicle.builder().vehicleId(1L).brand("Mercedes")
                 .model("Vito").engine("2.0").capacity(750.0)
                 .vehicleCategory("Van").licensePlate("cb-12345")
@@ -108,16 +108,30 @@ class VehicleServiceImplementationTest {
                 .build();
 
         when(vehicleRepository.findById(1L)).thenReturn(Optional.of(vehicle));
-        when(vehicleRepository.save(Mockito.any(Vehicle.class))).thenReturn(updatedVehicle);
         VehicleDTO vehicleDTO = vehicleServiceImplementation.updateVehicle(updatedVehicle);
 
+        ArgumentCaptor<Vehicle> vehicleArgumentCaptor = ArgumentCaptor.forClass(Vehicle.class);
+        verify(vehicleRepository).save(vehicleArgumentCaptor.capture());
+        Vehicle vehicleArgumentCaptorValue = vehicleArgumentCaptor.getValue();
 
-        assertThat(vehicleDTO.getVehicleCategory()).isEqualTo(updatedVehicle.getVehicleCategory());
-        assertThat(vehicleDTO.getCapacity()).isEqualTo(updatedVehicle.getCapacity());
+
+        assertThat(vehicleArgumentCaptorValue.getVehicleCategory()).isEqualTo(updatedVehicle.getVehicleCategory());
+        assertThat(vehicleArgumentCaptorValue.getCapacity()).isEqualTo(updatedVehicle.getCapacity());
     }
 
     @Test
-    void deleteProduct() {
+    void updateShouldThrowException(){
+        Vehicle updatedVehicle = Vehicle.builder().vehicleId(1L).brand("Mercedes")
+                .model("Vito").engine("2.0").capacity(850.0)
+                .vehicleCategory("Van").licensePlate("cb-12345")
+                .build();
+
+        when(vehicleRepository.findById(1L)).thenThrow(NotFoundException.class);
+        assertThrows(NotFoundException.class, () -> vehicleServiceImplementation.updateVehicle(updatedVehicle));
+    }
+
+    @Test
+    void shouldDeleteVehicle() {
         Vehicle vehicle = Vehicle.builder().vehicleId(1L).brand("Mercedes")
                 .model("Vito").engine("2.0").capacity(750.0)
                 .vehicleCategory("Van").licensePlate("cb-12345")

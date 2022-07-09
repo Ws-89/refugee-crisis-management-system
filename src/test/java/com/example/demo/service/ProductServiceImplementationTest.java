@@ -4,12 +4,14 @@ import com.example.demo.dto.ProductDTO;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.models.products.Category;
 import com.example.demo.models.products.Product;
+import com.example.demo.models.productsdelivery.HandlingEvent;
 import com.example.demo.models.productsdelivery.ProductDelivery;
 import com.example.demo.repo.ProductRepository;
 import org.aspectj.weaver.ast.Not;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -215,19 +217,22 @@ class ProductServiceImplementationTest {
 
 
         when(productRepository.findById(1L)).thenReturn(Optional.of(blackCoffe));
-        when(productRepository.save(Mockito.any(Product.class))).thenReturn(frappe);
+
         ProductDTO frappeDTO = productService.updateProduct(frappe);
 
+        ArgumentCaptor<Product> productArgumentCaptor = ArgumentCaptor.forClass(Product.class);
+        verify(productRepository).save(productArgumentCaptor.capture());
+        Product productArgumentCaptorValue = productArgumentCaptor.getValue();
 
-
-        assertThat(frappeDTO.getName()).isEqualTo(frappe.getName());
-        assertThat(frappeDTO.getDescription()).isEqualTo(frappe.getDescription());
-        assertThat(frappeDTO.getExpirationDate()).isEqualTo(frappe.getExpirationDate());
-        assertThat(frappeDTO.getAmount()).isEqualTo(frappe.getAmount());
-        assertThat(frappeDTO.getWeight()).isEqualTo(frappe.getWeight());
-        assertThat(frappeDTO.isFragile()).isEqualTo(frappe.isFragile());
-        assertThat(frappeDTO.getState()).isEqualTo(frappe.getState());
-        assertThat(frappeDTO.getCategory()).isEqualTo(frappe.getCategory());
+        assertThat(productArgumentCaptorValue.getProductId()).isEqualTo(frappe.getProductId());
+        assertThat(productArgumentCaptorValue.getName()).isEqualTo(frappe.getName());
+        assertThat(productArgumentCaptorValue.getDescription()).isEqualTo(frappe.getDescription());
+        assertThat(productArgumentCaptorValue.getExpirationDate()).isEqualTo(frappe.getExpirationDate());
+        assertThat(productArgumentCaptorValue.getAmount()).isEqualTo(frappe.getAmount());
+        assertThat(productArgumentCaptorValue.getWeight()).isEqualTo(frappe.getWeight());
+        assertThat(productArgumentCaptorValue.isFragile()).isEqualTo(frappe.isFragile());
+        assertThat(productArgumentCaptorValue.getState()).isEqualTo(frappe.getState());
+        assertThat(productArgumentCaptorValue.getCategory()).isEqualTo(frappe.getCategory());
     }
 
     @Test

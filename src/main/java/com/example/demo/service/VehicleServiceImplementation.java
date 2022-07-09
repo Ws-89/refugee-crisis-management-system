@@ -53,11 +53,19 @@ public class VehicleServiceImplementation implements VehicleService {
     @Override
     @Transactional
     public VehicleDTO updateVehicle(Vehicle source) {
-        return vehicleRepository.findById(source.getVehicleId())
+        Vehicle result = vehicleRepository.findById(source.getVehicleId())
                 .map(v -> {
-                    v.update(source);
-                    return VehicleMapper.INSTANCE.entityToDTO(vehicleRepository.save(v)); })
+                    Vehicle updatedVehicle = v;
+                    updatedVehicle.setBrand(source.getBrand());
+                    updatedVehicle.setModel(source.getModel());
+                    updatedVehicle.setEngine(source.getEngine());
+                    updatedVehicle.setCapacity(source.getCapacity());
+                    updatedVehicle.setVehicleCategory(source.getVehicleCategory());
+                    updatedVehicle.setLicensePlate(source.getLicensePlate());
+                    return updatedVehicle;
+                })
                 .orElseThrow(() -> new NotFoundException(String.format("Vehicle with id %s not found", source.getVehicleId())));
+                    return VehicleMapper.INSTANCE.entityToDTO(vehicleRepository.save(result));
     }
 
     @Override

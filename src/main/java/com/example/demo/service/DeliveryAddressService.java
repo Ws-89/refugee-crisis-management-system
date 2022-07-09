@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.dto.DeliveryAddressDTO;
 import com.example.demo.mappers.DeliveryAddressMapper;
 import com.example.demo.exception.NotFoundException;
+import com.example.demo.models.products.Product;
 import com.example.demo.models.productsdelivery.DeliveryAddress;
 import com.example.demo.repo.DeliveryAddressRepository;
 import lombok.RequiredArgsConstructor;
@@ -46,15 +47,17 @@ public class DeliveryAddressService {
     }
 
     public DeliveryAddressDTO update(DeliveryAddress deliveryAddress){
-        return deliveryAddressRepository.findById(deliveryAddress.getDeliveryAddressId())
+        DeliveryAddress result  = deliveryAddressRepository.findById(deliveryAddress.getDeliveryAddressId())
                 .map(a -> {
-                    a.setCity(deliveryAddress.getCity());
-                    a.setStreet(deliveryAddress.getStreet());
-                    a.setPostCode(deliveryAddress.getPostCode());
-                    a.setState(deliveryAddress.getState());
-                    return DeliveryAddressMapper.INSTANCE.entityToDTO(deliveryAddressRepository.save(a));
+                        DeliveryAddress address = a;
+                    address.setCity(deliveryAddress.getCity());
+                    address.setStreet(deliveryAddress.getStreet());
+                    address.setPostCode(deliveryAddress.getPostCode());
+                    address.setState(deliveryAddress.getState());
+                    return address;
                 })
                 .orElseThrow(() -> new NotFoundException("Addres not found"));
+        return DeliveryAddressMapper.INSTANCE.entityToDTO(deliveryAddressRepository.save(result));
     }
 
     public Long delete(Long id){

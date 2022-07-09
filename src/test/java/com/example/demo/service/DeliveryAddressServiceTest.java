@@ -6,6 +6,7 @@ import com.example.demo.models.productsdelivery.DeliveryAddress;
 import com.example.demo.repo.DeliveryAddressRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -109,16 +110,18 @@ class DeliveryAddressServiceTest {
         DeliveryAddress updatedAddress = DeliveryAddress.builder()
                 .deliveryAddressId(1L).city("XyzQ").street("AbcdefQ ghjkl").postCode("12-345Q").state("Poiuytrwq LkjhgfdsaQ").build();
         when(deliveryAddressRepository.findById(1L)).thenReturn(Optional.of(address));
-        when(deliveryAddressRepository.save(Mockito.any(DeliveryAddress.class)))
-                .thenReturn(updatedAddress);
 
-        DeliveryAddressDTO updatedAddressDTO = deliveryAddressService.update(address);
+        DeliveryAddressDTO updatedAddressDTO = deliveryAddressService.update(updatedAddress);
 
-        assertThat(updatedAddressDTO.getDeliveryAddressId()).isEqualTo(updatedAddress.getDeliveryAddressId());
-        assertThat(updatedAddressDTO.getState()).isEqualTo(updatedAddress.getState());
-        assertThat(updatedAddressDTO.getCity()).isEqualTo(updatedAddress.getCity());
-        assertThat(updatedAddressDTO.getStreet()).isEqualTo(updatedAddress.getStreet());
-        assertThat(updatedAddressDTO.getPostCode()).isEqualTo(updatedAddress.getPostCode());
+        ArgumentCaptor<DeliveryAddress> deliveryAddressArgumentCaptor = ArgumentCaptor.forClass(DeliveryAddress.class);
+        verify(deliveryAddressRepository).save(deliveryAddressArgumentCaptor.capture());
+        DeliveryAddress deliveryAddressArgumentCaptorValue = deliveryAddressArgumentCaptor.getValue();
+
+        assertThat(deliveryAddressArgumentCaptorValue.getDeliveryAddressId()).isEqualTo(updatedAddress.getDeliveryAddressId());
+        assertThat(deliveryAddressArgumentCaptorValue.getState()).isEqualTo(updatedAddress.getState());
+        assertThat(deliveryAddressArgumentCaptorValue.getCity()).isEqualTo(updatedAddress.getCity());
+        assertThat(deliveryAddressArgumentCaptorValue.getStreet()).isEqualTo(updatedAddress.getStreet());
+        assertThat(deliveryAddressArgumentCaptorValue.getPostCode()).isEqualTo(updatedAddress.getPostCode());
     }
 
     @Test
