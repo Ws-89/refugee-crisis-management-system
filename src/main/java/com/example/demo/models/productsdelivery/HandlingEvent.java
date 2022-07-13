@@ -41,11 +41,8 @@ public class HandlingEvent {
     )
     @Column(name = "handling_event_id")
     private long handlingEventId;
-//    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(
             cascade = CascadeType.MERGE
-//            ,
-//            fetch = FetchType.LAZY
     )
     @JoinColumn(
             name = "transport_movement_id",
@@ -71,46 +68,5 @@ public class HandlingEvent {
     @Enumerated(value = EnumType.STRING)
     private HandlingEventState state;
     private LocalDateTime timeStamp;
-
-    public long getHandlingEventId() {
-        return handlingEventId;
-    }
-
-    public void setHandlingEventId(long handlingEventId) {
-        this.handlingEventId = handlingEventId;
-    }
-
-    public TransportMovement getTransportMovement() {
-        return transportMovement;
-    }
-
-    public DeliveryHistory getDeliveryHistory() {
-        return deliveryHistory;
-    }
-
-    public void setDeliveryHistory(DeliveryHistory deliveryHistory) {
-        this.deliveryHistory = deliveryHistory;
-    }
-
-    public HandlingEventState getState() {
-        return state;
-    }
-
-    public void setState(HandlingEventState state) {
-        this.state = state;
-    }
-
-    public LocalDateTime getTimeStamp() {
-        return timeStamp;
-    }
-
-    public void setTimeStamp(LocalDateTime timeStamp) {
-        this.timeStamp = timeStamp;
-    }
-
-    public void setTransportMovement(TransportMovement transportMovement) {
-        this.transportMovement = transportMovement;
-    }
-
 
 }

@@ -5,6 +5,7 @@ import com.example.demo.models.products.State;
 import com.example.demo.models.products.Status;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -13,7 +14,7 @@ import java.time.LocalDateTime;
 public class ProductDTO {
     private Long productId;
     private String name;
-    private LocalDateTime expirationDate;
+    private LocalDate expirationDate;
     private String description;
     private double weight;
     private Long amount;

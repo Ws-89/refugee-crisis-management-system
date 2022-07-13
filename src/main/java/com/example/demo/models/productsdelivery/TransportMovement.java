@@ -28,7 +28,8 @@ import java.util.Set;
             @NamedAttributeNode(value = "deliverySpecification", subgraph = "subgraph.deliverySpecification")},
         subgraphs = {
             @NamedSubgraph(name = "subgraph.deliverySpecification", attributeNodes = {@NamedAttributeNode(value = "deliveryAddress")}),
-            @NamedSubgraph(name = "subgraph.handlingEvents", attributeNodes = {@NamedAttributeNode(value = "transportMovement")})
+            @NamedSubgraph(name = "subgraph.handlingEvents", attributeNodes = {@NamedAttributeNode(value = "transportMovement")}),
+            @NamedSubgraph(name = "subgraph.handlingEvents", attributeNodes = {@NamedAttributeNode(value = "deliveryHistory")})
         })
 public class TransportMovement {
 

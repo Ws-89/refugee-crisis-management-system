@@ -4,10 +4,7 @@ import com.example.demo.dto.ProductDTO;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.models.products.Category;
 import com.example.demo.models.products.Product;
-import com.example.demo.models.productsdelivery.HandlingEvent;
-import com.example.demo.models.productsdelivery.ProductDelivery;
 import com.example.demo.repo.ProductRepository;
-import org.aspectj.weaver.ast.Not;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -17,7 +14,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.Month;
 import java.util.Arrays;
 import java.util.List;
@@ -54,7 +51,7 @@ class ProductServiceImplementationTest {
         Product product = Product.builder()
                 .productId(1L)
                 .name("Bandage")
-                .expirationDate(LocalDateTime.of(2025, Month.FEBRUARY,3,6,30,40,50000))
+                .expirationDate(LocalDate.of(2017, Month.FEBRUARY,3))
                 .description("pressure bandage")
                 .amount(200L)
                 .weight(200)
@@ -85,7 +82,7 @@ class ProductServiceImplementationTest {
         Product product1 = Product.builder()
                 .productId(1L)
                 .name("Bandage")
-                .expirationDate(LocalDateTime.of(2025, Month.FEBRUARY,3,6,30,40,50000))
+                .expirationDate(LocalDate.of(2017, Month.FEBRUARY,3))
                 .description("pressure bandage")
                 .amount(200L)
                 .weight(200)
@@ -107,7 +104,7 @@ class ProductServiceImplementationTest {
         Product product1 = Product.builder()
                 .productId(1L)
                 .name("Bandage")
-                .expirationDate(LocalDateTime.of(2025, Month.FEBRUARY,3,6,30,40,50000))
+                .expirationDate(LocalDate.of(2017, Month.FEBRUARY,3))
                 .description("pressure bandage")
                 .amount(200L)
                 .weight(200)
@@ -122,7 +119,7 @@ class ProductServiceImplementationTest {
         Product product2 = Product.builder()
                 .productId(2L)
                 .name("Coffee")
-                .expirationDate(LocalDateTime.of(2017, Month.FEBRUARY,3,6,30,40,50000))
+                .expirationDate(LocalDate.of(2017, Month.FEBRUARY,3))
                 .description("Black and strong")
                 .amount(200L)
                 .weight(200)
@@ -137,7 +134,7 @@ class ProductServiceImplementationTest {
         Product product3 = Product.builder()
                 .productId(3L)
                 .name("Cif")
-                .expirationDate(LocalDateTime.of(2017, Month.FEBRUARY,3,6,30,40,50000))
+                .expirationDate(LocalDate.of(2017, Month.FEBRUARY,3))
                 .description("for cleaning house")
                 .amount(200L)
                 .weight(200)
@@ -160,7 +157,7 @@ class ProductServiceImplementationTest {
 
         Product foodProduct = Product.builder()
                 .name("Coffee")
-                .expirationDate(LocalDateTime.of(2017, Month.FEBRUARY,3,6,30,40,50000))
+                .expirationDate(LocalDate.of(2017, Month.FEBRUARY,3))
                 .description("Black")
                 .amount(200L)
                 .weight(200)
@@ -192,7 +189,7 @@ class ProductServiceImplementationTest {
         Product blackCoffe = Product.builder()
                 .productId(1L)
                 .name("Coffee")
-                .expirationDate(LocalDateTime.of(2017, Month.FEBRUARY,3,6,30,40,50000))
+                .expirationDate(LocalDate.of(2017, Month.FEBRUARY,3))
                 .description("Black")
                 .amount(200L)
                 .weight(200)
@@ -205,7 +202,7 @@ class ProductServiceImplementationTest {
         Product frappe = Product.builder()
                 .productId(1L)
                 .name("Coffee")
-                .expirationDate(LocalDateTime.of(2017, Month.FEBRUARY,3,6,30,40,50000))
+                .expirationDate(LocalDate.of(2017, Month.FEBRUARY,3))
                 .description("Black")
                 .amount(200L)
                 .weight(200)
@@ -242,7 +239,7 @@ class ProductServiceImplementationTest {
         Product blackCoffe = Product.builder()
                 .productId(1L)
                 .name("Coffee")
-                .expirationDate(LocalDateTime.of(2017, Month.FEBRUARY,3,6,30,40,50000))
+                .expirationDate(LocalDate.of(2017, Month.FEBRUARY,3))
                 .description("Black")
                 .amount(200L)
                 .weight(200)

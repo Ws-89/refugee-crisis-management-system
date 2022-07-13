@@ -1,0 +1,149 @@
+[33mcommit 84a1a4ed453854a290dd3ebb9982877b29e06a22[m[33m ([m[1;36mHEAD -> [m[1;32mhandlingEventsModel1[m[33m, [m[1;31morigin/handlingEventsModel1[m[33m)[m
+Author: Wiktor Siuda <wiktorsiuda@gmail.com>
+Date:   Sat Jul 9 02:31:00 2022 +0200
+
+    added service layer tests
+
+[33mcommit bd38ac280a578f18a7b6b3997696f150b02fc0f5[m
+Author: Wiktor Siuda <wiktorsiuda@gmail.com>
+Date:   Fri Jul 8 18:09:34 2022 +0200
+
+    service layer tests
+
+[33mcommit 3061b898ea12567992a73c0fa7403d6395d4dfcf[m
+Author: Wiktor Siuda <wiktorsiuda@gmail.com>
+Date:   Fri Jul 8 16:02:44 2022 +0200
+
+    unit testing service layer
+
+[33mcommit 9094ed786c593876ead7ac0dd214b8978de8f1c5[m
+Author: Wiktor Siuda <wiktorsiuda@gmail.com>
+Date:   Thu Jul 7 20:45:08 2022 +0200
+
+    adding handling events implemented
+
+[33mcommit be5a6a4cebe736f430d8d7b4a324144e6047b3ed[m
+Author: Wiktor Siuda <wiktorsiuda@gmail.com>
+Date:   Thu Jul 7 18:53:16 2022 +0200
+
+    dto projections for handling event view
+
+[33mcommit c724c0b11f547aa58e6293bb8d504ecf173f390d[m
+Author: Wiktor Siuda <wiktorsiuda@gmail.com>
+Date:   Thu Jul 7 16:31:23 2022 +0200
+
+    dto projections:s product, product delivery, delivery specification, delivery address added
+
+[33mcommit 25293cbeea7067f3036d3b9e8a3fd48bda2baae4[m
+Author: Wiktor Siuda <wiktorsiuda@gmail.com>
+Date:   Thu Jul 7 14:28:29 2022 +0200
+
+    adding dto projections
+
+[33mcommit e311676618cdfb65ecd198715695d045a498c10e[m[33m ([m[1;31morigin/master[m[33m, [m[1;32mmaster[m[33m)[m
+Author: Wiktor Siuda <wiktorsiuda@gmail.com>
+Date:   Wed Jul 6 15:57:16 2022 +0200
+
+    deleting not used properties
+
+[33mcommit e5ed33903ede139d4a609974853dd7f48a5987d0[m
+Merge: 66a272e 089ccc9
+Author: Ws-89 <33036915+Ws-89@users.noreply.github.com>
+Date:   Wed Jul 6 15:34:30 2022 +0200
+
+    Merge pull request #2 from Ws-89/alpha
+    
+    added transport movement graph for displaying list with carts but wit…
+
+[33mcommit 089ccc926f5194a199681d49f89f04f8dba927f1[m[33m ([m[1;31morigin/alpha[m[33m)[m
+Author: Wiktor Siuda <wiktorsiuda@gmail.com>
+Date:   Wed Jul 6 15:33:47 2022 +0200
+
+    added transport movement graph for displaying list with carts but without products
+
+[33mcommit 66a272e4b8167f29afdcc8ba987d1e8d9c031740[m
+Merge: 242f18f 12ba333
+Author: Ws-89 <33036915+Ws-89@users.noreply.github.com>
+Date:   Wed Jul 6 12:32:40 2022 +0200
+
+    Merge pull request #1 from Ws-89/alpha
+    
+    Alpha
+
+[33mcommit 12ba3332141824a1bc15129ef2c9386b318124df[m
+Author: Wiktor Siuda <wiktorsiuda@gmail.com>
+Date:   Wed Jul 6 12:31:39 2022 +0200
+
+    queries optimalisation
+
+[33mcommit ebff2d1a88082bbbf1b2726466939959895967a7[m
+Author: Wiktor Siuda <wiktorsiuda@gmail.com>
+Date:   Mon Jul 4 00:26:03 2022 +0200
+
+    implementing transport management
+
+[33mcommit ff68160b22892cca8ff1eee7407c963c8985aeba[m
+Author: Wiktor Siuda <wiktorsiuda@gmail.com>
+Date:   Sun Jul 3 00:58:51 2022 +0200
+
+    adding a shipment for transport
+
+[33mcommit a3d4624fbc4e94705a9ebe89a9f937b8b08233cc[m
+Author: Wiktor Siuda <wiktorsiuda@gmail.com>
+Date:   Sat Jul 2 17:29:17 2022 +0200
+
+    handling events implementation
+
+[33mcommit a3e41d4b122d594321e24bc4e07b62c2944b1633[m
+Author: Wiktor Siuda <wiktorsiuda@gmail.com>
+Date:   Thu Jun 30 01:34:23 2022 +0200
+
+    implementing transport planning
+
+[33mcommit 27c4e82805ba6b4bd430f89790a1a29356919138[m
+Author: Wiktor Siuda <wiktorsiuda@gmail.com>
+Date:   Mon Jun 27 15:43:05 2022 +0200
+
+    product delivery - product relationship switch owning side
+
+[33mcommit ceae2b13ef2b4146fef9b7ebddc5b170484a32d6[m
+Author: Wiktor Siuda <wiktorsiuda@gmail.com>
+Date:   Sun Jun 26 02:25:28 2022 +0200
+
+    inheritance removed
+
+[33mcommit 0a0af7862a3ae328cf8cb9f8df70408baac65da3[m
+Author: Wiktor Siuda <wiktorsiuda@gmail.com>
+Date:   Mon Jun 20 19:38:26 2022 +0200
+
+    vehicles implemented
+
+[33mcommit e020bdf91ea9a288de9827e12d8af988ba7ca7cb[m
+Author: Wiktor Siuda <wiktorsiuda@gmail.com>
+Date:   Mon Jun 20 14:29:43 2022 +0200
+
+    products handling implmented
+
+[33mcommit 72fea0fb55164174709921a6f10a31884b0ffc8f[m
+Author: Wiktor Siuda <wiktorsiuda@gmail.com>
+Date:   Tue Jun 14 07:47:10 2022 +0200
+
+    product delivery implementation
+
+[33mcommit 89a4325e9f111c0795fcbeb23ea5bc691a110001[m
+Author: Wiktor Siuda <wiktorsiuda@gmail.com>
+Date:   Wed Jun 1 21:25:09 2022 +0200
+
+    refugee lodging
+
+[33mcommit 8ed609c506fd4d86023c530b5162c74af89501d7[m
+Author: Wiktor Siuda <wiktorsiuda@gmail.com>
+Date:   Sun May 29 01:48:03 2022 +0200
+
+    implementing services
+
+[33mcommit 242f18ff04908bafab7a04965849f73edf741c9e[m
+Author: Wiktor Siuda <wiktorsiuda@gmail.com>
+Date:   Thu May 26 13:39:27 2022 +0200
+
+    First commit

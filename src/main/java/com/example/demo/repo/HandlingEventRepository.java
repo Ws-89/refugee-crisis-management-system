@@ -13,4 +13,5 @@ public interface HandlingEventRepository extends JpaRepository<HandlingEvent, Lo
     @Query("select s from HandlingEvent s where s.transportMovement.transportMovementId = ?1")
     public List<HandlingEvent> findAllByTransportMovementId(Long id);
 
+
 }

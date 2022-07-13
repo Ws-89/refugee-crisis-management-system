@@ -5,14 +5,16 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
-
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "tbl_product")
@@ -33,7 +35,7 @@ public class Product implements Serializable {
     @Column(name = "product_id")
     private Long productId;
     private String name;
-    private LocalDateTime expirationDate;
+    private LocalDate expirationDate;
     private String description;
     private double weight;
     private Long amount;
@@ -44,102 +46,15 @@ public class Product implements Serializable {
     private State state;
     @Embedded
     private Category category;
-
     @ManyToOne(
             cascade = {CascadeType.MERGE, CascadeType.PERSIST},
             fetch = FetchType.LAZY)
     @JoinColumn(name = "delivery_id", referencedColumnName = "delivery_id")
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private ProductDelivery productDelivery;
-
-
-    public Long getProductId() {
-        return productId;
-    }
-
-    public void setProductId(Long productId) {
-        this.productId = productId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public LocalDateTime getExpirationDate() {
-        return expirationDate;
-    }
-
-    public void setExpirationDate(LocalDateTime expirationDate) {
-        this.expirationDate = expirationDate;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public double getWeight() {
-        return weight;
-    }
-
-    public void setWeight(double weight) {
-        this.weight = weight;
-    }
-
-    public Long getAmount() {
-        return amount;
-    }
-
-    public void setAmount(Long amount) {
-        this.amount = amount;
-    }
-
-    public Status getReserved() {
-        return reserved;
-    }
-
-    public void setReserved(Status reserved) {
-        this.reserved = reserved;
-    }
-
-    public boolean isFragile() {
-        return fragile;
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
-    }
-
-    public void setFragile(boolean fragile) {
-        this.fragile = fragile;
-    }
-
-    public State getState() {
-        return state;
-    }
-
-    public void setState(State state) {
-        this.state = state;
-    }
 
     @JsonBackReference
     public ProductDelivery getProductDelivery() {
         return productDelivery;
-    }
-
-    public void setProductDelivery(ProductDelivery productDelivery) {
-        this.productDelivery = productDelivery;
     }
 
     @Override

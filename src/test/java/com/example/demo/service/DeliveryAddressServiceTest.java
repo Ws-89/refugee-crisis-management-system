@@ -111,7 +111,7 @@ class DeliveryAddressServiceTest {
                 .deliveryAddressId(1L).city("XyzQ").street("AbcdefQ ghjkl").postCode("12-345Q").state("Poiuytrwq LkjhgfdsaQ").build();
         when(deliveryAddressRepository.findById(1L)).thenReturn(Optional.of(address));
 
-        DeliveryAddressDTO updatedAddressDTO = deliveryAddressService.update(updatedAddress);
+        deliveryAddressService.update(updatedAddress);
 
         ArgumentCaptor<DeliveryAddress> deliveryAddressArgumentCaptor = ArgumentCaptor.forClass(DeliveryAddress.class);
         verify(deliveryAddressRepository).save(deliveryAddressArgumentCaptor.capture());

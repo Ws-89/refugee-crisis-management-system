@@ -115,7 +115,6 @@ class HandlingEventServiceImplementationTest {
 
     @Test
     void shouldSaveHandlingEvent() {
-
         //given
         DeliveryAddress startingAddress = DeliveryAddress.builder().city("Qwerty").postCode("12-345").state("Zxcv").street("Fghjk").build();
         DeliveryAddress deliveryAddress = DeliveryAddress.builder().city("Qwerty").postCode("12-345").state("Zxcv").street("Fghjk").build();
@@ -133,7 +132,6 @@ class HandlingEventServiceImplementationTest {
                 .vehicle(vehicle).build();
 
         HandlingEvent handlingEvent = HandlingEvent.builder().state(HandlingEventState.INITIALIZING_EVENT).build();
-
 
         when(productDeliveryRepository.findById(1L)).thenReturn(Optional.of(productDelivery));
         when(transportMovementRepo.findById(1L)).thenReturn(Optional.of(transportMovement));

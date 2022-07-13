@@ -50,23 +50,4 @@ public class DeliveryHistory {
         event.setDeliveryHistory(this);
     }
 
-    public List<HandlingEvent> getHandlingEvents() {
-        return handlingEvents;
-    }
-
-    public void setHandlingEvents(List<HandlingEvent> handlingEvents) {
-        this.handlingEvents = handlingEvents;
-    }
-
-    public ProductDelivery getProductDelivery() {
-        return productDelivery;
-    }
-
-    public void setProductDelivery(ProductDelivery productDelivery) {
-        this.productDelivery = productDelivery;
-    }
-
-    public long getDeliveryHistoryId() {
-        return deliveryHistoryId;
-    }
 }

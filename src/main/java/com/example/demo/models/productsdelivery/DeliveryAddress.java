@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -39,66 +40,18 @@ public class DeliveryAddress {
     private String state;
 
     @JsonIgnore
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @OneToMany(mappedBy = "deliveryAddress", cascade = CascadeType.PERSIST)
     private Set<DeliverySpecification> deliverySpecifications = new HashSet<>();
 
 
-    public void addDeliverySpecification(DeliverySpecification deliverySpecification){
+    public void addDeliverySpecification(DeliverySpecification deliverySpecification) {
         this.deliverySpecifications.add(deliverySpecification);
         deliverySpecification.setDeliveryAddress(this);
     }
 
-    public void removeDeliverySpecification(DeliverySpecification deliverySpecification){
+    public void removeDeliverySpecification(DeliverySpecification deliverySpecification) {
         this.deliverySpecifications.remove(deliverySpecification);
         deliverySpecification.setDeliveryAddress(null);
     }
 
-    public Long getDeliveryAddressId() {
-        return deliveryAddressId;
-    }
-
-    public void setDeliveryAddressId(Long deliveryAddressId) {
-        this.deliveryAddressId = deliveryAddressId;
-    }
-
-    public String getPostCode() {
-        return postCode;
-    }
-
-    public void setPostCode(String postCode) {
-        this.postCode = postCode;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getStreet() {
-        return street;
-    }
-
-    public void setStreet(String street) {
-        this.street = street;
-    }
-
-    public Set<DeliverySpecification> getDeliverySpecifications() {
-        return deliverySpecifications;
-    }
-
-    public void setDeliverySpecifications(Set<DeliverySpecification> deliverySpecifications) {
-        this.deliverySpecifications = deliverySpecifications;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
-    }
 }

@@ -23,6 +23,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Data
 @NamedEntityGraphs({@NamedEntityGraph(name = "graph.WholeProductDelivery", attributeNodes = {
                     @NamedAttributeNode(value = "deliveryHistory"),
                     @NamedAttributeNode(value = "startingAddress"),
@@ -90,67 +91,9 @@ public class ProductDelivery implements Serializable {
         product.setProductDelivery(null);
     }
 
-    public long getDeliveryId() {
-        return deliveryId;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Double getTotalWeight() {
-        return totalWeight;
-    }
-
-    public void setTotalWeight(Double totalWeight) {
-        this.totalWeight = totalWeight;
-    }
-
-    public DeliveryHistory getDeliveryHistory() {
-        return deliveryHistory;
-    }
-
-    public void setDeliveryHistory(DeliveryHistory deliveryHistory) {
-        this.deliveryHistory = deliveryHistory;
-    }
-
-    public DeliverySpecification getDeliverySpecification() {
-        return deliverySpecification;
-    }
-
-    public void setDeliverySpecification(DeliverySpecification deliverySpecification) {
-        this.deliverySpecification = deliverySpecification;
-    }
     @JsonManagedReference
     public List<Product> getProducts() {
         return products;
     }
 
-    public void setProducts(List<Product> products) {
-        this.products = products;
-    }
-
-    public void setDeliveryId(long deliveryId) {
-        this.deliveryId = deliveryId;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    public DeliveryAddress getStartingAddress() {
-        return startingAddress;
-    }
-
-    public void setStartingAddress(DeliveryAddress startingAddress) {
-        this.startingAddress = startingAddress;
-    }
 }

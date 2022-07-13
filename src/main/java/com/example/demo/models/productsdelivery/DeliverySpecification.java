@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @Table(name = "tbl_delivery_specification")
 @Builder
 @NoArgsConstructor
+@Data
 @AllArgsConstructor
 public class DeliverySpecification {
 
@@ -27,33 +28,8 @@ public class DeliverySpecification {
     @Column(name = "delivery_specification_id")
     private Long deliverySpecificationId;
     private LocalDateTime arrivalTime;
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "delivery_address_id", referencedColumnName = "delivery_address_id")
     private DeliveryAddress deliveryAddress;
-
-    public Long getDeliverySpecificationId() {
-        return deliverySpecificationId;
-    }
-
-    public void setDeliverySpecificationId(Long deliverySpecificationId) {
-        this.deliverySpecificationId = deliverySpecificationId;
-    }
-
-    public LocalDateTime getArrivalTime() {
-        return arrivalTime;
-    }
-
-    public void setArrivalTime(LocalDateTime arrivalTime) {
-        this.arrivalTime = arrivalTime;
-    }
-
-    public DeliveryAddress getDeliveryAddress() {
-        return deliveryAddress;
-    }
-
-    public void setDeliveryAddress(DeliveryAddress deliveryAddress) {
-        this.deliveryAddress = deliveryAddress;
-    }
 
 }

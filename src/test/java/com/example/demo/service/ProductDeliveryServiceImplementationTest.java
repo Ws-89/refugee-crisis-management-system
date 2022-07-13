@@ -22,6 +22,7 @@ import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.*;
@@ -97,7 +98,7 @@ class ProductDeliveryServiceImplementationTest {
         Product blackCoffe = Product.builder()
                 .productId(1L)
                 .name("Coffee")
-                .expirationDate(LocalDateTime.of(2017, Month.FEBRUARY,3,6,30,40,50000))
+                .expirationDate(LocalDate.of(2017, Month.FEBRUARY,3))
                 .description("Black")
                 .amount(200L)
                 .weight(200)
@@ -110,7 +111,7 @@ class ProductDeliveryServiceImplementationTest {
         Product frappe = Product.builder()
                 .productId(2L)
                 .name("Coffee")
-                .expirationDate(LocalDateTime.of(2017, Month.FEBRUARY,3,6,30,40,50000))
+                .expirationDate(LocalDate.of(2017, Month.FEBRUARY,3))
                 .description("Black")
                 .amount(200L)
                 .weight(200)
@@ -146,7 +147,7 @@ class ProductDeliveryServiceImplementationTest {
         Product blackCoffe = Product.builder()
                 .productId(1L)
                 .name("Coffee")
-                .expirationDate(LocalDateTime.of(2017, Month.FEBRUARY,3,6,30,40,50000))
+                .expirationDate(LocalDate.of(2017, Month.FEBRUARY,3))
                 .description("Black")
                 .amount(200L)
                 .weight(200)
@@ -159,7 +160,7 @@ class ProductDeliveryServiceImplementationTest {
         Product frappe = Product.builder()
                 .productId(2L)
                 .name("Coffee")
-                .expirationDate(LocalDateTime.of(2017, Month.FEBRUARY,3,6,30,40,50000))
+                .expirationDate(LocalDate.of(2017, Month.FEBRUARY,3))
                 .description("Black")
                 .amount(200L)
                 .weight(200)
@@ -203,7 +204,7 @@ class ProductDeliveryServiceImplementationTest {
         Product blackCoffe = Product.builder()
                 .productId(1L)
                 .name("Coffee")
-                .expirationDate(LocalDateTime.of(2017, Month.FEBRUARY,3,6,30,40,50000))
+                .expirationDate(LocalDate.of(2017, Month.FEBRUARY,3))
                 .description("Black")
                 .amount(200L)
                 .weight(200)
@@ -216,7 +217,7 @@ class ProductDeliveryServiceImplementationTest {
         Product frappe = Product.builder()
                 .productId(2L)
                 .name("Coffee")
-                .expirationDate(LocalDateTime.of(2017, Month.FEBRUARY,3,6,30,40,50000))
+                .expirationDate(LocalDate.of(2017, Month.FEBRUARY,3))
                 .description("Black")
                 .amount(200L)
                 .weight(200)
@@ -231,11 +232,12 @@ class ProductDeliveryServiceImplementationTest {
         DeliveryAddress startingAddress = DeliveryAddress.builder().deliveryAddressId(1L).city("Qwerty").postCode("12-345").state("Zxcv").street("Fghjk").build();
         DeliveryAddress deliveryAddress = DeliveryAddress.builder().city("Qwerty").deliveryAddressId(2L).postCode("12-345").state("Zxcv").street("Fghjk").build();
 
-        DeliveryAddress emptyDeliveryAddress = new DeliveryAddress();
+
         DeliverySpecification deliverySpecification = DeliverySpecification.builder().deliveryAddress(deliveryAddress).build();
         ProductDelivery productDelivery = ProductDelivery.builder().deliveryId(1L)
                 .startingAddress(startingAddress)
                 .deliverySpecification(deliverySpecification)
+                .products(products)
                 .description("Coffee")
                 .totalWeight(230.0)
                 .build();
@@ -244,12 +246,13 @@ class ProductDeliveryServiceImplementationTest {
                 .startingAddress(startingAddress)
                 .deliverySpecification(deliverySpecification)
                 .description("Coffee")
+                .products(products)
                 .totalWeight(250.0)
                 .build();
 
         when(productDeliveryRepository.findById(1L)).thenReturn(Optional.of(productDelivery));
 
-        ProductDeliveryDTO productDeliveryDTO = productDeliveryService.updateProductDelivery(updatedProductDelivery);
+        productDeliveryService.updateProductDelivery(updatedProductDelivery);
 
         ArgumentCaptor<ProductDelivery> productDeliveryCaptor = ArgumentCaptor.forClass(ProductDelivery.class);
         verify(productDeliveryRepository).save(productDeliveryCaptor.capture());
@@ -265,7 +268,7 @@ class ProductDeliveryServiceImplementationTest {
         Product blackCoffe = Product.builder()
                 .productId(1L)
                 .name("Coffee")
-                .expirationDate(LocalDateTime.of(2017, Month.FEBRUARY,3,6,30,40,50000))
+                .expirationDate(LocalDate.of(2017, Month.FEBRUARY,3))
                 .description("Black")
                 .amount(200L)
                 .weight(200)
@@ -278,7 +281,7 @@ class ProductDeliveryServiceImplementationTest {
         Product frappe = Product.builder()
                 .productId(2L)
                 .name("Coffee")
-                .expirationDate(LocalDateTime.of(2017, Month.FEBRUARY,3,6,30,40,50000))
+                .expirationDate(LocalDate.of(2017, Month.FEBRUARY,3))
                 .description("Black")
                 .amount(200L)
                 .weight(200)
