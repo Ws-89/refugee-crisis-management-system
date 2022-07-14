@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 public class DeliverySpecificationDTO {
     private Long deliverySpecificationId;
     private LocalDateTime arrivalTime;
+    private LocalDateTime startingTime;
     private DeliveryAddressDTO deliveryAddress;
 
 }

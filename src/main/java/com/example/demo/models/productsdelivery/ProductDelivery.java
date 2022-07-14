@@ -59,6 +59,8 @@ public class ProductDelivery implements Serializable {
     private long deliveryId;
     private String description;
     private Double totalWeight;
+    private Double size;
+    private Double temperature;
     @Enumerated(value = EnumType.STRING)
     private Status status;
 
