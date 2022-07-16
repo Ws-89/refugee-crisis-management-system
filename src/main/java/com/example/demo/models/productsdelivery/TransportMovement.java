@@ -1,17 +1,14 @@
 package com.example.demo.models.productsdelivery;
 
 import com.example.demo.models.vehicles.Vehicle;
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "tbl_transport_movement")
@@ -19,18 +16,40 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@NamedEntityGraph(name = "graph.TransportMovementHandlingEvents",
+@NamedEntityGraph(name = "graph.TransportMovement",
         attributeNodes = {
-            @NamedAttributeNode(value = "handlingEvents", subgraph = "subgraph.handlingEvents"),
             @NamedAttributeNode(value = "startingAddress"),
-            @NamedAttributeNode(value = "vehicle"
-            ),
-            @NamedAttributeNode(value = "deliverySpecification", subgraph = "subgraph.deliverySpecification")},
-        subgraphs = {
-            @NamedSubgraph(name = "subgraph.deliverySpecification", attributeNodes = {@NamedAttributeNode(value = "deliveryAddress")}),
-            @NamedSubgraph(name = "subgraph.handlingEvents", attributeNodes = {@NamedAttributeNode(value = "transportMovement")}),
-            @NamedSubgraph(name = "subgraph.handlingEvents", attributeNodes = {@NamedAttributeNode(value = "deliveryHistory")})
+            @NamedAttributeNode(value = "vehicle"),
+            @NamedAttributeNode(value = "deliveryAddress")
         })
+@NamedEntityGraph(name = "graph.TransportMovementDeliverySpecification",
+        attributeNodes = {
+            @NamedAttributeNode(value = "startingAddress"),
+            @NamedAttributeNode(value = "vehicle"),
+            @NamedAttributeNode(value = "deliveryAddress"),
+            @NamedAttributeNode(value = "transportMovementSpecifications", subgraph = "subgraph.transportMovementSpecifications")
+        }, subgraphs = {
+            @NamedSubgraph(name = "subgraph.transportMovementSpecifications", attributeNodes = {
+                @NamedAttributeNode(value = "deliveryAddress")
+        })
+})
+@NamedEntityGraph(name = "graph.TransportMovementWithPackages",
+        attributeNodes = {
+            @NamedAttributeNode(value = "wayBills", subgraph = "subgraph.wayBills")
+
+        }, subgraphs = {
+        @NamedSubgraph(name = "subgraph.wayBills", attributeNodes = {
+                @NamedAttributeNode(value = "productDelivery", subgraph = "subgraph.productDelivery")
+        }),
+        @NamedSubgraph(name = "subgraph.productDelivery", attributeNodes = {
+                @NamedAttributeNode(value = "deliveryHistory"),
+                @NamedAttributeNode(value = "startingAddress"),
+                @NamedAttributeNode(value = "deliverySpecification", subgraph = "subgraph.deliverySpecification"),
+        }),
+        @NamedSubgraph(name = "subgraph.deliverySpecification",
+                attributeNodes = @NamedAttributeNode(value = "deliveryAddress", subgraph="subgraph.deliveryAddress"))
+
+})
 public class TransportMovement {
 
     @Id
@@ -45,18 +64,15 @@ public class TransportMovement {
     )
     @Column(name = "transport_movement_id")
     private Long transportMovementId;
+//    @JsonManagedReference
     @OneToMany(
-            mappedBy = "transportMovement"
+            mappedBy = "transportMovement", cascade = CascadeType.MERGE
     )
-    private List<HandlingEvent> handlingEvents;
-    @OneToOne(
-            cascade = CascadeType.ALL
+    private List<DeliveryHistory> wayBills;
+    @OneToMany(
+            mappedBy = "transportMovement", cascade = CascadeType.ALL, orphanRemoval = true
     )
-    @JoinColumn(
-            name = "delivery_specification_id",
-            referencedColumnName = "delivery_specification_id"
-    )
-    private DeliverySpecification deliverySpecification;
+    private List<TransportMovementSpecification> transportMovementSpecifications;
     @OneToOne(
             cascade = CascadeType.MERGE,
             fetch = FetchType.LAZY
@@ -66,6 +82,16 @@ public class TransportMovement {
             referencedColumnName = "delivery_address_id"
     )
     private DeliveryAddress startingAddress;
+    @OneToOne(
+            cascade = CascadeType.MERGE,
+            fetch = FetchType.LAZY
+    )
+    @JoinColumn(
+            name = "delivery_address_id",
+            referencedColumnName = "delivery_address_id"
+    )
+    private DeliveryAddress deliveryAddress;
+    private Double weightOfTheGoods;
     @ManyToOne(
             fetch = FetchType.LAZY,
             cascade = CascadeType.MERGE
@@ -76,9 +102,19 @@ public class TransportMovement {
     )
     private Vehicle vehicle;
 
-    public void addHandlingEvent(HandlingEvent event){
-        this.handlingEvents.add(event);
-        event.setTransportMovement(this);
+    public boolean addProductDelivery(DeliveryHistory packageToBeDelivered){
+        if(wayBills.stream().anyMatch(x -> x.getDeliveryHistoryId() == packageToBeDelivered.getDeliveryHistoryId())){
+            throw new IllegalStateException("This package is already planned for this shipment");
+        }
+
+        Double capacity = vehicle.getCapacity();
+        if(weightOfTheGoods + packageToBeDelivered.getProductDelivery().getTotalWeight() > capacity)
+            throw new IllegalStateException("This package is too heavy for this shipment");
+
+        this.wayBills.add(packageToBeDelivered);
+        packageToBeDelivered.setTransportMovement(this);
+        this.weightOfTheGoods += packageToBeDelivered.getProductDelivery().getTotalWeight();
+        return true;
     }
 
 }

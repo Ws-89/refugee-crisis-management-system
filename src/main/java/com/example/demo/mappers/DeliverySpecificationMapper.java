@@ -13,7 +13,7 @@ public interface DeliverySpecificationMapper {
 
     @Mapping(source = "deliverySpecificationId", target ="deliverySpecificationId")
     @Mapping(source = "arrivalTime", target ="arrivalTime")
-    @Mapping(source = "startingTime", target = "startingTime")
+    @Mapping(source = "departureTime", target = "departureTime")
     @Mapping(source = "deliveryAddress", target ="deliveryAddress")
     DeliverySpecificationDTO entityToDTO(DeliverySpecification deliverySpecification);
 }

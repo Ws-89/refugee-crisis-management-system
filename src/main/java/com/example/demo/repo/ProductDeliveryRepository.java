@@ -17,4 +17,6 @@ public interface ProductDeliveryRepository extends JpaRepository<ProductDelivery
 
     @EntityGraph(value = "graph.WholeProductDelivery", type = EntityGraph.EntityGraphType.LOAD)
     Optional<ProductDelivery> findById(Long id);
+
+
 }

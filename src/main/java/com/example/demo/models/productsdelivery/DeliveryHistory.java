@@ -31,23 +31,17 @@ public class DeliveryHistory {
     )
     @Column(name = "delivery_history_id")
     private long deliveryHistoryId;
-    @OneToMany(
-            mappedBy = "deliveryHistory",
-            orphanRemoval = true
+//    @JsonBackReference
+    @ManyToOne(
+            cascade = CascadeType.MERGE, fetch = FetchType.LAZY
     )
-    @JsonIdentityInfo(
-            generator = ObjectIdGenerators.PropertyGenerator.class,
-            property = "handlingEventId")
-    @JsonManagedReference
-    private List<HandlingEvent> handlingEvents = new ArrayList<HandlingEvent>();
+    @JoinColumn(
+            name = "transport_movement_id", referencedColumnName = "transport_movement_id"
+    )
+    private TransportMovement transportMovement;
     @OneToOne(
             mappedBy = "deliveryHistory"
     )
     private ProductDelivery productDelivery;
-
-    public void addEvent(HandlingEvent event){
-        this.handlingEvents.add(event);
-        event.setDeliveryHistory(this);
-    }
 
 }

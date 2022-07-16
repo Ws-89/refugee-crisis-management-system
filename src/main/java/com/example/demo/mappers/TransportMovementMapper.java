@@ -12,10 +12,10 @@ public interface TransportMovementMapper {
     TransportMovementMapper INSTANCE = Mappers.getMapper(TransportMovementMapper.class);
 
     @Mapping(source = "transportMovementId", target = "transportMovementId")
-    @Mapping(source = "deliverySpecification", target = "deliverySpecification")
     @Mapping(source = "startingAddress", target = "startingAddress")
+    @Mapping(source = "deliveryAddress" , target ="deliveryAddress")
     @Mapping(source = "vehicle", target = "vehicle")
-    @Mapping(source = "handlingEvents", target = "handlingEvents")
+    @Mapping(source = "weightOfTheGoods", target = "weightOfTheGoods")
     TransportMovementDTO entityToDTO(TransportMovement transportMovement);
 
 }

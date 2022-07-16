@@ -7,7 +7,7 @@ import com.example.demo.models.products.Product;
 import com.example.demo.models.productsdelivery.*;
 import com.example.demo.models.vehicles.Vehicle;
 import com.example.demo.repo.DeliveryAddressRepository;
-import com.example.demo.repo.HandlingEventRepository;
+//import com.example.demo.repo.HandlingEventRepository;
 import com.example.demo.repo.ProductDeliveryRepository;
 import com.example.demo.repo.TransportMovementRepo;
 import com.example.demo.service.ProductDeliveryServiceImplementation;
@@ -45,8 +45,8 @@ class DemoApplicationTests {
 	@Autowired
 	private ProductDeliveryController productDeliveryController;
 
-	@Autowired
-	private HandlingEventRepository handlingEventRepository;
+//	@Autowired
+//	private HandlingEventRepository handlingEventRepository;
 
 	@Autowired
 	private TransportMovementRepo transportMovementRepo;

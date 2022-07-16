@@ -28,7 +28,7 @@ public class DeliverySpecification {
     @Column(name = "delivery_specification_id")
     private Long deliverySpecificationId;
     private LocalDateTime arrivalTime;
-    private LocalDateTime startingTime;
+    private LocalDateTime departureTime;
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "delivery_address_id", referencedColumnName = "delivery_address_id")
     private DeliveryAddress deliveryAddress;

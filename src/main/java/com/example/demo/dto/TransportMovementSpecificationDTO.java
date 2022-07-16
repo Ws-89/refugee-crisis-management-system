@@ -5,14 +5,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class DeliverySpecificationDTO {
-    private Long deliverySpecificationId;
+@NoArgsConstructor
+public class TransportMovementSpecificationDTO {
+
+    private Long transportMovementSpecificationId;
     private LocalDateTime arrivalTime;
     private LocalDateTime departureTime;
     private DeliveryAddressDTO deliveryAddress;
-
 }

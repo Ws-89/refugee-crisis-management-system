@@ -1,14 +1,14 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.TransportMovementDTO;
+import com.example.demo.dto.TransportMovementFullGraphDTO;
 import com.example.demo.models.productsdelivery.TransportMovement;
+import com.example.demo.requests.AssignPackageToTransportRequest;
 import com.example.demo.service.TransportMovementService;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -22,7 +22,7 @@ public class TransportMovementController {
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<TransportMovementDTO> findById(@PathVariable("id") Long id) {
+    public ResponseEntity<TransportMovementFullGraphDTO> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(this.transportMovementService.findById(id));
     }
 
@@ -46,4 +46,8 @@ public class TransportMovementController {
         return ResponseEntity.ok(this.transportMovementService.update(transportMovement));
     }
 
+    @PostMapping("/add-package-to-transport")
+    public ResponseEntity<TransportMovementDTO> addPackageToTransport(@RequestBody AssignPackageToTransportRequest assignPackageToTransportRequest){
+        return ResponseEntity.ok(this.transportMovementService.addAShipment(assignPackageToTransportRequest));
+    }
 }
