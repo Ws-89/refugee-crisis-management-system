@@ -16,6 +16,8 @@ public interface TransportMovementMapper {
     @Mapping(source = "deliveryAddress" , target ="deliveryAddress")
     @Mapping(source = "vehicle", target = "vehicle")
     @Mapping(source = "weightOfTheGoods", target = "weightOfTheGoods")
+    @Mapping(source = "arrivalTime", target = "arrivalTime")
+    @Mapping(source = "departureTime", target = "departureTime")
     TransportMovementDTO entityToDTO(TransportMovement transportMovement);
 
 }

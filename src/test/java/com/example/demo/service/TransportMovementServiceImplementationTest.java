@@ -2,11 +2,11 @@ package com.example.demo.service;
 
 import com.example.demo.dto.TransportMovementDTO;
 import com.example.demo.exception.NotFoundException;
-import com.example.demo.models.productsdelivery.DeliveryAddress;
-import com.example.demo.models.productsdelivery.TransportMovement;
-import com.example.demo.models.productsdelivery.TransportMovementSpecification;
+import com.example.demo.models.products.Product;
+import com.example.demo.models.productsdelivery.*;
 import com.example.demo.models.vehicles.Vehicle;
 import com.example.demo.repo.DeliveryAddressRepository;
+import com.example.demo.repo.ProductDeliveryRepository;
 import com.example.demo.repo.TransportMovementRepo;
 import com.example.demo.repo.VehicleRepository;
 import org.junit.jupiter.api.Test;
@@ -41,6 +41,8 @@ class TransportMovementServiceImplementationTest {
     private VehicleRepository vehicleRepository;
     @Mock
     private EntityManager entityManagerMock;
+    @Mock
+    private ProductDeliveryRepository productDeliveryRepository;
 
     @InjectMocks
     TransportMovementService transportMovementService;
@@ -202,5 +204,60 @@ class TransportMovementServiceImplementationTest {
         List<TransportMovementDTO> transportMovementDTOList = transportMovementService.findAll();
 
         assertThat(transportMovementDTOList.size()).isEqualTo(4);
+    }
+
+    @Test
+    void addAShipment(){
+        DeliveryAddress startingAddress = DeliveryAddress.builder().deliveryAddressId(1L).city("Qwerty").postCode("12-345").state("Zxcv").street("Fghjk").build();
+        DeliveryAddress deliveryAddress = DeliveryAddress.builder().city("Qwerty").deliveryAddressId(2L).postCode("12-345").state("Zxcv").street("Fghjk").build();
+        List<TransportMovementSpecification> tsml = Arrays.asList(TransportMovementSpecification.builder().deliveryAddress(deliveryAddress).build());
+        List<TransportMovement> transportMovements = new ArrayList<>();
+        Vehicle vehicle = Vehicle.builder().vehicleId(1L).vehicleCategory("Van").transportMovement(transportMovements).capacity(900.0).engine("2.0").brand("Renault").build();
+        TransportMovement transportMovement = TransportMovement.builder()
+                .weightOfTheGoods(0.0)
+                .transportMovementId(1L).transportMovementSpecifications(tsml)
+                .startingAddress(startingAddress).vehicle(vehicle).build();
+
+        DeliverySpecification deliverySpecification = DeliverySpecification.builder().deliveryAddress(deliveryAddress).build();
+        ProductDelivery productDelivery = ProductDelivery.builder().deliverySpecification(deliverySpecification)
+                .totalWeight(0.0)
+                .startingAddress(startingAddress).build();
+
+        DeliveryHistory deliveryHistory = DeliveryHistory.builder().productDelivery(productDelivery).build();
+        productDelivery.setDeliveryHistory(deliveryHistory);
+
+        transportMovement.addProductDelivery(productDelivery.getDeliveryHistory());
+        transportMovementRepo.save(transportMovement);
+    }
+
+    @Test
+    void changeRouteOrderUp(){
+        DeliveryAddress startingAddress = DeliveryAddress.builder().deliveryAddressId(1L).city("Qwerty1").postCode("12-345").state("Zxcv").street("Fghjk").build();
+        DeliveryAddress deliveryAddress = DeliveryAddress.builder().city("Qwerty2").deliveryAddressId(2L).postCode("12-345").state("Zxcv").street("Fghjk").build();
+        List<TransportMovementSpecification> tsml = Arrays.asList(TransportMovementSpecification.builder().deliveryAddress(deliveryAddress).build());
+        List<TransportMovement> transportMovements = new ArrayList<>();
+        Vehicle vehicle = Vehicle.builder().vehicleId(1L).vehicleCategory("Van").transportMovement(transportMovements).capacity(900.0).engine("2.0").brand("Renault").build();
+        TransportMovementSpecification tms1 = TransportMovementSpecification.builder().transportMovementSpecificationId(1L).deliveryAddress(startingAddress).build();
+        TransportMovementSpecification tms2 = TransportMovementSpecification.builder().transportMovementSpecificationId(2L).deliveryAddress(deliveryAddress).build();
+        TransportMovement transportMovement = TransportMovement.builder()
+                .weightOfTheGoods(0.0)
+                .transportMovementId(1L).transportMovementSpecifications(tsml)
+                .transportMovementSpecifications(new ArrayList<>())
+                .startingAddress(startingAddress).vehicle(vehicle).build();
+
+        transportMovement.getTransportMovementSpecifications().add(tms1);
+        transportMovement.getTransportMovementSpecifications().add(tms2);
+
+        TransportMovementSpecification tms = transportMovement.getTransportMovementSpecifications().stream()
+                .filter(x -> x.getTransportMovementSpecificationId() == 2)
+                .findFirst().orElseThrow(() -> new NotFoundException("No such address"));
+
+        int index = transportMovement.getTransportMovementSpecifications().indexOf(tms);
+        if(index > 0){
+            transportMovement.getTransportMovementSpecifications().remove(index);
+            transportMovement.getTransportMovementSpecifications().add(index-1, tms);
+        }
+
+        assertThat(transportMovement.getTransportMovementSpecifications().indexOf(tms)).isEqualTo(1);
     }
 }

@@ -7,7 +7,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -18,7 +20,9 @@ public class TransportMovementFullGraphDTO {
     DeliveryAddressDTO startingAddress;
     DeliveryAddressDTO deliveryAddress;
     Double weightOfTheGoods;
+    LocalDateTime arrivalTime;
+    LocalDateTime departureTime;
     VehicleDTO vehicle;
-    List<DeliveryHistoryDTO> wayBills;
+    Set<DeliveryHistoryDTO> wayBills;
     List<TransportMovementSpecificationDTO> transportMovementSpecifications;
 }

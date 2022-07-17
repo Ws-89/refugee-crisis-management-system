@@ -2,18 +2,18 @@ package com.example.demo.models.productsdelivery;
 
 import com.example.demo.models.vehicles.Vehicle;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "tbl_transport_movement")
 @Builder
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @NamedEntityGraph(name = "graph.TransportMovement",
@@ -64,11 +64,20 @@ public class TransportMovement {
     )
     @Column(name = "transport_movement_id")
     private Long transportMovementId;
-//    @JsonManagedReference
-    @OneToMany(
-            mappedBy = "transportMovement", cascade = CascadeType.MERGE
+    @ManyToMany(
+            cascade = CascadeType.MERGE
     )
-    private List<DeliveryHistory> wayBills;
+    @JoinTable(
+            name = "transport_package_map",
+            joinColumns = @JoinColumn(
+                    name = "transport_movement_id", referencedColumnName = "transport_movement_id"
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "delivery_history_id", referencedColumnName = "delivery_history_id"
+            )
+    )
+    private Set<DeliveryHistory> wayBills;
+    @OrderColumn
     @OneToMany(
             mappedBy = "transportMovement", cascade = CascadeType.ALL, orphanRemoval = true
     )
@@ -92,6 +101,8 @@ public class TransportMovement {
     )
     private DeliveryAddress deliveryAddress;
     private Double weightOfTheGoods;
+    private LocalDateTime arrivalTime;
+    private LocalDateTime departureTime;
     @ManyToOne(
             fetch = FetchType.LAZY,
             cascade = CascadeType.MERGE
@@ -102,7 +113,18 @@ public class TransportMovement {
     )
     private Vehicle vehicle;
 
+    public boolean removePackage(DeliveryHistory packageToBeRemoved){
+        if(wayBills.remove(packageToBeRemoved)){
+            this.weightOfTheGoods -= packageToBeRemoved.getProductDelivery().getTotalWeight();
+            return true;
+        }
+        return false;
+    }
+
     public boolean addProductDelivery(DeliveryHistory packageToBeDelivered){
+        if(this.wayBills == null){
+            this.wayBills = new HashSet<>();
+        }
         if(wayBills.stream().anyMatch(x -> x.getDeliveryHistoryId() == packageToBeDelivered.getDeliveryHistoryId())){
             throw new IllegalStateException("This package is already planned for this shipment");
         }
@@ -111,10 +133,92 @@ public class TransportMovement {
         if(weightOfTheGoods + packageToBeDelivered.getProductDelivery().getTotalWeight() > capacity)
             throw new IllegalStateException("This package is too heavy for this shipment");
 
-        this.wayBills.add(packageToBeDelivered);
-        packageToBeDelivered.setTransportMovement(this);
+
+        wayBills.add(packageToBeDelivered);
         this.weightOfTheGoods += packageToBeDelivered.getProductDelivery().getTotalWeight();
         return true;
     }
 
+    public void generateARoute(){
+//        this.transportMovementSpecifications = this.wayBills.stream().map(w -> {
+//            TransportMovementSpecification tms = new TransportMovementSpecification();
+//            tms.setArrivalTime(w.getProductDelivery().getDeliverySpecification().getArrivalTime());
+//            tms.setDeliveryAddress(w.getProductDelivery().getDeliverySpecification().getDeliveryAddress());
+//            return tms;
+//        }).distinct().collect(Collectors.toList());
+
+    };
+
+
+    public Long getTransportMovementId() {
+        return transportMovementId;
+    }
+
+    public void setTransportMovementId(Long transportMovementId) {
+        this.transportMovementId = transportMovementId;
+    }
+
+    public Set<DeliveryHistory> getWayBills() {
+        return wayBills;
+    }
+
+    public void setWayBills(Set<DeliveryHistory> wayBills) {
+        this.wayBills = wayBills;
+    }
+
+    public List<TransportMovementSpecification> getTransportMovementSpecifications() {
+        return transportMovementSpecifications;
+    }
+
+    public void setTransportMovementSpecifications(List<TransportMovementSpecification> transportMovementSpecifications) {
+        this.transportMovementSpecifications = transportMovementSpecifications;
+    }
+
+    public DeliveryAddress getStartingAddress() {
+        return startingAddress;
+    }
+
+    public void setStartingAddress(DeliveryAddress startingAddress) {
+        this.startingAddress = startingAddress;
+    }
+
+    public DeliveryAddress getDeliveryAddress() {
+        return deliveryAddress;
+    }
+
+    public void setDeliveryAddress(DeliveryAddress deliveryAddress) {
+        this.deliveryAddress = deliveryAddress;
+    }
+
+    public Double getWeightOfTheGoods() {
+        return weightOfTheGoods;
+    }
+
+    public void setWeightOfTheGoods(Double weightOfTheGoods) {
+        this.weightOfTheGoods = weightOfTheGoods;
+    }
+
+    public LocalDateTime getArrivalTime() {
+        return arrivalTime;
+    }
+
+    public void setArrivalTime(LocalDateTime arrivalTime) {
+        this.arrivalTime = arrivalTime;
+    }
+
+    public Vehicle getVehicle() {
+        return vehicle;
+    }
+
+    public void setVehicle(Vehicle vehicle) {
+        this.vehicle = vehicle;
+    }
+
+    public LocalDateTime getDepartureTime() {
+        return departureTime;
+    }
+
+    public void setDepartureTime(LocalDateTime departureTime) {
+        this.departureTime = departureTime;
+    }
 }

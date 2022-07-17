@@ -50,4 +50,27 @@ public class TransportMovementController {
     public ResponseEntity<TransportMovementDTO> addPackageToTransport(@RequestBody AssignPackageToTransportRequest assignPackageToTransportRequest){
         return ResponseEntity.ok(this.transportMovementService.addAShipment(assignPackageToTransportRequest));
     }
+
+    @DeleteMapping("/{transportId}/delete-package/{deliveryId}")
+    public ResponseEntity<TransportMovementFullGraphDTO> delete(@PathVariable("transportId") Long transportId, @PathVariable("deliveryId") Long deliveryId){
+        return ResponseEntity.ok(this.transportMovementService.removeAShipment(transportId, deliveryId));
+    }
+
+    @GetMapping("/{transportId}/change-route-order-up/{transportSpecificationId}")
+    public ResponseEntity<TransportMovementFullGraphDTO> changeRouteOrderUp(
+            @PathVariable("transportId") Long transportId, @PathVariable("transportSpecificationId")Long transportSpecificationId){
+        return ResponseEntity.ok(this.transportMovementService.changeRouteOrderUp(transportId, transportSpecificationId));
+    }
+
+    @GetMapping("/{transportId}/change-route-order-down/{transportSpecificationId}")
+    public ResponseEntity<TransportMovementFullGraphDTO> changeRouteOrderDown(
+            @PathVariable("transportId") Long transportId, @PathVariable("transportSpecificationId")Long transportSpecificationId){
+        return ResponseEntity.ok(this.transportMovementService.changeRouteOrderDown(transportId, transportSpecificationId));
+    }
+
+    @GetMapping("/{transportId}/generate-a-route")
+    public ResponseEntity<TransportMovementFullGraphDTO> generateARoute(@PathVariable("transportId") Long transportId){
+        return ResponseEntity.ok(this.transportMovementService.generateARoute(transportId));
+    }
+
 }

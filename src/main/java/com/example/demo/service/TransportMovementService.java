@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class TransportMovementService  {
 
     private final TransportMovementRepo transportMovementRepo;
@@ -36,6 +37,7 @@ public class TransportMovementService  {
 
     public static final String GET_ALL_TRANSPORT_MOVEMENTS = "from TransportMovement";
 
+    @Transactional
     public TransportMovementFullGraphDTO findById(Long id) {
         TransportMovement transportMovement = transportMovementRepo.findById(id)
                 .orElseThrow(()-> new NotFoundException("Transport movement not found"));
@@ -62,29 +64,17 @@ public class TransportMovementService  {
                 transportMovement.getStartingAddress().getDeliveryAddressId()
         ).orElseThrow(()-> new NotFoundException("Starting address not found"));
 
-
-        List<TransportMovementSpecification> transportMovementSpecifications = transportMovement.getTransportMovementSpecifications().stream()
-                .map(s -> {
-                    TransportMovementSpecification transportMovementSpecification = s;
-                    DeliveryAddress address = deliveryAddressRepository.findById(s.getDeliveryAddress().getDeliveryAddressId())
-                            .orElseThrow(()-> new NotFoundException("Starting address not found"));
-                    transportMovementSpecification.setDeliveryAddress(address);
-                    return transportMovementSpecification;
-                }).collect(Collectors.toList());
-
         Vehicle vehicle = vehicleRepository.findById(transportMovement.getVehicle().getVehicleId()).orElseThrow(() -> new NotFoundException("Vehicle not found"));
 
         TransportMovement tmToSave = TransportMovement.builder()
                 .startingAddress(startingAddress)
                 .deliveryAddress(deliveryAddress)
-                .transportMovementSpecifications(transportMovementSpecifications)
                 .weightOfTheGoods(0.0)
                 .vehicle(vehicle)
                 .wayBills(transportMovement.getWayBills())
                 .build();
 
         vehicle.addTransportMovement(tmToSave);
-        transportMovementSpecifications.stream().forEach(tms -> tms.setTransportMovement(tmToSave));
 
         return TransportMovementMapper.INSTANCE.entityToDTO(transportMovementRepo.save(tmToSave));
     }
@@ -128,14 +118,92 @@ public class TransportMovementService  {
         TransportMovement transportMovement = transportMovementRepo.findById(assignPackageToTransportRequest.getTransportId())
                 .orElseThrow(() -> new NotFoundException(String.format("Transport with id %s not found", assignPackageToTransportRequest.getTransportId())));
 
-
-
         Boolean result = transportMovement.addProductDelivery(productDelivery.getDeliveryHistory());
 
         if(assignPackageToTransportRequest.getFinalDestination() && result){
             productDelivery.setStatus(Status.Reserved);
+            productDelivery.getDeliveryHistory().setFinalDestinationId(assignPackageToTransportRequest.getTransportId());
         }
+
         return TransportMovementMapper.INSTANCE.entityToDTO(transportMovementRepo.save(transportMovement));
+    }
+
+    @Transactional
+    public TransportMovementFullGraphDTO removeAShipment(Long transportId, Long wayBillId){
+        TransportMovement transportMovement = transportMovementRepo.findById(transportId)
+                .orElseThrow(() -> new NotFoundException(String.format("Transport with id %s not found", transportId)));
+
+        DeliveryHistory packageToDelete = transportMovement.getWayBills().stream().filter(x -> x.getDeliveryHistoryId() == wayBillId)
+                .findFirst().orElseThrow(() -> new NotFoundException(String.format("Package does not exist in this transport")));
+
+        if(transportMovement.getTransportMovementId() == packageToDelete.getFinalDestinationId()){
+            packageToDelete.getProductDelivery().setStatus(Status.Available);
+        }
+
+        if(transportMovement.removePackage(packageToDelete)){
+            productDeliveryRepository.save(packageToDelete.getProductDelivery());
+        }else {
+            throw new IllegalStateException("Cannot delete the package");
+        }
+
+        return TransportMovementFullGraphMapper.INSTANCE.entityToDTO(transportMovementRepo.save(transportMovement));
+    }
+
+    @Transactional
+    public TransportMovementFullGraphDTO changeRouteOrderUp(Long transportId, Long transportMovementSpecificationId){
+        TransportMovement transportMovement = transportMovementRepo.findById(transportId)
+                .orElseThrow(() -> new NotFoundException(String.format("Transport with id %s not found", transportId)));
+
+        TransportMovementSpecification tms = transportMovement.getTransportMovementSpecifications().stream()
+                .filter(x -> x.getTransportMovementSpecificationId() == transportMovementSpecificationId)
+                .findFirst().orElseThrow(() -> new NotFoundException("No such address"));
+
+        int index = transportMovement.getTransportMovementSpecifications().indexOf(tms);
+        if(index < transportMovement.getTransportMovementSpecifications().size()-1){
+            transportMovement.getTransportMovementSpecifications().remove(index);
+            transportMovement.getTransportMovementSpecifications().add(index+1, tms);
+        }
+        return TransportMovementFullGraphMapper.INSTANCE.entityToDTO(transportMovementRepo.save(transportMovement));
+    }
+
+    @Transactional
+    public TransportMovementFullGraphDTO changeRouteOrderDown(Long transportId, Long transportMovementSpecificationId){
+        TransportMovement transportMovement = transportMovementRepo.findById(transportId)
+                .orElseThrow(() -> new NotFoundException(String.format("Transport with id %s not found", transportId)));
+
+        TransportMovementSpecification tms = transportMovement.getTransportMovementSpecifications().stream()
+                .filter(x -> x.getTransportMovementSpecificationId() == transportMovementSpecificationId)
+                .findFirst().orElseThrow(() -> new NotFoundException("No such address"));
+
+        int index = transportMovement.getTransportMovementSpecifications().indexOf(tms);
+        if(index > 0){
+            transportMovement.getTransportMovementSpecifications().remove(index);
+            transportMovement.getTransportMovementSpecifications().add(index-1, tms);
+        }
+        return TransportMovementFullGraphMapper.INSTANCE.entityToDTO(transportMovementRepo.save(transportMovement));
+    }
+
+    @Transactional
+    public TransportMovementFullGraphDTO generateARoute(Long transportId){
+        TransportMovement transportMovement = transportMovementRepo.findById(transportId)
+                .orElseThrow(() -> new NotFoundException(String.format("Transport with id %s not found", transportId)));
+
+        List<TransportMovementSpecification> transportMovementSpecifications = transportMovement.getWayBills().stream()
+                .map(w -> {
+                    DeliveryAddress address = deliveryAddressRepository.findById(w.getProductDelivery().getDeliverySpecification().getDeliveryAddress().getDeliveryAddressId())
+                            .orElseThrow(()-> new NotFoundException("Delivery address not found"));
+
+                    TransportMovementSpecification transportMovementSpecification = TransportMovementSpecification.builder()
+                            .arrivalTime(w.getProductDelivery().getDeliverySpecification().getArrivalTime())
+                            .deliveryAddress(address)
+                            .transportMovement(transportMovement)
+                            .build();
+                    return transportMovementSpecification;
+                }).collect(Collectors.toList());
+        transportMovement.getTransportMovementSpecifications().removeAll(transportMovement.getTransportMovementSpecifications());
+        transportMovementSpecifications.stream().forEach(tms -> transportMovement.getTransportMovementSpecifications().add(tms));
+//        transportMovement.generateARoute();
+        return TransportMovementFullGraphMapper.INSTANCE.entityToDTO(transportMovementRepo.save(transportMovement));
     }
 
 }

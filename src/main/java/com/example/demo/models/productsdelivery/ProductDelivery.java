@@ -23,24 +23,28 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Data
-@NamedEntityGraphs({@NamedEntityGraph(name = "graph.WholeProductDelivery", attributeNodes = {
-                    @NamedAttributeNode(value = "deliveryHistory"),
-                    @NamedAttributeNode(value = "startingAddress"),
-                    @NamedAttributeNode(value = "products"),
-                    @NamedAttributeNode(value = "deliverySpecification", subgraph = "subgraph.deliverySpecification")},
-        subgraphs = {
-        @NamedSubgraph(name = "subgraph.deliverySpecification",
-                attributeNodes = @NamedAttributeNode(value = "deliveryAddress", subgraph="subgraph.deliveryAddress"))}),
-
-        @NamedEntityGraph(name = "graph.DeliveryWithoutProducts", attributeNodes = {
-                @NamedAttributeNode(value = "deliveryHistory"),
-                @NamedAttributeNode(value = "startingAddress"),
-                @NamedAttributeNode(value = "deliverySpecification", subgraph = "subgraph.deliverySpecification")},
-                subgraphs = {
+@NamedEntityGraphs({@NamedEntityGraph(name = "graph.WholeProductDelivery",
+                    attributeNodes = {
+                        @NamedAttributeNode(value = "deliveryHistory", subgraph = "subgraph.deliveryHistory"),
+                        @NamedAttributeNode(value = "startingAddress"),
+                        @NamedAttributeNode(value = "products"),
+                        @NamedAttributeNode(value = "deliverySpecification", subgraph = "subgraph.deliverySpecification")},
+                    subgraphs = {
+                        @NamedSubgraph(name = "subgraph.deliverySpecification",
+                            attributeNodes = @NamedAttributeNode(value = "deliveryAddress", subgraph="subgraph.deliveryAddress")),
+                        @NamedSubgraph(name = "subgraph.deliveryHistory",
+                            attributeNodes = @NamedAttributeNode(value = "transportMovements")
+                        )
+                    }),
+@NamedEntityGraph(name = "graph.DeliveryWithoutProducts",
+                    attributeNodes = {
+                        @NamedAttributeNode(value = "deliveryHistory"),
+                        @NamedAttributeNode(value = "startingAddress"),
+                        @NamedAttributeNode(value = "deliverySpecification", subgraph = "subgraph.deliverySpecification")},
+                    subgraphs = {
                         @NamedSubgraph(name = "subgraph.deliverySpecification",
                                 attributeNodes = @NamedAttributeNode(value = "deliveryAddress", subgraph="subgraph.deliveryAddress"))}),
-        @NamedEntityGraph(name = "graph.DeliveryOnlyWithProducts", attributeNodes = {@NamedAttributeNode(value = "products")})}
+@NamedEntityGraph(name = "graph.DeliveryOnlyWithProducts", attributeNodes = {@NamedAttributeNode(value = "products")})}
 )
 @Entity
 public class ProductDelivery implements Serializable {
@@ -63,10 +67,13 @@ public class ProductDelivery implements Serializable {
     @Enumerated(value = EnumType.STRING)
     private Status status;
 
+
     @JsonIdentityInfo(
             generator = ObjectIdGenerators.PropertyGenerator.class,
             property = "deliveryHistoryId")
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @OneToOne(cascade= CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "delivery_history_id", referencedColumnName = "delivery_history_id")
     private DeliveryHistory deliveryHistory;
@@ -90,6 +97,74 @@ public class ProductDelivery implements Serializable {
     public void removeProduct(Product product){
         this.products.remove(product);
         product.setProductDelivery(null);
+    }
+
+    public long getDeliveryId() {
+        return deliveryId;
+    }
+
+    public void setDeliveryId(long deliveryId) {
+        this.deliveryId = deliveryId;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Double getTotalWeight() {
+        return totalWeight;
+    }
+
+    public void setTotalWeight(Double totalWeight) {
+        this.totalWeight = totalWeight;
+    }
+
+    public Double getTemperature() {
+        return temperature;
+    }
+
+    public void setTemperature(Double temperature) {
+        this.temperature = temperature;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public DeliveryHistory getDeliveryHistory() {
+        return deliveryHistory;
+    }
+
+    public void setDeliveryHistory(DeliveryHistory deliveryHistory) {
+        this.deliveryHistory = deliveryHistory;
+    }
+
+    public DeliveryAddress getStartingAddress() {
+        return startingAddress;
+    }
+
+    public void setStartingAddress(DeliveryAddress startingAddress) {
+        this.startingAddress = startingAddress;
+    }
+
+    public DeliverySpecification getDeliverySpecification() {
+        return deliverySpecification;
+    }
+
+    public void setDeliverySpecification(DeliverySpecification deliverySpecification) {
+        this.deliverySpecification = deliverySpecification;
+    }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
     }
 
     @JsonManagedReference
