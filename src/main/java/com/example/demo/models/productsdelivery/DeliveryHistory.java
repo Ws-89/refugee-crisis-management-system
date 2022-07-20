@@ -1,12 +1,9 @@
 package com.example.demo.models.productsdelivery;
 
 
-import com.fasterxml.jackson.annotation.*;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -34,10 +31,14 @@ public class DeliveryHistory {
     )
     Set<TransportMovement> transportMovements;
     @OneToOne(
-            mappedBy = "deliveryHistory"
+            mappedBy = "deliveryHistory", cascade = CascadeType.MERGE
     )
     private ProductDelivery productDelivery;
+    @OneToMany(mappedBy = "deliveryHistory", orphanRemoval = true, cascade = CascadeType.MERGE)
+    private List<CargoActivity> cargoActivityList;
     private Long finalDestinationId;
+    private Boolean isLoaded;
+    private long currentTransportMovementId;
     public long getDeliveryHistoryId() {
         return deliveryHistoryId;
     }
@@ -70,11 +71,27 @@ public class DeliveryHistory {
         this.finalDestinationId = finalDestinationId;
     }
 
-    //    public void addTransportMovement(TransportMovement transportMovement){
-//        if(this.transportMovements == null){
-//            this.transportMovements = new HashSet<>();
-//        }
-//        this.transportMovements.add(transportMovement);
-//    }
+    public List<CargoActivity> getCargoActivityList() {
+        return cargoActivityList;
+    }
 
+    public void setCargoActivityList(List<CargoActivity> cargoActivityList) {
+        this.cargoActivityList = cargoActivityList;
+    }
+
+    public Boolean getIsLoaded() {
+        return isLoaded;
+    }
+
+    public void setIsLoaded(Boolean loaded) {
+        isLoaded = loaded;
+    }
+
+    public long getCurrentTransportMovementId() {
+        return currentTransportMovementId;
+    }
+
+    public void setCurrentTransportMovementId(long currentTransportMovementId) {
+        this.currentTransportMovementId = currentTransportMovementId;
+    }
 }

@@ -1,5 +1,6 @@
 package com.example.demo.repo;
 
+import com.example.demo.dto.TransportMovementFullGraphDTO;
 import com.example.demo.models.productsdelivery.ProductDelivery;
 import com.example.demo.models.productsdelivery.TransportMovement;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -19,5 +20,9 @@ public interface TransportMovementRepo extends JpaRepository<TransportMovement, 
 
     @EntityGraph(value = "graph.TransportMovement", type = EntityGraph.EntityGraphType.LOAD)
     List<TransportMovement> findAll();
+
+    @EntityGraph(value = "graph.TransportMovementWithPackages", type = EntityGraph.EntityGraphType.LOAD)
+    @Query("SELECT t FROM TransportMovement t")
+    List<TransportMovement> findAllTransportMovements();
 
 }

@@ -10,8 +10,9 @@ import com.example.demo.repo.ProductDeliveryRepository;
 import com.example.demo.repo.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -55,6 +56,7 @@ public class ProductDeliveryServiceImplementation implements ProductDeliveryServ
         return ProductDeliveryMapper.INSTANCE.entityToDTO(productDeliveryRepository.save(productDelivery));
     }
 
+    @Transactional
     public void assignProductToDelivery(Long deliveryId, Long productId){
         Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("Product not found"));
         ProductDelivery productDelivery = productDeliveryRepository.findById(deliveryId).orElseThrow(() -> new NotFoundException("Product delivery not found"));
@@ -64,6 +66,7 @@ public class ProductDeliveryServiceImplementation implements ProductDeliveryServ
         productRepository.save(product);
     }
 
+    @Transactional
     public void removeProductFromPackage(Long deliveryId, Long productId){
         Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("Product not found"));
         ProductDelivery productDelivery = productDeliveryRepository.findById(deliveryId).orElseThrow(() -> new NotFoundException("Product delivery not found"));
@@ -71,6 +74,12 @@ public class ProductDeliveryServiceImplementation implements ProductDeliveryServ
         product.setReserved(Status.Available);
         productDelivery.removeProduct(product);
         productRepository.save(product);
+    }
+
+    public void finishCargoCompletion(Long deliveryId){
+        ProductDelivery productDelivery = productDeliveryRepository.findById(deliveryId).orElseThrow(() -> new NotFoundException("Product delivery not found"));
+        productDelivery.setStatus(Status.Reserved);
+        productDeliveryRepository.save(productDelivery);
     }
 
     @Override

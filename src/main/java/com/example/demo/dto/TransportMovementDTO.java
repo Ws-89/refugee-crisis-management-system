@@ -1,6 +1,7 @@
 package com.example.demo.dto;
 
 import com.example.demo.models.productsdelivery.DeliveryHistory;
+import com.example.demo.models.productsdelivery.TransportStatus;
 import com.example.demo.models.vehicles.VehicleDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,6 +20,7 @@ public class TransportMovementDTO {
     Double weightOfTheGoods;
     LocalDateTime arrivalTime;
     LocalDateTime departureTime;
+    TransportStatus transportStatus;
     VehicleDTO vehicle;
 
 }

@@ -73,4 +73,20 @@ public class TransportMovementController {
         return ResponseEntity.ok(this.transportMovementService.generateARoute(transportId));
     }
 
+    @GetMapping("/{transportId}/preparationFinished")
+    public ResponseEntity<TransportMovementFullGraphDTO> preparationFinished(@PathVariable("transportId") Long transportId){
+        return ResponseEntity.ok(this.transportMovementService.preparationFinished(transportId));
+    }
+
+    @GetMapping("/find-transport-that-stops-at-address/{addressId}")
+    public ResponseEntity<List<TransportMovementFullGraphDTO>> findAllWithProducts(@PathVariable("addressId")Long addressId){
+        return ResponseEntity.ok(this.transportMovementService.findTransportMovementsThatStopsAtAddress(addressId));
+    }
+
+    @GetMapping("/{transportId}/finish-transport")
+    public ResponseEntity<String> finishTransport(@PathVariable("transportId")Long transportId){
+        this.transportMovementService.finishTransport(transportId);
+        return ResponseEntity.ok("OK");
+    }
+
 }

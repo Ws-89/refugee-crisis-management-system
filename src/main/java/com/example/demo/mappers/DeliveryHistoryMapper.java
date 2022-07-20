@@ -13,5 +13,8 @@ public interface DeliveryHistoryMapper {
 
     @Mapping(source = "deliveryHistoryId", target = "deliveryHistoryId")
     @Mapping(source = "productDelivery", target = "productDelivery")
+    @Mapping(source = "cargoActivityList", target = "cargoActivityList")
+    @Mapping(source = "isLoaded", target = "isLoaded")
+    @Mapping(source = "currentTransportMovementId", target = "currentTransportMovementId")
     DeliveryHistoryDTO entityToDTO(DeliveryHistory deliveryHistory);
 }

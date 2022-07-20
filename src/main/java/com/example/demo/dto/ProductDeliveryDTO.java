@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -17,5 +18,5 @@ public class ProductDeliveryDTO{
     private Status status;
     private DeliveryAddressDTO startingAddress;
     private DeliverySpecificationDTO deliverySpecification;
-    private List<ProductDTO> products;
+    private Set<ProductDTO> products;
 }

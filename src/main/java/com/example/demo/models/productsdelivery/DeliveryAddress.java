@@ -14,7 +14,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -54,4 +53,51 @@ public class DeliveryAddress {
         deliverySpecification.setDeliveryAddress(null);
     }
 
+    public Long getDeliveryAddressId() {
+        return deliveryAddressId;
+    }
+
+    public void setDeliveryAddressId(Long deliveryAddressId) {
+        this.deliveryAddressId = deliveryAddressId;
+    }
+
+    public String getPostCode() {
+        return postCode;
+    }
+
+    public void setPostCode(String postCode) {
+        this.postCode = postCode;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public Set<DeliverySpecification> getDeliverySpecifications() {
+        return deliverySpecifications;
+    }
+
+    public void setDeliverySpecifications(Set<DeliverySpecification> deliverySpecifications) {
+        this.deliverySpecifications = deliverySpecifications;
+    }
 }

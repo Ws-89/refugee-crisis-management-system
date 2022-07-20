@@ -4,6 +4,7 @@ import com.example.demo.models.productsdelivery.TransportMovement;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,11 +30,17 @@ public class Vehicle implements Serializable, Comparable<Vehicle> {
     )
     @Column(name = "vehicle_id")
     private Long vehicleId;
+    @NotNull
     private String brand;
+    @NotNull
     private String model;
+    @NotNull
     private String engine;
+    @NotNull
     private Double capacity;
+    @NotNull
     private String vehicleCategory;
+    @NotNull
     private String licensePlate;
     @OneToMany(
             mappedBy = "vehicle"

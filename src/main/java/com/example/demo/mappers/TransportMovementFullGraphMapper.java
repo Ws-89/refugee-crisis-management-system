@@ -20,5 +20,6 @@ public interface TransportMovementFullGraphMapper {
     @Mapping(source = "transportMovementSpecifications", target = "transportMovementSpecifications")
     @Mapping(source = "arrivalTime", target = "arrivalTime")
     @Mapping(source = "departureTime", target = "departureTime")
+    @Mapping(source = "transportStatus", target = "transportStatus")
     TransportMovementFullGraphDTO entityToDTO(TransportMovement transportMovement);
 }

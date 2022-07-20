@@ -12,6 +12,7 @@ import javax.persistence.*;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -33,7 +34,10 @@ import java.util.Set;
                         @NamedSubgraph(name = "subgraph.deliverySpecification",
                             attributeNodes = @NamedAttributeNode(value = "deliveryAddress", subgraph="subgraph.deliveryAddress")),
                         @NamedSubgraph(name = "subgraph.deliveryHistory",
-                            attributeNodes = @NamedAttributeNode(value = "transportMovements")
+                            attributeNodes = {
+                                @NamedAttributeNode(value = "transportMovements"),
+                                @NamedAttributeNode(value = "cargoActivityList")
+                            }
                         )
                     }),
 @NamedEntityGraph(name = "graph.DeliveryWithoutProducts",
@@ -62,8 +66,8 @@ public class ProductDelivery implements Serializable {
     @Column(name = "delivery_id")
     private long deliveryId;
     private String description;
+    @NotNull
     private Double totalWeight;
-    private Double temperature;
     @Enumerated(value = EnumType.STRING)
     private Status status;
 
@@ -71,13 +75,12 @@ public class ProductDelivery implements Serializable {
     @JsonIdentityInfo(
             generator = ObjectIdGenerators.PropertyGenerator.class,
             property = "deliveryHistoryId")
-
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
+    @NotNull
     @OneToOne(cascade= CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "delivery_history_id", referencedColumnName = "delivery_history_id")
     private DeliveryHistory deliveryHistory;
 
+    @NotNull
     @OneToOne(cascade= CascadeType.MERGE)
     @JoinColumn(name = "starting_address_id", referencedColumnName = "delivery_address_id")
     private DeliveryAddress startingAddress;
@@ -85,18 +88,20 @@ public class ProductDelivery implements Serializable {
     @OneToOne(cascade= CascadeType.PERSIST, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "delivery_specification_id", referencedColumnName = "delivery_specification_id")
     private DeliverySpecification deliverySpecification;
-
+    @NotNull
     @OneToMany(mappedBy = "productDelivery", orphanRemoval = true)
-    private List<Product> products = new ArrayList<>();
+    private Set<Product> products = new HashSet<>();
 
     public void addProduct(Product product){
         this.products.add(product);
         product.setProductDelivery(this);
+        this.totalWeight += product.getWeight();
     }
 
     public void removeProduct(Product product){
         this.products.remove(product);
         product.setProductDelivery(null);
+        this.totalWeight -= product.getWeight();
     }
 
     public long getDeliveryId() {
@@ -121,14 +126,6 @@ public class ProductDelivery implements Serializable {
 
     public void setTotalWeight(Double totalWeight) {
         this.totalWeight = totalWeight;
-    }
-
-    public Double getTemperature() {
-        return temperature;
-    }
-
-    public void setTemperature(Double temperature) {
-        this.temperature = temperature;
     }
 
     public Status getStatus() {
@@ -163,12 +160,12 @@ public class ProductDelivery implements Serializable {
         this.deliverySpecification = deliverySpecification;
     }
 
-    public void setProducts(List<Product> products) {
+    public void setProducts(Set<Product> products) {
         this.products = products;
     }
 
-    @JsonManagedReference
-    public List<Product> getProducts() {
+//    @JsonManagedReference
+    public Set<Product> getProducts() {
         return products;
     }
 

@@ -100,6 +100,8 @@ public class TransportMovement {
             referencedColumnName = "delivery_address_id"
     )
     private DeliveryAddress deliveryAddress;
+    @Enumerated(value = EnumType.STRING)
+    private TransportStatus transportStatus;
     private Double weightOfTheGoods;
     private LocalDateTime arrivalTime;
     private LocalDateTime departureTime;
@@ -148,6 +150,16 @@ public class TransportMovement {
 //        }).distinct().collect(Collectors.toList());
 
     };
+
+    public boolean checkIfStopsAtAddress(DeliveryAddress deliveryAddress){
+        if(this.deliveryAddress.equals(deliveryAddress) || this.startingAddress.equals(deliveryAddress)) {
+            return true;
+        }else if (this.wayBills.stream().anyMatch(wayBill -> wayBill.getProductDelivery().getStartingAddress() == deliveryAddress
+                || wayBill.getProductDelivery().getDeliverySpecification().getDeliveryAddress() == deliveryAddress)){
+            return true;
+        }
+        else return false;
+    }
 
 
     public Long getTransportMovementId() {
@@ -220,5 +232,13 @@ public class TransportMovement {
 
     public void setDepartureTime(LocalDateTime departureTime) {
         this.departureTime = departureTime;
+    }
+
+    public TransportStatus getTransportStatus() {
+        return transportStatus;
+    }
+
+    public void setTransportStatus(TransportStatus transportStatus) {
+        this.transportStatus = transportStatus;
     }
 }

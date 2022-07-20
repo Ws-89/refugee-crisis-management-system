@@ -13,15 +13,6 @@ import java.util.Optional;
 @Repository
 public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
 
-//    @Query("from PassengerCar")
-//    public List<Vehicle> getPassengerCars();
-//    @Query("from Van")
-//    public List<Vehicle> getVans();
-//    @Query("from Truck")
-//    public List<Vehicle> getTrucks();
-
-
-
     @EntityGraph(value = "graph.VehicleTransportMovement", type = EntityGraph.EntityGraphType.FETCH)
     Optional<Vehicle> findById(Long id);
 

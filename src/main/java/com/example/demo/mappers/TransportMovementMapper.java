@@ -18,6 +18,7 @@ public interface TransportMovementMapper {
     @Mapping(source = "weightOfTheGoods", target = "weightOfTheGoods")
     @Mapping(source = "arrivalTime", target = "arrivalTime")
     @Mapping(source = "departureTime", target = "departureTime")
+    @Mapping(source = "transportStatus", target = "transportStatus")
     TransportMovementDTO entityToDTO(TransportMovement transportMovement);
 
 }
