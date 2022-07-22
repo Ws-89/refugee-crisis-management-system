@@ -2,11 +2,10 @@ package com.example.demo.service;
 
 import com.example.demo.dto.TransportMovementDTO;
 import com.example.demo.exception.NotFoundException;
-import com.example.demo.models.products.Product;
-import com.example.demo.models.productsdelivery.*;
+import com.example.demo.models.cargo.*;
 import com.example.demo.models.vehicles.Vehicle;
 import com.example.demo.repo.DeliveryAddressRepository;
-import com.example.demo.repo.ProductDeliveryRepository;
+import com.example.demo.repo.CargoRepository;
 import com.example.demo.repo.TransportMovementRepo;
 import com.example.demo.repo.VehicleRepository;
 import org.junit.jupiter.api.Test;
@@ -42,7 +41,7 @@ class TransportMovementServiceImplementationTest {
     @Mock
     private EntityManager entityManagerMock;
     @Mock
-    private ProductDeliveryRepository productDeliveryRepository;
+    private CargoRepository cargoRepository;
 
     @InjectMocks
     TransportMovementService transportMovementService;
@@ -219,14 +218,14 @@ class TransportMovementServiceImplementationTest {
                 .startingAddress(startingAddress).vehicle(vehicle).build();
 
         DeliverySpecification deliverySpecification = DeliverySpecification.builder().deliveryAddress(deliveryAddress).build();
-        ProductDelivery productDelivery = ProductDelivery.builder().deliverySpecification(deliverySpecification)
+        Cargo cargo = Cargo.builder().deliverySpecification(deliverySpecification)
                 .totalWeight(0.0)
                 .startingAddress(startingAddress).build();
 
-        DeliveryHistory deliveryHistory = DeliveryHistory.builder().productDelivery(productDelivery).build();
-        productDelivery.setDeliveryHistory(deliveryHistory);
+        DeliveryHistory deliveryHistory = DeliveryHistory.builder().cargo(cargo).build();
+        cargo.setDeliveryHistory(deliveryHistory);
 
-        transportMovement.addProductDelivery(productDelivery.getDeliveryHistory());
+        transportMovement.addProductDelivery(cargo.getDeliveryHistory());
         transportMovementRepo.save(transportMovement);
     }
 

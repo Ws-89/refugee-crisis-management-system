@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductDeliveryTransportMovementDTO {
-    private long deliveryId;
+public class CargoTransportMovementDTO {
+    private long cargoId;
     private String description;
     private Double totalWeight;
     private Status status;

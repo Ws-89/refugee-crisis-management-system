@@ -7,11 +7,7 @@ import com.example.demo.models.products.Product;
 import com.example.demo.repo.ProductRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImplementation implements ProductService{
@@ -48,7 +44,7 @@ public class ProductServiceImplementation implements ProductService{
                             newProduct.setFragile(product.isFragile());
                             newProduct.setState(product.getState());
                             newProduct.setCategory(product.getCategory());
-                            newProduct.setProductDelivery(product.getProductDelivery());
+                            newProduct.setCargo(product.getCargo());
                             return newProduct;
                 })
                 .orElseThrow(()-> new NotFoundException(String.format("Product with id %s not found", product.getProductId())));

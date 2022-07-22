@@ -1,9 +1,9 @@
 package com.example.demo.service;
 
 import com.example.demo.exception.NotFoundException;
-import com.example.demo.models.productsdelivery.CargoActivity;
-import com.example.demo.models.productsdelivery.CargoActivityCategory;
-import com.example.demo.models.productsdelivery.DeliveryHistory;
+import com.example.demo.models.cargo.CargoActivity;
+import com.example.demo.models.cargo.CargoActivityCategory;
+import com.example.demo.models.cargo.DeliveryHistory;
 import com.example.demo.repo.CargoActivityRepository;
 import com.example.demo.repo.DeliveryHistoryRepository;
 import org.springframework.stereotype.Service;

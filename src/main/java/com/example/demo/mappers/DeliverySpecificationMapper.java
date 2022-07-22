@@ -1,7 +1,7 @@
 package com.example.demo.mappers;
 
 import com.example.demo.dto.DeliverySpecificationDTO;
-import com.example.demo.models.productsdelivery.DeliverySpecification;
+import com.example.demo.models.cargo.DeliverySpecification;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;

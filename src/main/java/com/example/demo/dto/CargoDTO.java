@@ -11,8 +11,8 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductDeliveryDTO{
-    private long deliveryId;
+public class CargoDTO {
+    private long cargoId;
     private String description;
     private Double totalWeight;
     private Status status;

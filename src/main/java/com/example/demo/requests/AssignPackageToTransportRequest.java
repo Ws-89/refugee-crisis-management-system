@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AssignPackageToTransportRequest {
 
-    private Long deliveryId;
+    private Long cargoId;
     private Long transportId;
     private Boolean finalDestination;
 }

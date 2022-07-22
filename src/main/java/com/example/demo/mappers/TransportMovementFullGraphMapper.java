@@ -1,7 +1,7 @@
 package com.example.demo.mappers;
 
 import com.example.demo.dto.TransportMovementFullGraphDTO;
-import com.example.demo.models.productsdelivery.TransportMovement;
+import com.example.demo.models.cargo.TransportMovement;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;

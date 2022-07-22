@@ -1,7 +1,7 @@
 package com.example.demo.mappers;
 
 import com.example.demo.dto.CargoActivityDTO;
-import com.example.demo.models.productsdelivery.CargoActivity;
+import com.example.demo.models.cargo.CargoActivity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;

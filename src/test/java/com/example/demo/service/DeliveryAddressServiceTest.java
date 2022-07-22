@@ -2,7 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.dto.DeliveryAddressDTO;
 import com.example.demo.exception.NotFoundException;
-import com.example.demo.models.productsdelivery.DeliveryAddress;
+import com.example.demo.models.cargo.DeliveryAddress;
 import com.example.demo.repo.DeliveryAddressRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

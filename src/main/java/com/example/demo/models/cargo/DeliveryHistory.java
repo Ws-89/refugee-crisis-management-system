@@ -1,4 +1,4 @@
-package com.example.demo.models.productsdelivery;
+package com.example.demo.models.cargo;
 
 
 import lombok.*;
@@ -33,7 +33,7 @@ public class DeliveryHistory {
     @OneToOne(
             mappedBy = "deliveryHistory", cascade = CascadeType.MERGE
     )
-    private ProductDelivery productDelivery;
+    private Cargo cargo;
     @OneToMany(mappedBy = "deliveryHistory", orphanRemoval = true, cascade = CascadeType.MERGE)
     private List<CargoActivity> cargoActivityList;
     private Long finalDestinationId;
@@ -55,12 +55,12 @@ public class DeliveryHistory {
         this.transportMovements = transportMovements;
     }
 
-    public ProductDelivery getProductDelivery() {
-        return productDelivery;
+    public Cargo getCargo() {
+        return cargo;
     }
 
-    public void setProductDelivery(ProductDelivery productDelivery) {
-        this.productDelivery = productDelivery;
+    public void setCargo(Cargo cargo) {
+        this.cargo = cargo;
     }
 
     public Long getFinalDestinationId() {

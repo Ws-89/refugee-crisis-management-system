@@ -1,22 +1,22 @@
 package com.example.demo.mappers;
 
-import com.example.demo.dto.ProductDeliveryTransportMovementDTO;
-import com.example.demo.models.productsdelivery.ProductDelivery;
+import com.example.demo.dto.CargoTransportMovementDTO;
+import com.example.demo.models.cargo.Cargo;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 @Mapper
-public interface ProductDeliveryTransportMovementMapper {
+public interface CargoTransportMovementMapper {
 
-    ProductDeliveryTransportMovementMapper INSTANCE = Mappers.getMapper(ProductDeliveryTransportMovementMapper.class);
+    CargoTransportMovementMapper INSTANCE = Mappers.getMapper(CargoTransportMovementMapper.class);
 
-    @Mapping(source = "deliveryId", target = "deliveryId")
+    @Mapping(source = "cargoId", target = "cargoId")
     @Mapping(source = "description", target = "description")
     @Mapping(source = "totalWeight", target = "totalWeight")
     @Mapping(source = "status", target = "status")
     @Mapping(source = "startingAddress", target = "startingAddress")
     @Mapping(source = "deliverySpecification", target = "deliverySpecification")
-    ProductDeliveryTransportMovementDTO entityToDTO(ProductDelivery productDelivery);
+    CargoTransportMovementDTO entityToDTO(Cargo cargo);
 
 }

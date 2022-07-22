@@ -1,7 +1,6 @@
-package com.example.demo.models.productsdelivery;
+package com.example.demo.models.cargo;
 
 import com.example.demo.models.vehicles.Vehicle;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -9,7 +8,6 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "tbl_transport_movement")
@@ -39,9 +37,9 @@ import java.util.stream.Collectors;
 
         }, subgraphs = {
         @NamedSubgraph(name = "subgraph.wayBills", attributeNodes = {
-                @NamedAttributeNode(value = "productDelivery", subgraph = "subgraph.productDelivery")
+                @NamedAttributeNode(value = "cargo", subgraph = "subgraph.cargo")
         }),
-        @NamedSubgraph(name = "subgraph.productDelivery", attributeNodes = {
+        @NamedSubgraph(name = "subgraph.cargo", attributeNodes = {
                 @NamedAttributeNode(value = "deliveryHistory"),
                 @NamedAttributeNode(value = "startingAddress"),
                 @NamedAttributeNode(value = "deliverySpecification", subgraph = "subgraph.deliverySpecification"),
@@ -117,7 +115,7 @@ public class TransportMovement {
 
     public boolean removePackage(DeliveryHistory packageToBeRemoved){
         if(wayBills.remove(packageToBeRemoved)){
-            this.weightOfTheGoods -= packageToBeRemoved.getProductDelivery().getTotalWeight();
+            this.weightOfTheGoods -= packageToBeRemoved.getCargo().getTotalWeight();
             return true;
         }
         return false;
@@ -132,12 +130,12 @@ public class TransportMovement {
         }
 
         Double capacity = vehicle.getCapacity();
-        if(weightOfTheGoods + packageToBeDelivered.getProductDelivery().getTotalWeight() > capacity)
+        if(weightOfTheGoods + packageToBeDelivered.getCargo().getTotalWeight() > capacity)
             throw new IllegalStateException("This package is too heavy for this shipment");
 
 
         wayBills.add(packageToBeDelivered);
-        this.weightOfTheGoods += packageToBeDelivered.getProductDelivery().getTotalWeight();
+        this.weightOfTheGoods += packageToBeDelivered.getCargo().getTotalWeight();
         return true;
     }
 
@@ -154,8 +152,8 @@ public class TransportMovement {
     public boolean checkIfStopsAtAddress(DeliveryAddress deliveryAddress){
         if(this.deliveryAddress.equals(deliveryAddress) || this.startingAddress.equals(deliveryAddress)) {
             return true;
-        }else if (this.wayBills.stream().anyMatch(wayBill -> wayBill.getProductDelivery().getStartingAddress() == deliveryAddress
-                || wayBill.getProductDelivery().getDeliverySpecification().getDeliveryAddress() == deliveryAddress)){
+        }else if (this.wayBills.stream().anyMatch(wayBill -> wayBill.getCargo().getStartingAddress() == deliveryAddress
+                || wayBill.getCargo().getDeliverySpecification().getDeliveryAddress() == deliveryAddress)){
             return true;
         }
         else return false;

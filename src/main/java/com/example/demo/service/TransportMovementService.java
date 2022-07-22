@@ -6,10 +6,10 @@ import com.example.demo.mappers.TransportMovementFullGraphMapper;
 import com.example.demo.mappers.TransportMovementMapper;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.models.products.Status;
-import com.example.demo.models.productsdelivery.*;
+import com.example.demo.models.cargo.*;
 import com.example.demo.models.vehicles.Vehicle;
 import com.example.demo.repo.DeliveryAddressRepository;
-import com.example.demo.repo.ProductDeliveryRepository;
+import com.example.demo.repo.CargoRepository;
 import com.example.demo.repo.TransportMovementRepo;
 import com.example.demo.repo.VehicleRepository;
 import com.example.demo.requests.AssignPackageToTransportRequest;
@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 
-import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -32,7 +31,7 @@ public class TransportMovementService  {
     private final TransportMovementRepo transportMovementRepo;
     private final DeliveryAddressRepository deliveryAddressRepository;
     private final VehicleRepository vehicleRepository;
-    private final ProductDeliveryRepository productDeliveryRepository;
+    private final CargoRepository cargoRepository;
     private final EntityManager em;
 
     public static final String GET_ALL_TRANSPORT_MOVEMENTS = "from TransportMovement";
@@ -113,17 +112,17 @@ public class TransportMovementService  {
 
     @Transactional
     public TransportMovementDTO addAShipment(AssignPackageToTransportRequest assignPackageToTransportRequest){
-        ProductDelivery productDelivery = productDeliveryRepository.findById(assignPackageToTransportRequest.getDeliveryId())
-                .orElseThrow(() -> new NotFoundException(String.format("Package with id %s not found", assignPackageToTransportRequest.getDeliveryId())));
+        Cargo cargo = cargoRepository.findById(assignPackageToTransportRequest.getCargoId())
+                .orElseThrow(() -> new NotFoundException(String.format("Package with id %s not found", assignPackageToTransportRequest.getCargoId())));
 
         TransportMovement transportMovement = transportMovementRepo.findById(assignPackageToTransportRequest.getTransportId())
                 .orElseThrow(() -> new NotFoundException(String.format("Transport with id %s not found", assignPackageToTransportRequest.getTransportId())));
 
-        Boolean result = transportMovement.addProductDelivery(productDelivery.getDeliveryHistory());
+        Boolean result = transportMovement.addProductDelivery(cargo.getDeliveryHistory());
 
         if(assignPackageToTransportRequest.getFinalDestination() && result){
-            productDelivery.setStatus(Status.ReadyForShipment);
-            productDelivery.getDeliveryHistory().setFinalDestinationId(assignPackageToTransportRequest.getTransportId());
+            cargo.setStatus(Status.ReadyForShipment);
+            cargo.getDeliveryHistory().setFinalDestinationId(assignPackageToTransportRequest.getTransportId());
         }
 
         return TransportMovementMapper.INSTANCE.entityToDTO(transportMovementRepo.save(transportMovement));
@@ -138,11 +137,11 @@ public class TransportMovementService  {
                 .findFirst().orElseThrow(() -> new NotFoundException(String.format("Package does not exist in this transport")));
 
         if(transportMovement.getTransportMovementId() == packageToDelete.getFinalDestinationId()){
-            packageToDelete.getProductDelivery().setStatus(Status.Reserved);
+            packageToDelete.getCargo().setStatus(Status.Reserved);
         }
 
         if(transportMovement.removePackage(packageToDelete)){
-            productDeliveryRepository.save(packageToDelete.getProductDelivery());
+            cargoRepository.save(packageToDelete.getCargo());
         }else {
             throw new IllegalStateException("Cannot delete the package");
         }
@@ -191,11 +190,11 @@ public class TransportMovementService  {
 
         List<TransportMovementSpecification> transportMovementSpecifications = transportMovement.getWayBills().stream()
                 .map(w -> {
-                    DeliveryAddress address = deliveryAddressRepository.findById(w.getProductDelivery().getDeliverySpecification().getDeliveryAddress().getDeliveryAddressId())
+                    DeliveryAddress address = deliveryAddressRepository.findById(w.getCargo().getDeliverySpecification().getDeliveryAddress().getDeliveryAddressId())
                             .orElseThrow(()-> new NotFoundException("Delivery address not found"));
 
                     TransportMovementSpecification transportMovementSpecification = TransportMovementSpecification.builder()
-                            .arrivalTime(w.getProductDelivery().getDeliverySpecification().getArrivalTime())
+                            .arrivalTime(w.getCargo().getDeliverySpecification().getArrivalTime())
                             .deliveryAddress(address)
                             .transportMovement(transportMovement)
                             .build();
@@ -204,11 +203,11 @@ public class TransportMovementService  {
 
         List<TransportMovementSpecification> transportMovementSpecificationsStartingAddresses = transportMovement.getWayBills().stream()
                         .map(w -> {
-                            DeliveryAddress address = deliveryAddressRepository.findById(w.getProductDelivery().getStartingAddress().getDeliveryAddressId())
+                            DeliveryAddress address = deliveryAddressRepository.findById(w.getCargo().getStartingAddress().getDeliveryAddressId())
                                     .orElseThrow(()-> new NotFoundException("Delivery address not found"));
 
                             TransportMovementSpecification transportMovementSpecification = TransportMovementSpecification.builder()
-                                    .arrivalTime(w.getProductDelivery().getDeliverySpecification().getArrivalTime())
+                                    .arrivalTime(w.getCargo().getDeliverySpecification().getArrivalTime())
                                     .deliveryAddress(address)
                                     .transportMovement(transportMovement)
                                     .build();

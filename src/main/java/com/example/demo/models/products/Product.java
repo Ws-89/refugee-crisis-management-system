@@ -1,12 +1,9 @@
 package com.example.demo.models.products;
 
-import com.example.demo.models.productsdelivery.ProductDelivery;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.example.demo.models.cargo.Cargo;
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -14,7 +11,6 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 
@@ -57,12 +53,12 @@ public class Product implements Serializable {
     @ManyToOne(
             cascade = CascadeType.MERGE,
             fetch = FetchType.LAZY)
-    @JoinColumn(name = "delivery_id", referencedColumnName = "delivery_id")
-    private ProductDelivery productDelivery;
+    @JoinColumn(name = "cargo_id", referencedColumnName = "cargo_id")
+    private Cargo cargo;
 
 //    @JsonBackReference
-    public ProductDelivery getProductDelivery() {
-        return productDelivery;
+    public Cargo getCargo() {
+        return cargo;
     }
 
     public Long getProductId() {
@@ -145,8 +141,8 @@ public class Product implements Serializable {
         this.category = category;
     }
 
-    public void setProductDelivery(ProductDelivery productDelivery) {
-        this.productDelivery = productDelivery;
+    public void setCargo(Cargo cargo) {
+        this.cargo = cargo;
     }
 
     @Override
@@ -162,7 +158,7 @@ public class Product implements Serializable {
                 ", reserved=" + reserved +
                 ", fragile=" + fragile +
                 ", state=" + state +
-                ", productDelivery=" + productDelivery +
+                ", productDelivery=" + cargo +
                 '}';
     }
 
@@ -171,11 +167,11 @@ public class Product implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
-        return Double.compare(product.weight, weight) == 0 && fragile == product.fragile && Objects.equals(productId, product.productId) && Objects.equals(name, product.name) && Objects.equals(expirationDate, product.expirationDate) && Objects.equals(description, product.description) && Objects.equals(amount, product.amount) && reserved == product.reserved && state == product.state && Objects.equals(category, product.category) && Objects.equals(productDelivery, product.productDelivery);
+        return Double.compare(product.weight, weight) == 0 && fragile == product.fragile && Objects.equals(productId, product.productId) && Objects.equals(name, product.name) && Objects.equals(expirationDate, product.expirationDate) && Objects.equals(description, product.description) && Objects.equals(amount, product.amount) && reserved == product.reserved && state == product.state && Objects.equals(category, product.category) && Objects.equals(cargo, product.cargo);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(productId, name, expirationDate, description, weight, amount, reserved, fragile, state, category, productDelivery);
+        return Objects.hash(productId, name, expirationDate, description, weight, amount, reserved, fragile, state, category, cargo);
     }
 }

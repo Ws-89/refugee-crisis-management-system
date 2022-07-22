@@ -1,7 +1,7 @@
 package com.example.demo.dto;
 
-import com.example.demo.models.productsdelivery.CargoActivityCategory;
-import com.example.demo.models.productsdelivery.DeliveryAddress;
+import com.example.demo.models.cargo.CargoActivityCategory;
+import com.example.demo.models.cargo.DeliveryAddress;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

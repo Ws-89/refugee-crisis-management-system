@@ -2,7 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.TransportMovementDTO;
 import com.example.demo.dto.TransportMovementFullGraphDTO;
-import com.example.demo.models.productsdelivery.TransportMovement;
+import com.example.demo.models.cargo.TransportMovement;
 import com.example.demo.requests.AssignPackageToTransportRequest;
 import com.example.demo.service.TransportMovementService;
 import org.springframework.http.ResponseEntity;

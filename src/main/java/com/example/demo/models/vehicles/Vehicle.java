@@ -1,6 +1,6 @@
 package com.example.demo.models.vehicles;
 
-import com.example.demo.models.productsdelivery.TransportMovement;
+import com.example.demo.models.cargo.TransportMovement;
 import lombok.*;
 
 import javax.persistence.*;

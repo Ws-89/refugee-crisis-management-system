@@ -1,27 +1,15 @@
 package com.example.demo;
 
-import com.example.demo.controller.ProductDeliveryController;
-import com.example.demo.exception.NotFoundException;
-import com.example.demo.models.products.Category;
-import com.example.demo.models.products.Product;
-import com.example.demo.models.productsdelivery.*;
-import com.example.demo.models.vehicles.Vehicle;
+import com.example.demo.controller.CargoController;
 import com.example.demo.repo.DeliveryAddressRepository;
 //import com.example.demo.repo.HandlingEventRepository;
-import com.example.demo.repo.ProductDeliveryRepository;
+import com.example.demo.repo.CargoRepository;
 import com.example.demo.repo.TransportMovementRepo;
-import com.example.demo.service.ProductDeliveryServiceImplementation;
+import com.example.demo.service.CargoServiceImplementation;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
-import java.time.Month;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -37,13 +25,13 @@ class DemoApplicationTests {
 
 
 	@Autowired
-	private ProductDeliveryRepository productDeliveryRepository;
+	private CargoRepository cargoRepository;
 
 	@Autowired
-	private ProductDeliveryServiceImplementation productDeliveryServiceImplementation;
+	private CargoServiceImplementation productDeliveryServiceImplementation;
 
 	@Autowired
-	private ProductDeliveryController productDeliveryController;
+	private CargoController cargoController;
 
 //	@Autowired
 //	private HandlingEventRepository handlingEventRepository;

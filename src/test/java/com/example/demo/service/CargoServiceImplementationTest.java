@@ -1,29 +1,20 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.ProductDeliveryDTO;
+import com.example.demo.dto.CargoDTO;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.models.products.*;
-import com.example.demo.models.productsdelivery.*;
+import com.example.demo.models.cargo.*;
 import com.example.demo.repo.DeliveryAddressRepository;
-import com.example.demo.repo.ProductDeliveryRepository;
+import com.example.demo.repo.CargoRepository;
 import com.example.demo.repo.ProductRepository;
-import org.hibernate.Session;
-import org.hibernate.stat.Statistics;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
-import javax.persistence.EntityGraph;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.*;
 
@@ -35,10 +26,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class ProductDeliveryServiceImplementationTest {
+class CargoServiceImplementationTest {
 
     @Mock
-    private ProductDeliveryRepository productDeliveryRepository;
+    private CargoRepository cargoRepository;
 
     @Mock
     private ProductRepository productRepository;
@@ -47,24 +38,24 @@ class ProductDeliveryServiceImplementationTest {
     private DeliveryAddressRepository deliveryAddressRepository;
 
    @InjectMocks
-   ProductDeliveryServiceImplementation productDeliveryService;
+   CargoServiceImplementation productDeliveryService;
 
     @Test
     void shouldFindAllProductDeliveries() {
         DeliveryAddress startingAddress = DeliveryAddress.builder().city("Qwerty").postCode("12-345").state("Zxcv").street("Fghjk").build();
         DeliveryAddress deliveryAddress = DeliveryAddress.builder().city("Qwerty").postCode("12-345").state("Zxcv").street("Fghjk").build();
         DeliverySpecification deliverySpecification = DeliverySpecification.builder().deliveryAddress(deliveryAddress).build();
-        ProductDelivery productDelivery = ProductDelivery.builder().deliverySpecification(deliverySpecification).startingAddress(startingAddress).build();
-        ProductDelivery productDelivery2 = ProductDelivery.builder().deliverySpecification(deliverySpecification).startingAddress(startingAddress).build();
-        ProductDelivery productDelivery3 = ProductDelivery.builder().deliverySpecification(deliverySpecification).startingAddress(startingAddress).build();
-        ProductDelivery productDelivery4 = ProductDelivery.builder().deliverySpecification(deliverySpecification).startingAddress(startingAddress).build();
-        ProductDelivery productDelivery5 = ProductDelivery.builder().deliverySpecification(deliverySpecification).startingAddress(startingAddress).build();
+        Cargo cargo = Cargo.builder().deliverySpecification(deliverySpecification).startingAddress(startingAddress).build();
+        Cargo cargo2 = Cargo.builder().deliverySpecification(deliverySpecification).startingAddress(startingAddress).build();
+        Cargo cargo3 = Cargo.builder().deliverySpecification(deliverySpecification).startingAddress(startingAddress).build();
+        Cargo cargo4 = Cargo.builder().deliverySpecification(deliverySpecification).startingAddress(startingAddress).build();
+        Cargo cargo5 = Cargo.builder().deliverySpecification(deliverySpecification).startingAddress(startingAddress).build();
 
-        List<ProductDelivery> productDeliveryList = Arrays.asList(productDelivery,productDelivery2,productDelivery3,productDelivery4,productDelivery5);
+        List<Cargo> cargoList = Arrays.asList(cargo, cargo2, cargo3, cargo4, cargo5);
 
-        when(productDeliveryRepository.findAll()).thenReturn(productDeliveryList);
+        when(cargoRepository.findAll()).thenReturn(cargoList);
 
-        assertThat(productDeliveryService.findAllProductDelivery().size()).isEqualTo(5);
+//        assertThat(productDeliveryService.findByDescriptionContaining("", 0, 10).size()).isEqualTo(5);
 
     }
 
@@ -73,20 +64,20 @@ class ProductDeliveryServiceImplementationTest {
         DeliveryAddress startingAddress = DeliveryAddress.builder().city("Qwerty").postCode("12-345").state("Zxcv").street("Fghjk").build();
         DeliveryAddress deliveryAddress = DeliveryAddress.builder().city("Qwerty").postCode("12-345").state("Zxcv").street("Fghjk").build();
         DeliverySpecification deliverySpecification = DeliverySpecification.builder().deliveryAddress(deliveryAddress).build();
-        ProductDelivery productDelivery = ProductDelivery.builder().deliveryId(1L).deliverySpecification(deliverySpecification).startingAddress(startingAddress).build();
+        Cargo cargo = Cargo.builder().cargoId(1L).deliverySpecification(deliverySpecification).startingAddress(startingAddress).build();
 
-        when(productDeliveryRepository.findById(1L)).thenReturn(Optional.of(productDelivery));
+        when(cargoRepository.findById(1L)).thenReturn(Optional.of(cargo));
 
-        ProductDeliveryDTO productDeliveryDTO = productDeliveryService.findById(1L);
+        CargoDTO cargoDTO = productDeliveryService.findById(1L);
 
-        assertThat(productDeliveryDTO.getDeliverySpecification().getDeliveryAddress().getCity())
-                .isEqualTo(productDelivery.getDeliverySpecification().getDeliveryAddress().getCity());
-        assertThat(productDeliveryDTO.getStartingAddress().getStreet()).isEqualTo(productDelivery.getStartingAddress().getStreet());
+        assertThat(cargoDTO.getDeliverySpecification().getDeliveryAddress().getCity())
+                .isEqualTo(cargo.getDeliverySpecification().getDeliveryAddress().getCity());
+        assertThat(cargoDTO.getStartingAddress().getStreet()).isEqualTo(cargo.getStartingAddress().getStreet());
     }
 
     @Test
     void findProductDeliveryByIdShouldThrowException(){
-        when(productDeliveryRepository.findById(1L)).thenThrow(NotFoundException.class);
+        when(cargoRepository.findById(1L)).thenThrow(NotFoundException.class);
 
         assertThrows(NotFoundException.class, () -> productDeliveryService.findById(1L));
     }
@@ -127,7 +118,7 @@ class ProductDeliveryServiceImplementationTest {
         DeliveryAddress deliveryAddress = DeliveryAddress.builder().city("Qwerty").deliveryAddressId(1L).postCode("12-345").state("Zxcv").street("Fghjk").build();
 
         DeliverySpecification deliverySpecification = DeliverySpecification.builder().deliveryAddress(deliveryAddress).build();
-        ProductDelivery productDelivery = ProductDelivery.builder().deliveryId(1L)
+        Cargo cargo = Cargo.builder().cargoId(1L)
                 .startingAddress(startingAddress)
                 .deliverySpecification(deliverySpecification)
                 .description("Some snacks")
@@ -136,7 +127,7 @@ class ProductDeliveryServiceImplementationTest {
 
 
         when(deliveryAddressRepository.findById(1L)).thenThrow(NotFoundException.class);
-        assertThrows(NotFoundException.class, () -> productDeliveryService.saveProductDelivery(productDelivery));
+        assertThrows(NotFoundException.class, () -> productDeliveryService.saveCargo(cargo));
     }
 
     @Test
@@ -179,21 +170,21 @@ class ProductDeliveryServiceImplementationTest {
         when(deliveryAddressRepository.findById(2L)).thenReturn(Optional.of(deliveryAddress));
 
         DeliverySpecification deliverySpecification = DeliverySpecification.builder().deliveryAddress(deliveryAddress).build();
-        ProductDelivery productDelivery = ProductDelivery.builder().deliveryId(1L)
+        Cargo cargo = Cargo.builder().cargoId(1L)
                 .startingAddress(startingAddress)
                 .deliverySpecification(deliverySpecification)
                 .description("Some snacks")
                 .totalWeight(230.0)
                 .build();
 
-        productDeliveryService.saveProductDelivery(productDelivery);
+        productDeliveryService.saveCargo(cargo);
 
-        ArgumentCaptor<ProductDelivery> productDeliveryCaptor = ArgumentCaptor.forClass(ProductDelivery.class);
-        verify(productDeliveryRepository).save(productDeliveryCaptor.capture());
+        ArgumentCaptor<Cargo> productDeliveryCaptor = ArgumentCaptor.forClass(Cargo.class);
+        verify(cargoRepository).save(productDeliveryCaptor.capture());
 
-        ProductDelivery capturedProductDelivery = productDeliveryCaptor.getValue();
+        Cargo capturedCargo = productDeliveryCaptor.getValue();
 
-        assertThat(capturedProductDelivery.getProducts()).isEqualTo(productDelivery.getProducts());
+        assertThat(capturedCargo.getProducts()).isEqualTo(cargo.getProducts());
 
     }
 
@@ -297,17 +288,17 @@ class ProductDeliveryServiceImplementationTest {
         DeliveryAddress deliveryAddress = DeliveryAddress.builder().city("Qwerty").deliveryAddressId(2L).postCode("12-345").state("Zxcv").street("Fghjk").build();
 
         DeliverySpecification deliverySpecification = DeliverySpecification.builder().deliveryAddress(deliveryAddress).build();
-        ProductDelivery productDelivery = ProductDelivery.builder().deliveryId(1L)
+        Cargo cargo = Cargo.builder().cargoId(1L)
                 .startingAddress(startingAddress)
                 .deliverySpecification(deliverySpecification)
                 .description("Some snacks")
                 .totalWeight(230.0)
                 .build();
 
-        when(productDeliveryRepository.findById(1L)).thenReturn(Optional.of(productDelivery));
-        productDeliveryService.deleteProductDelivery(1L);
+        when(cargoRepository.findById(1L)).thenReturn(Optional.of(cargo));
+        productDeliveryService.deleteCargo(1L);
 
-        verify(productDeliveryRepository).delete(productDelivery);
+        verify(cargoRepository).delete(cargo);
     }
 
 }

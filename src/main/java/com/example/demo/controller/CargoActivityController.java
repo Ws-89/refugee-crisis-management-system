@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.models.productsdelivery.CargoActivity;
+import com.example.demo.models.cargo.CargoActivity;
 import com.example.demo.service.CargoActivityService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

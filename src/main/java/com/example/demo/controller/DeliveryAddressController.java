@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.DeliveryAddressDTO;
-import com.example.demo.models.productsdelivery.DeliveryAddress;
+import com.example.demo.models.cargo.DeliveryAddress;
 import com.example.demo.service.DeliveryAddressService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
