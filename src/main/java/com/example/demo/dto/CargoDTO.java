@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
 import java.util.Set;
 
 @Data
@@ -16,7 +15,7 @@ public class CargoDTO {
     private String description;
     private Double totalWeight;
     private Status status;
-    private DeliveryAddressDTO startingAddress;
+    private AddressDTO startingAddress;
     private DeliverySpecificationDTO deliverySpecification;
     private Set<ProductDTO> products;
 }

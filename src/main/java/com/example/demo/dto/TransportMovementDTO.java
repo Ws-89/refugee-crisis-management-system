@@ -14,8 +14,8 @@ import java.time.LocalDateTime;
 public class TransportMovementDTO {
 
     Long transportMovementId;
-    DeliveryAddressDTO startingAddress;
-    DeliveryAddressDTO deliveryAddress;
+    AddressDTO startingAddress;
+    AddressDTO deliveryAddress;
     Double weightOfTheGoods;
     LocalDateTime arrivalTime;
     LocalDateTime departureTime;

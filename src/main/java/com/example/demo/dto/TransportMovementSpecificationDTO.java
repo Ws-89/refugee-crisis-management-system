@@ -13,5 +13,5 @@ public class TransportMovementSpecificationDTO {
     private Long transportMovementSpecificationId;
     private LocalDateTime arrivalTime;
     private LocalDateTime departureTime;
-    private DeliveryAddressDTO deliveryAddress;
+    private AddressDTO deliveryAddress;
 }

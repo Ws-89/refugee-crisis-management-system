@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DeliveryAddressDTO {
-    private Long deliveryAddressId;
+public class AddressDTO {
+    private Long addressId;
     private String postCode;
     private String city;
     private String street;

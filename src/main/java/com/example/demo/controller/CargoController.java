@@ -5,13 +5,10 @@ import com.example.demo.models.HttpResponse;
 import com.example.demo.models.cargo.Cargo;
 import com.example.demo.service.CargoServiceImplementation;
 import com.google.gson.Gson;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -29,8 +26,15 @@ public class CargoController {
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<CargoDTO> findOne(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(this.cargoServiceImplementation.findById(id));
+    public ResponseEntity<HttpResponse> findOne(@PathVariable("id") Long id) {
+        return ResponseEntity.ok().body(
+                HttpResponse.builder().timeStamp(now().toString())
+                        .data(Map.of("object", this.cargoServiceImplementation.findById(id)))
+                        .message("Cargo retrieved")
+                        .status(OK)
+                        .statusCode(OK.value())
+                        .build()
+        );
     }
 
     @GetMapping("/list")
@@ -45,36 +49,75 @@ public class CargoController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<CargoDTO> createDelivery(@RequestBody Cargo cargo){
-        return ResponseEntity.ok(this.cargoServiceImplementation.saveCargo(cargo));
+    public ResponseEntity<HttpResponse> createCargo(@RequestBody Cargo cargo){
+        return ResponseEntity.ok().body(
+                HttpResponse.builder().timeStamp(now().toString())
+                        .data(Map.of("created", this.cargoServiceImplementation.saveCargo(cargo)))
+                        .message("Cargo created")
+                        .status(OK)
+                        .statusCode(OK.value())
+                        .build()
+        );
     }
 
     @PutMapping("/update")
-    public ResponseEntity<CargoDTO> updateDelivery(@RequestBody Cargo cargo){
-        return ResponseEntity.ok(this.cargoServiceImplementation.updateCargo(cargo));
+    public ResponseEntity<HttpResponse> updateCargo(@RequestBody Cargo cargo){
+        return ResponseEntity.ok().body(
+                HttpResponse.builder().timeStamp(now().toString())
+                        .data(Map.of("object", this.cargoServiceImplementation.updateCargo(cargo)))
+                        .message("Cargo updated")
+                        .status(OK)
+                        .statusCode(OK.value())
+                        .build()
+        );
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Long> deleteDelivery(@PathVariable("id") Long id){
-        return ResponseEntity.ok(this.cargoServiceImplementation.deleteCargo(id));
+    public ResponseEntity<HttpResponse> deleteCargo(@PathVariable("id") Long id){
+        return ResponseEntity.ok().body(
+                HttpResponse.builder().timeStamp(now().toString())
+                        .data(Map.of("deleted", this.cargoServiceImplementation.deleteCargo(id)))
+                        .message("Cargo deleted")
+                        .status(OK)
+                        .statusCode(OK.value())
+                        .build()
+        );
     }
 
     @GetMapping("/{cargoId}/assign/{productId}")
-    public ResponseEntity<String> assignProductToDelivery(@PathVariable("cargoId") Long cargoId, @PathVariable("productId") Long productId){
-        this.cargoServiceImplementation.assignProductToCargo(cargoId, productId);
-        return ResponseEntity.ok(gson.toJson("OK"));
+    public ResponseEntity<HttpResponse> assignProductToCargo(@PathVariable("cargoId") Long cargoId, @PathVariable("productId") Long productId){
+        return ResponseEntity.ok().body(
+                HttpResponse.builder().timeStamp(now().toString())
+                        .data(Map.of("assigned", this.cargoServiceImplementation.assignProductToCargo(cargoId, productId)))
+                        .message("Product assigned to cargo")
+                        .status(HttpStatus.OK)
+                        .statusCode(OK.value())
+                        .build()
+        );
     }
 
-    @GetMapping("/{cargoId}/remove-from-package/{productId}")
-    public ResponseEntity<String> removeProductFromPackage(@PathVariable("cargoId") Long cargoId, @PathVariable("productId") Long productId){
-        this.cargoServiceImplementation.removeProductFromCargo(cargoId, productId);
-        return ResponseEntity.ok(gson.toJson("OK"));
+    @GetMapping("/{cargoId}/remove-from-cargo/{productId}")
+    public ResponseEntity<HttpResponse> removeProductFromCargo(@PathVariable("cargoId") Long cargoId, @PathVariable("productId") Long productId){
+        return ResponseEntity.ok().body(
+                HttpResponse.builder().timeStamp(now().toString())
+                        .data(Map.of("removed-from-cargo", this.cargoServiceImplementation.removeProductFromCargo(cargoId, productId)))
+                        .message("Product removed from cargo")
+                        .status(HttpStatus.OK)
+                        .statusCode(OK.value())
+                        .build()
+        );
     }
 
     @GetMapping("/finish-cargo-completion/{cargoId}")
-    public ResponseEntity<String> finishCargoCompletion(@PathVariable("cargoId")Long cargoId){
-        this.cargoServiceImplementation.finishCargoCompletion(cargoId);
-        return ResponseEntity.ok(gson.toJson("OK"));
+    public ResponseEntity<HttpResponse> finishCargoCompletion(@PathVariable("cargoId")Long cargoId){
+        return ResponseEntity.ok().body(
+                HttpResponse.builder().timeStamp(now().toString())
+                        .data(Map.of("finished", this.cargoServiceImplementation.finishCargoCompletion(cargoId)))
+                        .message("Cargo completion finshed")
+                        .status(HttpStatus.OK)
+                        .statusCode(OK.value())
+                        .build()
+        );
     }
 
 }

@@ -15,6 +15,6 @@ public interface CargoService {
     public CargoDTO updateCargo(Cargo cargo);
     public Long deleteCargo(Long id);
     public Page<CargoDTO> findByDescriptionContaining(String description, int page, int size);
-    public void assignProductToCargo(Long cargoId, Long productId);
-    public void removeProductFromCargo(Long cargoId, Long productId);
+    public boolean assignProductToCargo(Long cargoId, Long productId);
+    public boolean removeProductFromCargo(Long cargoId, Long productId);
 }

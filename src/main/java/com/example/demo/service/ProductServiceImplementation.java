@@ -4,6 +4,7 @@ import com.example.demo.dto.ProductDTO;
 import com.example.demo.mappers.ProductMapper;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.models.products.Product;
+import com.example.demo.models.products.Status;
 import com.example.demo.repo.ProductRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -63,7 +64,10 @@ public class ProductServiceImplementation implements ProductService{
 
     @Override
     public Page<ProductDTO> findByNameContaining(String name, int page, int size) {
-//        return productRepository.findAll().stream().map(p -> ProductMapper.INSTANCE.productToProductDTO(p)).collect(Collectors.toList());
         return productRepository.findByNameContaining(name, PageRequest.of(page, size)).map(p -> ProductMapper.INSTANCE.productToProductDTO(p));
-}
+    }
+
+    public Page<ProductDTO> findByReservedAndNameContaining(Status status, String name, int page, int size){
+        return productRepository.findByReservedAndNameContaining(status, name, PageRequest.of(page, size)).map(p -> ProductMapper.INSTANCE.productToProductDTO(p));
+    }
 }

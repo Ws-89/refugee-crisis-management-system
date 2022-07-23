@@ -86,18 +86,18 @@ public class TransportMovement {
     )
     @JoinColumn(
             name = "starting_address_id",
-            referencedColumnName = "delivery_address_id"
+            referencedColumnName = "address_id"
     )
-    private DeliveryAddress startingAddress;
+    private Address startingAddress;
     @OneToOne(
             cascade = CascadeType.MERGE,
             fetch = FetchType.LAZY
     )
     @JoinColumn(
             name = "delivery_address_id",
-            referencedColumnName = "delivery_address_id"
+            referencedColumnName = "address_id"
     )
-    private DeliveryAddress deliveryAddress;
+    private Address deliveryAddress;
     @Enumerated(value = EnumType.STRING)
     private TransportStatus transportStatus;
     private Double weightOfTheGoods;
@@ -149,11 +149,11 @@ public class TransportMovement {
 
     };
 
-    public boolean checkIfStopsAtAddress(DeliveryAddress deliveryAddress){
-        if(this.deliveryAddress.equals(deliveryAddress) || this.startingAddress.equals(deliveryAddress)) {
+    public boolean checkIfStopsAtAddress(Address address){
+        if(this.deliveryAddress.equals(address) || this.startingAddress.equals(address)) {
             return true;
-        }else if (this.wayBills.stream().anyMatch(wayBill -> wayBill.getCargo().getStartingAddress() == deliveryAddress
-                || wayBill.getCargo().getDeliverySpecification().getDeliveryAddress() == deliveryAddress)){
+        }else if (this.wayBills.stream().anyMatch(wayBill -> wayBill.getCargo().getStartingAddress() == address
+                || wayBill.getCargo().getDeliverySpecification().getDeliveryAddress() == address)){
             return true;
         }
         else return false;
@@ -184,19 +184,19 @@ public class TransportMovement {
         this.transportMovementSpecifications = transportMovementSpecifications;
     }
 
-    public DeliveryAddress getStartingAddress() {
+    public Address getStartingAddress() {
         return startingAddress;
     }
 
-    public void setStartingAddress(DeliveryAddress startingAddress) {
+    public void setStartingAddress(Address startingAddress) {
         this.startingAddress = startingAddress;
     }
 
-    public DeliveryAddress getDeliveryAddress() {
+    public Address getDeliveryAddress() {
         return deliveryAddress;
     }
 
-    public void setDeliveryAddress(DeliveryAddress deliveryAddress) {
+    public void setDeliveryAddress(Address deliveryAddress) {
         this.deliveryAddress = deliveryAddress;
     }
 

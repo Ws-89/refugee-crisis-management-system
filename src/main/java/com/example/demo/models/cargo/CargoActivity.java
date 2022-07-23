@@ -29,8 +29,8 @@ public class CargoActivity {
     private Long cargoActivityId;
     private LocalDateTime timeStamp;
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "delivery_address_id", referencedColumnName = "delivery_address_id")
-    private DeliveryAddress deliveryAddress;
+    @JoinColumn(name = "address_id", referencedColumnName = "address_id")
+    private Address address;
     @Enumerated(value = EnumType.STRING)
     private CargoActivityCategory cargoActivityCategory;
     @NotNull
@@ -56,12 +56,12 @@ public class CargoActivity {
         this.timeStamp = timeStamp;
     }
 
-    public DeliveryAddress getDeliveryAddress() {
-        return deliveryAddress;
+    public Address getAddress() {
+        return address;
     }
 
-    public void setDeliveryAddress(DeliveryAddress deliveryAddress) {
-        this.deliveryAddress = deliveryAddress;
+    public void setAddress(Address address) {
+        this.address = address;
     }
 
     public CargoActivityCategory getCargoActivityCategory() {

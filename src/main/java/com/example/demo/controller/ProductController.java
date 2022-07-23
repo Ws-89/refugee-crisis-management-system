@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.models.HttpResponse;
 import com.example.demo.models.products.Product;
+import com.example.demo.models.products.Status;
 import com.example.demo.service.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -60,10 +61,30 @@ public class ProductController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<HttpResponse> findAllHProducts(@RequestParam Optional<String> name,@RequestParam Optional<Integer> page, @RequestParam Optional<Integer> size){
+    public ResponseEntity<HttpResponse> findProductByNameContaining(@RequestParam Optional<String> name,
+                                                                    @RequestParam Optional<Integer> page,
+                                                                    @RequestParam Optional<Integer> size){
         return ResponseEntity.ok().body(HttpResponse.builder()
                 .timeStamp(now().toString())
                 .data(Map.of("page", productService.findByNameContaining(name.orElse(""), page.orElse(0), size.orElse(10))))
+                .message("Products retrieved")
+                .status(OK)
+                .statusCode(OK.value())
+                .build());
+    }
+
+    @GetMapping("/list-with-status")
+    public ResponseEntity<HttpResponse> findProductByStatus(@RequestParam Optional<Status> status,
+                                                            @RequestParam Optional<String> name,
+                                                            @RequestParam Optional<Integer> page,
+                                                            @RequestParam Optional<Integer> size){
+        return ResponseEntity.ok().body(HttpResponse.builder()
+                .timeStamp(now().toString())
+                .data(Map.of("page", productService.findByReservedAndNameContaining(
+                        status.orElse(Status.Available),
+                        name.orElse(""),
+                        page.orElse(0),
+                        size.orElse(10))))
                 .message("Products retrieved")
                 .status(OK)
                 .statusCode(OK.value())

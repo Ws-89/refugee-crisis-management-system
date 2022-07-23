@@ -12,29 +12,29 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "tbl_delivery_address")
+@Table(name = "tbl_address")
 @Entity
-public class DeliveryAddress {
+public class Address {
 
     @Id
     @SequenceGenerator(
-            name = "delivery_address_sequence",
-            sequenceName = "delivery_address_sequence",
+            name = "address_sequence",
+            sequenceName = "address_sequence",
             allocationSize = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "delivery_address_sequence"
+            generator = "address_sequence"
     )
-    @Column(name = "delivery_address_id")
-    private Long deliveryAddressId;
+    @Column(name = "address_id")
+    private Long addressId;
     private String postCode;
     private String city;
     private String street;
     private String state;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "deliveryAddress", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "deliveryAddress", cascade = CascadeType.MERGE)
     private Set<DeliverySpecification> deliverySpecifications = new HashSet<>();
 
 
@@ -48,12 +48,12 @@ public class DeliveryAddress {
         deliverySpecification.setDeliveryAddress(null);
     }
 
-    public Long getDeliveryAddressId() {
-        return deliveryAddressId;
+    public Long getAddressId() {
+        return addressId;
     }
 
-    public void setDeliveryAddressId(Long deliveryAddressId) {
-        this.deliveryAddressId = deliveryAddressId;
+    public void setAddressId(Long addressId) {
+        this.addressId = addressId;
     }
 
     public String getPostCode() {

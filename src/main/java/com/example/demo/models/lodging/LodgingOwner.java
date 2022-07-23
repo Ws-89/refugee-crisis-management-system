@@ -1,7 +1,6 @@
 package com.example.demo.models.lodging;
 
 import com.example.demo.models.GenericEntity;
-import com.example.demo.models.shared.Address;
 import com.example.demo.models.shared.Contact;
 import com.example.demo.models.shared.Person;
 import lombok.AllArgsConstructor;
@@ -34,14 +33,11 @@ public class LodgingOwner implements Serializable, GenericEntity<LodgingOwner> {
     @Embedded
     private Person person;
     @Embedded
-    private Address address;
-    @Embedded
     private Contact contact;
 
 
     @Override
     public void update(LodgingOwner source) {
-        this.address = source.getAddress();
         this.person = source.getPerson();
         this.contact = source.getContact();
     }

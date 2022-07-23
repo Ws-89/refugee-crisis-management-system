@@ -28,8 +28,8 @@ public class DeliverySpecification {
     private LocalDateTime arrivalTime;
     private LocalDateTime departureTime;
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
-    @JoinColumn(name = "delivery_address_id", referencedColumnName = "delivery_address_id")
-    private DeliveryAddress deliveryAddress;
+    @JoinColumn(name = "address_id", referencedColumnName = "address_id")
+    private Address deliveryAddress;
 
     @Override
     public boolean equals(Object o) {
@@ -68,11 +68,11 @@ public class DeliverySpecification {
         this.departureTime = departureTime;
     }
 
-    public DeliveryAddress getDeliveryAddress() {
+    public Address getDeliveryAddress() {
         return deliveryAddress;
     }
 
-    public void setDeliveryAddress(DeliveryAddress deliveryAddress) {
+    public void setDeliveryAddress(Address deliveryAddress) {
         this.deliveryAddress = deliveryAddress;
     }
 }

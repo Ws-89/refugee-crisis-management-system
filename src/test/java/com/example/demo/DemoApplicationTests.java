@@ -1,7 +1,7 @@
 package com.example.demo;
 
 import com.example.demo.controller.CargoController;
-import com.example.demo.repo.DeliveryAddressRepository;
+import com.example.demo.repo.AddressRepository;
 //import com.example.demo.repo.HandlingEventRepository;
 import com.example.demo.repo.CargoRepository;
 import com.example.demo.repo.TransportMovementRepo;
@@ -40,7 +40,7 @@ class DemoApplicationTests {
 	private TransportMovementRepo transportMovementRepo;
 
 	@Autowired
-	private DeliveryAddressRepository deliveryAddressRepository;
+	private AddressRepository addressRepository;
 
 	@Test
 	void saveProductDelivery(){

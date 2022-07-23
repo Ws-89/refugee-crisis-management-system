@@ -5,7 +5,7 @@ import com.example.demo.mappers.CargoMapper;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.models.products.*;
 import com.example.demo.models.cargo.*;
-import com.example.demo.repo.DeliveryAddressRepository;
+import com.example.demo.repo.AddressRepository;
 import com.example.demo.repo.CargoRepository;
 import com.example.demo.repo.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,8 +15,6 @@ import org.springframework.stereotype.Service;
 
 
 import javax.transaction.Transactional;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +22,7 @@ public class CargoServiceImplementation implements CargoService {
 
     private final CargoRepository cargoRepository;
     private final ProductRepository productRepository;
-    private final DeliveryAddressRepository deliveryAddressRepository;
+    private final AddressRepository addressRepository;
 
     @Override
     public CargoDTO findById(Long id) {
@@ -37,10 +35,10 @@ public class CargoServiceImplementation implements CargoService {
     @Transactional
     public CargoDTO saveCargo(Cargo source){
 
-        DeliveryAddress destinationAddress = deliveryAddressRepository.findById(source.getDeliverySpecification()
-                .getDeliveryAddress().getDeliveryAddressId()).orElseThrow(()-> new NotFoundException("Addres not found"));
+        Address destinationAddress = addressRepository.findById(source.getDeliverySpecification()
+                .getDeliveryAddress().getAddressId()).orElseThrow(()-> new NotFoundException("Addres not found"));
 
-        DeliveryAddress startingAddress = deliveryAddressRepository.findById(source.getStartingAddress().getDeliveryAddressId())
+        Address startingAddress = addressRepository.findById(source.getStartingAddress().getAddressId())
                 .orElseThrow(()-> new NotFoundException("Addres not found"));
 
         DeliverySpecification deliverySpecification = source.getDeliverySpecification();
@@ -59,32 +57,36 @@ public class CargoServiceImplementation implements CargoService {
     }
 
     @Transactional
-    public void assignProductToCargo(Long cargoId, Long productId){
+    public boolean assignProductToCargo(Long cargoId, Long productId){
         Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("Product not found"));
         Cargo cargo = cargoRepository.findById(cargoId).orElseThrow(() -> new NotFoundException("Cargo not found"));
 
         product.setReserved(Status.Reserved);
         cargo.addProduct(product);
         productRepository.save(product);
+        return true;
     }
 
     @Transactional
-    public void removeProductFromCargo(Long cargoId, Long productId){
+    public boolean removeProductFromCargo(Long cargoId, Long productId){
         Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("Product not found"));
         Cargo cargo = cargoRepository.findById(cargoId).orElseThrow(() -> new NotFoundException("Cargo not found"));
 
         product.setReserved(Status.Available);
         cargo.removeProduct(product);
         productRepository.save(product);
+        return true;
     }
 
-    public void finishCargoCompletion(Long deliveryId){
-        Cargo cargo = cargoRepository.findById(deliveryId).orElseThrow(() -> new NotFoundException("Cargo not found"));
+    public boolean finishCargoCompletion(Long cargoId){
+        Cargo cargo = cargoRepository.findById(cargoId).orElseThrow(() -> new NotFoundException("Cargo not found"));
         cargo.setStatus(Status.Reserved);
         cargoRepository.save(cargo);
+        return true;
     }
 
     @Override
+    @Transactional
     public CargoDTO updateCargo(Cargo cargo) {
         Cargo result = cargoRepository.findById(cargo.getCargoId())
                 .map(p -> {
@@ -94,8 +96,6 @@ public class CargoServiceImplementation implements CargoService {
                     newCargo.setStatus(cargo.getStatus());
                     newCargo.setDeliveryHistory(cargo.getDeliveryHistory());
                     newCargo.setStartingAddress(cargo.getStartingAddress());
-                    newCargo.setDeliverySpecification(cargo.getDeliverySpecification());
-                    newCargo.setProducts(cargo.getProducts());
                     return newCargo;
                 })
                 .orElseThrow(() -> new NotFoundException(String.format("Cargo with id %s not found", cargo.getCargoId())));

@@ -13,7 +13,7 @@ public interface CargoActivityMapper {
 
     @Mapping(source = "cargoActivityId", target = "cargoActivityId")
     @Mapping(source = "timeStamp", target = "timeStamp")
-    @Mapping(source = "deliveryAddress", target = "deliveryAddress")
+    @Mapping(source = "address", target = "address")
     @Mapping(source = "cargoActivityCategory", target = "cargoActivityCategory")
     @Mapping(source = "transportMovementId", target = "transportMovementId")
     CargoActivityDTO entityToDTO(CargoActivity cargoActivity);

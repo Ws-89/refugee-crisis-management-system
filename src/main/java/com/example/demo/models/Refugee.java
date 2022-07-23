@@ -1,6 +1,5 @@
 package com.example.demo.models;
 
-import com.example.demo.models.shared.Address;
 import com.example.demo.models.shared.Contact;
 import com.example.demo.models.shared.Person;
 import lombok.AllArgsConstructor;
@@ -35,8 +34,6 @@ public class Refugee implements Serializable, GenericEntity<Refugee> {
     @Embedded
     private Person person;
     @Embedded
-    private Address address;
-    @Embedded
     private Contact contact;
 
     @Override
@@ -47,7 +44,6 @@ public class Refugee implements Serializable, GenericEntity<Refugee> {
     @Override
     public void update(Refugee source) {
         this.person = source.getPerson();
-        this.address = source.getAddress();
         this.contact = source.getContact();
     }
 

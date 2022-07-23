@@ -4,7 +4,6 @@ import com.example.demo.models.cargo.Cargo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
@@ -22,5 +21,6 @@ public interface CargoRepository extends PagingAndSortingRepository<Cargo, Long>
     @EntityGraph(value = "graph.WholeCargo", type = EntityGraph.EntityGraphType.LOAD)
     Optional<Cargo> findById(Long id);
 
+    @EntityGraph(value = "graph.WholeCargo", type = EntityGraph.EntityGraphType.LOAD)
     Page<Cargo> findByDescriptionContaining(String description, Pageable page);
 }

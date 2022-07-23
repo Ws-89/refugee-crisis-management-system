@@ -4,7 +4,7 @@ import com.example.demo.dto.TransportMovementDTO;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.models.cargo.*;
 import com.example.demo.models.vehicles.Vehicle;
-import com.example.demo.repo.DeliveryAddressRepository;
+import com.example.demo.repo.AddressRepository;
 import com.example.demo.repo.CargoRepository;
 import com.example.demo.repo.TransportMovementRepo;
 import com.example.demo.repo.VehicleRepository;
@@ -35,7 +35,7 @@ class TransportMovementServiceImplementationTest {
     @Mock
     private TransportMovementRepo transportMovementRepo;
     @Mock
-    private DeliveryAddressRepository deliveryAddressRepository;
+    private AddressRepository addressRepository;
     @Mock
     private VehicleRepository vehicleRepository;
     @Mock
@@ -77,10 +77,10 @@ class TransportMovementServiceImplementationTest {
 
     @Test
     void shouldSaveTransportMovement() {
-        DeliveryAddress startingAddress = DeliveryAddress.builder().deliveryAddressId(1L).city("Qwerty").postCode("12-345").state("Zxcv").street("Fghjk").build();
-        DeliveryAddress deliveryAddress = DeliveryAddress.builder().city("Qwerty").deliveryAddressId(2L).postCode("12-345").state("Zxcv").street("Fghjk").build();
+        Address startingAddress = Address.builder().addressId(1L).city("Qwerty").postCode("12-345").state("Zxcv").street("Fghjk").build();
+        Address address = Address.builder().city("Qwerty").addressId(2L).postCode("12-345").state("Zxcv").street("Fghjk").build();
 
-        List<TransportMovementSpecification> tsml = Arrays.asList( TransportMovementSpecification.builder().deliveryAddress(deliveryAddress).build());
+        List<TransportMovementSpecification> tsml = Arrays.asList( TransportMovementSpecification.builder().deliveryAddress(address).build());
 
         List<TransportMovement> transportMovements = new ArrayList<>();
         Vehicle vehicle = Vehicle.builder().vehicleId(1L).vehicleCategory("Van").transportMovement(transportMovements).capacity(900.0).engine("2.0").brand("Renault").build();
@@ -88,8 +88,8 @@ class TransportMovementServiceImplementationTest {
                 .transportMovementId(1L).transportMovementSpecifications(tsml)
                 .startingAddress(startingAddress).vehicle(vehicle).build();
 
-        when(deliveryAddressRepository.findById(1L)).thenReturn(Optional.of(startingAddress));
-        when(deliveryAddressRepository.findById(2L)).thenReturn(Optional.of(deliveryAddress));
+        when(addressRepository.findById(1L)).thenReturn(Optional.of(startingAddress));
+        when(addressRepository.findById(2L)).thenReturn(Optional.of(address));
         when(vehicleRepository.findById(1L)).thenReturn(Optional.of(vehicle));
 
         transportMovementService.save(transportMovement);
@@ -104,33 +104,33 @@ class TransportMovementServiceImplementationTest {
 
     @Test
     void saveTransportMovementShouldThrowException(){
-        DeliveryAddress startingAddress = DeliveryAddress.builder().deliveryAddressId(1L).city("Qwerty").postCode("12-345").state("Zxcv").street("Fghjk").build();
-        DeliveryAddress deliveryAddress = DeliveryAddress.builder().city("Qwerty").deliveryAddressId(2L).postCode("12-345").state("Zxcv").street("Fghjk").build();
-        List<TransportMovementSpecification> tsml = Arrays.asList( TransportMovementSpecification.builder().deliveryAddress(deliveryAddress).build());
+        Address startingAddress = Address.builder().addressId(1L).city("Qwerty").postCode("12-345").state("Zxcv").street("Fghjk").build();
+        Address address = Address.builder().city("Qwerty").addressId(2L).postCode("12-345").state("Zxcv").street("Fghjk").build();
+        List<TransportMovementSpecification> tsml = Arrays.asList( TransportMovementSpecification.builder().deliveryAddress(address).build());
         List<TransportMovement> transportMovements = new ArrayList<>();
         Vehicle vehicle = Vehicle.builder().vehicleId(1L).vehicleCategory("Van").transportMovement(transportMovements).capacity(900.0).engine("2.0").brand("Renault").build();
         TransportMovement transportMovement = TransportMovement.builder()
                 .transportMovementId(1L).transportMovementSpecifications(tsml)
                 .startingAddress(startingAddress).vehicle(vehicle).build();
 
-        when(deliveryAddressRepository.findById(1L)).thenThrow(NotFoundException.class);
+        when(addressRepository.findById(1L)).thenThrow(NotFoundException.class);
 
         assertThrows(NotFoundException.class, () -> transportMovementService.save(transportMovement));
     }
 
     @Test
     void saveTransportMovementShouldThrowVehicleNotFoundException() {
-        DeliveryAddress startingAddress = DeliveryAddress.builder().deliveryAddressId(1L).city("Qwerty").postCode("12-345").state("Zxcv").street("Fghjk").build();
-        DeliveryAddress deliveryAddress = DeliveryAddress.builder().city("Qwerty").deliveryAddressId(2L).postCode("12-345").state("Zxcv").street("Fghjk").build();
-        List<TransportMovementSpecification> tsml = Arrays.asList( TransportMovementSpecification.builder().deliveryAddress(deliveryAddress).build());
+        Address startingAddress = Address.builder().addressId(1L).city("Qwerty").postCode("12-345").state("Zxcv").street("Fghjk").build();
+        Address address = Address.builder().city("Qwerty").addressId(2L).postCode("12-345").state("Zxcv").street("Fghjk").build();
+        List<TransportMovementSpecification> tsml = Arrays.asList( TransportMovementSpecification.builder().deliveryAddress(address).build());
         List<TransportMovement> transportMovements = new ArrayList<>();
         Vehicle vehicle = Vehicle.builder().vehicleId(1L).vehicleCategory("Van").transportMovement(transportMovements).capacity(900.0).engine("2.0").brand("Renault").build();
         TransportMovement transportMovement = TransportMovement.builder()
                 .transportMovementId(1L).transportMovementSpecifications(tsml)
                 .startingAddress(startingAddress).vehicle(vehicle).build();
 
-        when(deliveryAddressRepository.findById(1L)).thenReturn(Optional.of(startingAddress));
-        when(deliveryAddressRepository.findById(2L)).thenReturn(Optional.of(deliveryAddress));
+        when(addressRepository.findById(1L)).thenReturn(Optional.of(startingAddress));
+        when(addressRepository.findById(2L)).thenReturn(Optional.of(address));
         when(vehicleRepository.findById(1L)).thenThrow(NotFoundException.class);
 
         assertThrows(NotFoundException.class, () -> transportMovementService.save(transportMovement));
@@ -138,9 +138,9 @@ class TransportMovementServiceImplementationTest {
 
     @Test
     void delete() {
-        DeliveryAddress startingAddress = DeliveryAddress.builder().deliveryAddressId(1L).city("Qwerty").postCode("12-345").state("Zxcv").street("Fghjk").build();
-        DeliveryAddress deliveryAddress = DeliveryAddress.builder().city("Qwerty").deliveryAddressId(2L).postCode("12-345").state("Zxcv").street("Fghjk").build();
-        List<TransportMovementSpecification> tsml = Arrays.asList(TransportMovementSpecification.builder().deliveryAddress(deliveryAddress).build());
+        Address startingAddress = Address.builder().addressId(1L).city("Qwerty").postCode("12-345").state("Zxcv").street("Fghjk").build();
+        Address address = Address.builder().city("Qwerty").addressId(2L).postCode("12-345").state("Zxcv").street("Fghjk").build();
+        List<TransportMovementSpecification> tsml = Arrays.asList(TransportMovementSpecification.builder().deliveryAddress(address).build());
         List<TransportMovement> transportMovements = new ArrayList<>();
         Vehicle vehicle = Vehicle.builder().vehicleId(1L).vehicleCategory("Van").transportMovement(transportMovements).capacity(900.0).engine("2.0").brand("Renault").build();
         TransportMovement transportMovement = TransportMovement.builder()
@@ -156,18 +156,18 @@ class TransportMovementServiceImplementationTest {
 
     @Test
     void update() {
-        DeliveryAddress startingAddress = DeliveryAddress.builder().deliveryAddressId(1L).city("Qwerty").postCode("12-345").state("Zxcv").street("Fghjk").build();
-        DeliveryAddress deliveryAddress = DeliveryAddress.builder().city("Qwerty").deliveryAddressId(2L).postCode("12-345").state("Zxcv").street("Fghjk").build();
-        List<TransportMovementSpecification> tsml = Arrays.asList(TransportMovementSpecification.builder().deliveryAddress(deliveryAddress).build());
+        Address startingAddress = Address.builder().addressId(1L).city("Qwerty").postCode("12-345").state("Zxcv").street("Fghjk").build();
+        Address address = Address.builder().city("Qwerty").addressId(2L).postCode("12-345").state("Zxcv").street("Fghjk").build();
+        List<TransportMovementSpecification> tsml = Arrays.asList(TransportMovementSpecification.builder().deliveryAddress(address).build());
         List<TransportMovement> transportMovements = new ArrayList<>();
         Vehicle vehicle = Vehicle.builder().vehicleId(1L).vehicleCategory("Van").transportMovement(transportMovements).capacity(900.0).engine("2.0").brand("Renault").build();
         TransportMovement transportMovement = TransportMovement.builder()
                 .transportMovementId(1L).transportMovementSpecifications(tsml)
                 .startingAddress(startingAddress).vehicle(vehicle).build();
 
-        DeliveryAddress updatedStartingAddress = DeliveryAddress.builder().deliveryAddressId(1L).city("QwertyQ").postCode("12-345").state("Zxcv").street("Fghjk").build();
-        DeliveryAddress updatedDeliveryAddress = DeliveryAddress.builder().city("Qwerty").deliveryAddressId(2L).postCode("12-345").state("ZxQcv").street("Fghjk").build();
-        List<TransportMovementSpecification> tsml2 = Arrays.asList(TransportMovementSpecification.builder().deliveryAddress(updatedDeliveryAddress).build());
+        Address updatedStartingAddress = Address.builder().addressId(1L).city("QwertyQ").postCode("12-345").state("Zxcv").street("Fghjk").build();
+        Address updatedAddress = Address.builder().city("Qwerty").addressId(2L).postCode("12-345").state("ZxQcv").street("Fghjk").build();
+        List<TransportMovementSpecification> tsml2 = Arrays.asList(TransportMovementSpecification.builder().deliveryAddress(updatedAddress).build());
         List<TransportMovement> updatedTransportMovements = new ArrayList<>();
         Vehicle updatedVehicle = Vehicle.builder().vehicleId(1L).vehicleCategory("VanQ").transportMovement(updatedTransportMovements).capacity(900.0).engine("2.0").brand("Renault").build();
         TransportMovement updatedTransportMovement = TransportMovement.builder()
@@ -207,9 +207,9 @@ class TransportMovementServiceImplementationTest {
 
     @Test
     void addAShipment(){
-        DeliveryAddress startingAddress = DeliveryAddress.builder().deliveryAddressId(1L).city("Qwerty").postCode("12-345").state("Zxcv").street("Fghjk").build();
-        DeliveryAddress deliveryAddress = DeliveryAddress.builder().city("Qwerty").deliveryAddressId(2L).postCode("12-345").state("Zxcv").street("Fghjk").build();
-        List<TransportMovementSpecification> tsml = Arrays.asList(TransportMovementSpecification.builder().deliveryAddress(deliveryAddress).build());
+        Address startingAddress = Address.builder().addressId(1L).city("Qwerty").postCode("12-345").state("Zxcv").street("Fghjk").build();
+        Address address = Address.builder().city("Qwerty").addressId(2L).postCode("12-345").state("Zxcv").street("Fghjk").build();
+        List<TransportMovementSpecification> tsml = Arrays.asList(TransportMovementSpecification.builder().deliveryAddress(address).build());
         List<TransportMovement> transportMovements = new ArrayList<>();
         Vehicle vehicle = Vehicle.builder().vehicleId(1L).vehicleCategory("Van").transportMovement(transportMovements).capacity(900.0).engine("2.0").brand("Renault").build();
         TransportMovement transportMovement = TransportMovement.builder()
@@ -217,7 +217,7 @@ class TransportMovementServiceImplementationTest {
                 .transportMovementId(1L).transportMovementSpecifications(tsml)
                 .startingAddress(startingAddress).vehicle(vehicle).build();
 
-        DeliverySpecification deliverySpecification = DeliverySpecification.builder().deliveryAddress(deliveryAddress).build();
+        DeliverySpecification deliverySpecification = DeliverySpecification.builder().deliveryAddress(address).build();
         Cargo cargo = Cargo.builder().deliverySpecification(deliverySpecification)
                 .totalWeight(0.0)
                 .startingAddress(startingAddress).build();
@@ -231,13 +231,13 @@ class TransportMovementServiceImplementationTest {
 
     @Test
     void changeRouteOrderUp(){
-        DeliveryAddress startingAddress = DeliveryAddress.builder().deliveryAddressId(1L).city("Qwerty1").postCode("12-345").state("Zxcv").street("Fghjk").build();
-        DeliveryAddress deliveryAddress = DeliveryAddress.builder().city("Qwerty2").deliveryAddressId(2L).postCode("12-345").state("Zxcv").street("Fghjk").build();
-        List<TransportMovementSpecification> tsml = Arrays.asList(TransportMovementSpecification.builder().deliveryAddress(deliveryAddress).build());
+        Address startingAddress = Address.builder().addressId(1L).city("Qwerty1").postCode("12-345").state("Zxcv").street("Fghjk").build();
+        Address address = Address.builder().city("Qwerty2").addressId(2L).postCode("12-345").state("Zxcv").street("Fghjk").build();
+        List<TransportMovementSpecification> tsml = Arrays.asList(TransportMovementSpecification.builder().deliveryAddress(address).build());
         List<TransportMovement> transportMovements = new ArrayList<>();
         Vehicle vehicle = Vehicle.builder().vehicleId(1L).vehicleCategory("Van").transportMovement(transportMovements).capacity(900.0).engine("2.0").brand("Renault").build();
         TransportMovementSpecification tms1 = TransportMovementSpecification.builder().transportMovementSpecificationId(1L).deliveryAddress(startingAddress).build();
-        TransportMovementSpecification tms2 = TransportMovementSpecification.builder().transportMovementSpecificationId(2L).deliveryAddress(deliveryAddress).build();
+        TransportMovementSpecification tms2 = TransportMovementSpecification.builder().transportMovementSpecificationId(2L).deliveryAddress(address).build();
         TransportMovement transportMovement = TransportMovement.builder()
                 .weightOfTheGoods(0.0)
                 .transportMovementId(1L).transportMovementSpecifications(tsml)

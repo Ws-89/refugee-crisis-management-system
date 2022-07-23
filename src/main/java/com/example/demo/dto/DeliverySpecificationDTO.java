@@ -13,6 +13,6 @@ public class DeliverySpecificationDTO {
     private Long deliverySpecificationId;
     private LocalDateTime arrivalTime;
     private LocalDateTime departureTime;
-    private DeliveryAddressDTO deliveryAddress;
+    private AddressDTO deliveryAddress;
 
 }

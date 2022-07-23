@@ -8,7 +8,7 @@ import com.example.demo.exception.NotFoundException;
 import com.example.demo.models.products.Status;
 import com.example.demo.models.cargo.*;
 import com.example.demo.models.vehicles.Vehicle;
-import com.example.demo.repo.DeliveryAddressRepository;
+import com.example.demo.repo.AddressRepository;
 import com.example.demo.repo.CargoRepository;
 import com.example.demo.repo.TransportMovementRepo;
 import com.example.demo.repo.VehicleRepository;
@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 public class TransportMovementService  {
 
     private final TransportMovementRepo transportMovementRepo;
-    private final DeliveryAddressRepository deliveryAddressRepository;
+    private final AddressRepository addressRepository;
     private final VehicleRepository vehicleRepository;
     private final CargoRepository cargoRepository;
     private final EntityManager em;
@@ -55,12 +55,12 @@ public class TransportMovementService  {
     @Transactional
     public TransportMovementDTO save(TransportMovement transportMovement) {
 
-        DeliveryAddress startingAddress = deliveryAddressRepository.findById(
-                transportMovement.getStartingAddress().getDeliveryAddressId()
+        Address startingAddress = addressRepository.findById(
+                transportMovement.getStartingAddress().getAddressId()
         ).orElseThrow(()-> new NotFoundException("Starting address not found"));
 
-        DeliveryAddress deliveryAddress = deliveryAddressRepository.findById(
-                transportMovement.getStartingAddress().getDeliveryAddressId()
+        Address address = addressRepository.findById(
+                transportMovement.getStartingAddress().getAddressId()
         ).orElseThrow(()-> new NotFoundException("Starting address not found"));
 
         Vehicle vehicle = vehicleRepository.findById(transportMovement.getVehicle().getVehicleId()).orElseThrow(() -> new NotFoundException("Vehicle not found"));
@@ -68,7 +68,7 @@ public class TransportMovementService  {
         TransportMovement tmToSave = TransportMovement.builder()
                 .transportStatus(TransportStatus.InPreparation)
                 .startingAddress(startingAddress)
-                .deliveryAddress(deliveryAddress)
+                .deliveryAddress(address)
                 .weightOfTheGoods(0.0)
                 .vehicle(vehicle)
                 .wayBills(transportMovement.getWayBills())
@@ -190,7 +190,7 @@ public class TransportMovementService  {
 
         List<TransportMovementSpecification> transportMovementSpecifications = transportMovement.getWayBills().stream()
                 .map(w -> {
-                    DeliveryAddress address = deliveryAddressRepository.findById(w.getCargo().getDeliverySpecification().getDeliveryAddress().getDeliveryAddressId())
+                    Address address = addressRepository.findById(w.getCargo().getDeliverySpecification().getDeliveryAddress().getAddressId())
                             .orElseThrow(()-> new NotFoundException("Delivery address not found"));
 
                     TransportMovementSpecification transportMovementSpecification = TransportMovementSpecification.builder()
@@ -203,7 +203,7 @@ public class TransportMovementService  {
 
         List<TransportMovementSpecification> transportMovementSpecificationsStartingAddresses = transportMovement.getWayBills().stream()
                         .map(w -> {
-                            DeliveryAddress address = deliveryAddressRepository.findById(w.getCargo().getStartingAddress().getDeliveryAddressId())
+                            Address address = addressRepository.findById(w.getCargo().getStartingAddress().getAddressId())
                                     .orElseThrow(()-> new NotFoundException("Delivery address not found"));
 
                             TransportMovementSpecification transportMovementSpecification = TransportMovementSpecification.builder()
@@ -231,7 +231,7 @@ public class TransportMovementService  {
     }
 
     public List<TransportMovementFullGraphDTO> findTransportMovementsThatStopsAtAddress(Long addressId){
-        DeliveryAddress address = deliveryAddressRepository.findById(addressId).orElseThrow(() -> new NotFoundException("Address not found"));
+        Address address = addressRepository.findById(addressId).orElseThrow(() -> new NotFoundException("Address not found"));
         List<TransportMovement> list = transportMovementRepo.findAllTransportMovements().stream()
                 .filter(tm -> tm.checkIfStopsAtAddress(address) && tm.getTransportStatus().equals(TransportStatus.InProgress)).collect(Collectors.toList());
 

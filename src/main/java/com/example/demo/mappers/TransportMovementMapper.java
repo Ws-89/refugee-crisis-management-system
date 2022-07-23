@@ -13,7 +13,7 @@ public interface TransportMovementMapper {
 
     @Mapping(source = "transportMovementId", target = "transportMovementId")
     @Mapping(source = "startingAddress", target = "startingAddress")
-    @Mapping(source = "deliveryAddress" , target ="deliveryAddress")
+    @Mapping(source = "deliveryAddress", target ="deliveryAddress")
     @Mapping(source = "vehicle", target = "vehicle")
     @Mapping(source = "weightOfTheGoods", target = "weightOfTheGoods")
     @Mapping(source = "arrivalTime", target = "arrivalTime")

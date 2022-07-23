@@ -1,6 +1,5 @@
 package com.example.demo.models;
 
-import com.example.demo.models.shared.Address;
 import com.example.demo.models.shared.Contact;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,12 +28,12 @@ public class LocalGovernment implements Serializable, GenericEntity<LocalGovernm
             generator = "local_government_sequence"
     )
     private Long id;
-    private Address address;
+
     private Contact contact;
 
     @Override
     public void update(LocalGovernment source) {
-        this.address = source.getAddress();
+
         this.contact = source.getContact();
     }
 

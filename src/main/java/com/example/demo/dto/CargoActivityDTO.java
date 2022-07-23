@@ -1,7 +1,7 @@
 package com.example.demo.dto;
 
 import com.example.demo.models.cargo.CargoActivityCategory;
-import com.example.demo.models.cargo.DeliveryAddress;
+import com.example.demo.models.cargo.Address;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,7 +15,7 @@ public class CargoActivityDTO {
 
     private Long cargoActivityId;
     private LocalDateTime timeStamp;
-    private DeliveryAddress deliveryAddress;
+    private Address address;
     private CargoActivityCategory cargoActivityCategory;
     private Long transportMovementId;
 }

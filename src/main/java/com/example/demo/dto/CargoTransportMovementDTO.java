@@ -13,6 +13,6 @@ public class CargoTransportMovementDTO {
     private String description;
     private Double totalWeight;
     private Status status;
-    private DeliveryAddressDTO startingAddress;
+    private AddressDTO startingAddress;
     private DeliverySpecificationDTO deliverySpecification;
 }

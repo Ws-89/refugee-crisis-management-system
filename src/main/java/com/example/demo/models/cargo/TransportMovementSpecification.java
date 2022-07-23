@@ -33,6 +33,6 @@ public class TransportMovementSpecification {
     private LocalDateTime arrivalTime;
     private LocalDateTime departureTime;
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
-    @JoinColumn(name = "delivery_address_id", referencedColumnName = "delivery_address_id")
-    private DeliveryAddress deliveryAddress;
+    @JoinColumn(name = "delivery_address_id", referencedColumnName = "address_id")
+    private Address deliveryAddress;
 }

@@ -16,8 +16,8 @@ import java.util.Set;
 public class TransportMovementFullGraphDTO {
 
     Long transportMovementId;
-    DeliveryAddressDTO startingAddress;
-    DeliveryAddressDTO deliveryAddress;
+    AddressDTO startingAddress;
+    AddressDTO deliveryAddress;
     Double weightOfTheGoods;
     LocalDateTime arrivalTime;
     LocalDateTime departureTime;

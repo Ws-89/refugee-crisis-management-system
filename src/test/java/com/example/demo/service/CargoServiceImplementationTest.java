@@ -4,7 +4,7 @@ import com.example.demo.dto.CargoDTO;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.models.products.*;
 import com.example.demo.models.cargo.*;
-import com.example.demo.repo.DeliveryAddressRepository;
+import com.example.demo.repo.AddressRepository;
 import com.example.demo.repo.CargoRepository;
 import com.example.demo.repo.ProductRepository;
 import org.junit.jupiter.api.Test;
@@ -35,16 +35,16 @@ class CargoServiceImplementationTest {
     private ProductRepository productRepository;
 
     @Mock
-    private DeliveryAddressRepository deliveryAddressRepository;
+    private AddressRepository addressRepository;
 
    @InjectMocks
    CargoServiceImplementation productDeliveryService;
 
     @Test
     void shouldFindAllProductDeliveries() {
-        DeliveryAddress startingAddress = DeliveryAddress.builder().city("Qwerty").postCode("12-345").state("Zxcv").street("Fghjk").build();
-        DeliveryAddress deliveryAddress = DeliveryAddress.builder().city("Qwerty").postCode("12-345").state("Zxcv").street("Fghjk").build();
-        DeliverySpecification deliverySpecification = DeliverySpecification.builder().deliveryAddress(deliveryAddress).build();
+        Address startingAddress = Address.builder().city("Qwerty").postCode("12-345").state("Zxcv").street("Fghjk").build();
+        Address address = Address.builder().city("Qwerty").postCode("12-345").state("Zxcv").street("Fghjk").build();
+        DeliverySpecification deliverySpecification = DeliverySpecification.builder().deliveryAddress(address).build();
         Cargo cargo = Cargo.builder().deliverySpecification(deliverySpecification).startingAddress(startingAddress).build();
         Cargo cargo2 = Cargo.builder().deliverySpecification(deliverySpecification).startingAddress(startingAddress).build();
         Cargo cargo3 = Cargo.builder().deliverySpecification(deliverySpecification).startingAddress(startingAddress).build();
@@ -61,9 +61,9 @@ class CargoServiceImplementationTest {
 
     @Test
     void shouldFindProductById() {
-        DeliveryAddress startingAddress = DeliveryAddress.builder().city("Qwerty").postCode("12-345").state("Zxcv").street("Fghjk").build();
-        DeliveryAddress deliveryAddress = DeliveryAddress.builder().city("Qwerty").postCode("12-345").state("Zxcv").street("Fghjk").build();
-        DeliverySpecification deliverySpecification = DeliverySpecification.builder().deliveryAddress(deliveryAddress).build();
+        Address startingAddress = Address.builder().city("Qwerty").postCode("12-345").state("Zxcv").street("Fghjk").build();
+        Address address = Address.builder().city("Qwerty").postCode("12-345").state("Zxcv").street("Fghjk").build();
+        DeliverySpecification deliverySpecification = DeliverySpecification.builder().deliveryAddress(address).build();
         Cargo cargo = Cargo.builder().cargoId(1L).deliverySpecification(deliverySpecification).startingAddress(startingAddress).build();
 
         when(cargoRepository.findById(1L)).thenReturn(Optional.of(cargo));
@@ -114,10 +114,10 @@ class CargoServiceImplementationTest {
 
         List<Product> products = Arrays.asList(blackCoffe, frappe);
 
-        DeliveryAddress startingAddress = DeliveryAddress.builder().deliveryAddressId(1L).city("Qwerty").postCode("12-345").state("Zxcv").street("Fghjk").build();
-        DeliveryAddress deliveryAddress = DeliveryAddress.builder().city("Qwerty").deliveryAddressId(1L).postCode("12-345").state("Zxcv").street("Fghjk").build();
+        Address startingAddress = Address.builder().addressId(1L).city("Qwerty").postCode("12-345").state("Zxcv").street("Fghjk").build();
+        Address address = Address.builder().city("Qwerty").addressId(1L).postCode("12-345").state("Zxcv").street("Fghjk").build();
 
-        DeliverySpecification deliverySpecification = DeliverySpecification.builder().deliveryAddress(deliveryAddress).build();
+        DeliverySpecification deliverySpecification = DeliverySpecification.builder().deliveryAddress(address).build();
         Cargo cargo = Cargo.builder().cargoId(1L)
                 .startingAddress(startingAddress)
                 .deliverySpecification(deliverySpecification)
@@ -126,7 +126,7 @@ class CargoServiceImplementationTest {
                 .build();
 
 
-        when(deliveryAddressRepository.findById(1L)).thenThrow(NotFoundException.class);
+        when(addressRepository.findById(1L)).thenThrow(NotFoundException.class);
         assertThrows(NotFoundException.class, () -> productDeliveryService.saveCargo(cargo));
     }
 
@@ -163,13 +163,13 @@ class CargoServiceImplementationTest {
 
         List<Product> products = Arrays.asList(blackCoffe, frappe);
 
-        DeliveryAddress startingAddress = DeliveryAddress.builder().deliveryAddressId(1L).city("Qwerty").postCode("12-345").state("Zxcv").street("Fghjk").build();
-        DeliveryAddress deliveryAddress = DeliveryAddress.builder().city("Qwerty").deliveryAddressId(2L).postCode("12-345").state("Zxcv").street("Fghjk").build();
+        Address startingAddress = Address.builder().addressId(1L).city("Qwerty").postCode("12-345").state("Zxcv").street("Fghjk").build();
+        Address address = Address.builder().city("Qwerty").addressId(2L).postCode("12-345").state("Zxcv").street("Fghjk").build();
 
-        when(deliveryAddressRepository.findById(1L)).thenReturn(Optional.of(startingAddress));
-        when(deliveryAddressRepository.findById(2L)).thenReturn(Optional.of(deliveryAddress));
+        when(addressRepository.findById(1L)).thenReturn(Optional.of(startingAddress));
+        when(addressRepository.findById(2L)).thenReturn(Optional.of(address));
 
-        DeliverySpecification deliverySpecification = DeliverySpecification.builder().deliveryAddress(deliveryAddress).build();
+        DeliverySpecification deliverySpecification = DeliverySpecification.builder().deliveryAddress(address).build();
         Cargo cargo = Cargo.builder().cargoId(1L)
                 .startingAddress(startingAddress)
                 .deliverySpecification(deliverySpecification)
@@ -284,10 +284,10 @@ class CargoServiceImplementationTest {
 
         List<Product> products = Arrays.asList(blackCoffe, frappe);
 
-        DeliveryAddress startingAddress = DeliveryAddress.builder().deliveryAddressId(1L).city("Qwerty").postCode("12-345").state("Zxcv").street("Fghjk").build();
-        DeliveryAddress deliveryAddress = DeliveryAddress.builder().city("Qwerty").deliveryAddressId(2L).postCode("12-345").state("Zxcv").street("Fghjk").build();
+        Address startingAddress = Address.builder().addressId(1L).city("Qwerty").postCode("12-345").state("Zxcv").street("Fghjk").build();
+        Address address = Address.builder().city("Qwerty").addressId(2L).postCode("12-345").state("Zxcv").street("Fghjk").build();
 
-        DeliverySpecification deliverySpecification = DeliverySpecification.builder().deliveryAddress(deliveryAddress).build();
+        DeliverySpecification deliverySpecification = DeliverySpecification.builder().deliveryAddress(address).build();
         Cargo cargo = Cargo.builder().cargoId(1L)
                 .startingAddress(startingAddress)
                 .deliverySpecification(deliverySpecification)

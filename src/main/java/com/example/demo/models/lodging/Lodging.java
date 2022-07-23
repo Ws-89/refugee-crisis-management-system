@@ -2,7 +2,6 @@ package com.example.demo.models.lodging;
 
 import com.example.demo.models.GenericEntity;
 import com.example.demo.models.Refugee;
-import com.example.demo.models.shared.Address;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Lodging implements Serializable, GenericEntity<Lodging> {
+public class Lodging implements Serializable {
 
     @Id
     @SequenceGenerator(
@@ -31,7 +30,6 @@ public class Lodging implements Serializable, GenericEntity<Lodging> {
             generator = "tbl_lodging_sequence"
     )
     private Long lodgingId;
-    private Address address;
     @ManyToOne(
             cascade = CascadeType.ALL
     )
@@ -53,21 +51,12 @@ public class Lodging implements Serializable, GenericEntity<Lodging> {
     )
     private List<Refugee> tenants;
 
-    @Override
-    public void update(Lodging source) {
-        this.address = source.getAddress();
-    }
 
     public Long getId() {
         return this.lodgingId;
     }
 
-    @Override
-    public Lodging createNewInstance() {
-        Lodging newInstance = new Lodging();
-        newInstance.update(this);
-        return newInstance;
-    }
+
 
     public void setStateToAvailable(){
         this.state = LodgingState.Available;

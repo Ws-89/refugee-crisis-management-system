@@ -78,10 +78,10 @@ public class Cargo implements Serializable {
 
     @NotNull
     @OneToOne(cascade= CascadeType.MERGE)
-    @JoinColumn(name = "starting_address_id", referencedColumnName = "delivery_address_id")
-    private DeliveryAddress startingAddress;
+    @JoinColumn(name = "starting_address_id", referencedColumnName = "address_id")
+    private Address startingAddress;
 
-    @OneToOne(cascade= CascadeType.PERSIST, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToOne(cascade= CascadeType.MERGE, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "delivery_specification_id", referencedColumnName = "delivery_specification_id")
     private DeliverySpecification deliverySpecification;
     @NotNull
@@ -140,11 +140,11 @@ public class Cargo implements Serializable {
         this.deliveryHistory = deliveryHistory;
     }
 
-    public DeliveryAddress getStartingAddress() {
+    public Address getStartingAddress() {
         return startingAddress;
     }
 
-    public void setStartingAddress(DeliveryAddress startingAddress) {
+    public void setStartingAddress(Address startingAddress) {
         this.startingAddress = startingAddress;
     }
 
