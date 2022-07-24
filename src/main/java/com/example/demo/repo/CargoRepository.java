@@ -1,6 +1,7 @@
 package com.example.demo.repo;
 
 import com.example.demo.models.cargo.Cargo;
+import com.example.demo.models.products.Status;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -22,5 +23,5 @@ public interface CargoRepository extends PagingAndSortingRepository<Cargo, Long>
     Optional<Cargo> findById(Long id);
 
     @EntityGraph(value = "graph.WholeCargo", type = EntityGraph.EntityGraphType.LOAD)
-    Page<Cargo> findByDescriptionContaining(String description, Pageable page);
+    Page<Cargo> findByStatusAndDescriptionContaining(Status status, String description, Pageable page);
 }

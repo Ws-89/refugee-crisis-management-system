@@ -12,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -80,24 +81,33 @@ public class Cargo implements Serializable {
     @OneToOne(cascade= CascadeType.MERGE)
     @JoinColumn(name = "starting_address_id", referencedColumnName = "address_id")
     private Address startingAddress;
-
-    @OneToOne(cascade= CascadeType.MERGE, orphanRemoval = true, fetch = FetchType.LAZY)
+    @NotNull
+    @OneToOne(cascade= CascadeType.PERSIST, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "delivery_specification_id", referencedColumnName = "delivery_specification_id")
     private DeliverySpecification deliverySpecification;
     @NotNull
     @OneToMany(mappedBy = "cargo", orphanRemoval = true)
-    private Set<Product> products = new HashSet<>();
+    private Set<Product> products;
 
-    public void addProduct(Product product){
-        this.products.add(product);
-        product.setCargo(this);
-        this.totalWeight += product.getWeight();
+    public boolean addProduct(Product product){
+        if(this.products == null){
+            this.products = new HashSet<>();
+        }
+        if(this.products.add(product)){
+            product.setCargo(this);
+            this.totalWeight += product.getWeight();
+            return true;
+        }
+        throw new IllegalArgumentException("Something went wrong. Product may not be added to the cargo");
     }
 
-    public void removeProduct(Product product){
-        this.products.remove(product);
-        product.setCargo(null);
-        this.totalWeight -= product.getWeight();
+    public boolean removeProduct(Product product){
+        if(this.products.remove(product)){
+            product.setCargo(null);
+            this.totalWeight -= product.getWeight();
+            return true;
+        }
+        throw new IllegalArgumentException("Something went wrong. Product may not be removed from the cargo");
     }
 
     public long getCargoId() {

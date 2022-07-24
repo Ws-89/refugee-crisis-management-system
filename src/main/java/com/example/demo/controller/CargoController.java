@@ -1,10 +1,10 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.CargoDTO;
+
 import com.example.demo.models.HttpResponse;
 import com.example.demo.models.cargo.Cargo;
+import com.example.demo.models.products.Status;
 import com.example.demo.service.CargoServiceImplementation;
-import com.google.gson.Gson;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +20,6 @@ import static org.springframework.http.HttpStatus.*;
 public class CargoController {
 
     private final CargoServiceImplementation cargoServiceImplementation;
-    private static final Gson gson = new Gson();
     public CargoController(CargoServiceImplementation cargoServiceImplementation) {
         this.cargoServiceImplementation = cargoServiceImplementation;
     }
@@ -38,10 +37,17 @@ public class CargoController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<HttpResponse> findByDescriptionContaining(@RequestParam Optional<String> description, @RequestParam Optional<Integer> page, @RequestParam Optional<Integer> size) {
+    public ResponseEntity<HttpResponse> findByDescriptionContaining(@RequestParam Optional<Status> status,
+                                                                    @RequestParam Optional<String> description,
+                                                                    @RequestParam Optional<Integer> page,
+                                                                    @RequestParam Optional<Integer> size) {
         return ResponseEntity.ok().body(HttpResponse.builder()
                         .timeStamp(now().toString())
-                        .data(Map.of("page", this.cargoServiceImplementation.findByDescriptionContaining(description.orElse(""), page.orElse(0), size.orElse(10))))
+                        .data(Map.of("page", this.cargoServiceImplementation.findByStatusAndDescriptionContaining(
+                                status.orElse(Status.Available),
+                                description.orElse(""),
+                                page.orElse(0),
+                                size.orElse(10))))
                         .message("Cargo list retrieved")
                         .status(OK)
                         .statusCode(OK.value())
@@ -89,7 +95,7 @@ public class CargoController {
         return ResponseEntity.ok().body(
                 HttpResponse.builder().timeStamp(now().toString())
                         .data(Map.of("assigned", this.cargoServiceImplementation.assignProductToCargo(cargoId, productId)))
-                        .message("Product assigned to cargo")
+                        .message("Assign product to cargo")
                         .status(HttpStatus.OK)
                         .statusCode(OK.value())
                         .build()
@@ -101,7 +107,7 @@ public class CargoController {
         return ResponseEntity.ok().body(
                 HttpResponse.builder().timeStamp(now().toString())
                         .data(Map.of("removed-from-cargo", this.cargoServiceImplementation.removeProductFromCargo(cargoId, productId)))
-                        .message("Product removed from cargo")
+                        .message("Remove product from cargo")
                         .status(HttpStatus.OK)
                         .statusCode(OK.value())
                         .build()

@@ -56,6 +56,12 @@ public class Product implements Serializable {
     @JoinColumn(name = "cargo_id", referencedColumnName = "cargo_id")
     private Cargo cargo;
 
+    public boolean removeProductFromCargo(Cargo cargo){
+        cargo.removeProduct(this);
+            this.setReserved(Status.Available);
+            return true;
+    }
+
 //    @JsonBackReference
     public Cargo getCargo() {
         return cargo;

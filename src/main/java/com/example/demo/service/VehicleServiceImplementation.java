@@ -5,6 +5,8 @@ import com.example.demo.models.vehicles.Vehicle;
 import com.example.demo.models.vehicles.VehicleDTO;
 import com.example.demo.models.vehicles.VehicleMapper;
 import com.example.demo.repo.VehicleRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -77,8 +79,8 @@ public class VehicleServiceImplementation implements VehicleService {
 
     @Override
     @Transactional
-    public List<VehicleDTO> findAllVehicles() {
-        return vehicleRepository.findAll().stream().map(v -> VehicleMapper.INSTANCE.entityToDTO(v)).collect(Collectors.toList());
+    public Page<VehicleDTO> findByCapacityGreaterThanEqual(Double capacity, int page, int size) {
+        return vehicleRepository.findByCapacityGreaterThanEqual(capacity, PageRequest.of(page, size)).map(v -> VehicleMapper.INSTANCE.entityToDTO(v));
     }
 
     public List<VehicleDTO> findAllVehiclesWithoutTransportMovement(){

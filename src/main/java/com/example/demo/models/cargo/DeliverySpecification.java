@@ -3,6 +3,7 @@ package com.example.demo.models.cargo;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -27,6 +28,7 @@ public class DeliverySpecification {
     private Long deliverySpecificationId;
     private LocalDateTime arrivalTime;
     private LocalDateTime departureTime;
+    @NotNull
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "address_id", referencedColumnName = "address_id")
     private Address deliveryAddress;

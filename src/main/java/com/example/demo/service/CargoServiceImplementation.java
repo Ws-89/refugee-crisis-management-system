@@ -72,8 +72,7 @@ public class CargoServiceImplementation implements CargoService {
         Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("Product not found"));
         Cargo cargo = cargoRepository.findById(cargoId).orElseThrow(() -> new NotFoundException("Cargo not found"));
 
-        product.setReserved(Status.Available);
-        cargo.removeProduct(product);
+        product.removeProductFromCargo(cargo);
         productRepository.save(product);
         return true;
     }
@@ -113,8 +112,8 @@ public class CargoServiceImplementation implements CargoService {
     }
 
     @Override
-    public Page<CargoDTO> findByDescriptionContaining(String description, int page, int size) {
-        return cargoRepository.findByDescriptionContaining(description, PageRequest.of(page, size)).map(c -> CargoMapper.INSTANCE.entityToDTO(c));
+    public Page<CargoDTO> findByStatusAndDescriptionContaining(Status status, String description, int page, int size) {
+        return cargoRepository.findByStatusAndDescriptionContaining(status, description, PageRequest.of(page, size)).map(c -> CargoMapper.INSTANCE.entityToDTO(c));
     }
 
 
